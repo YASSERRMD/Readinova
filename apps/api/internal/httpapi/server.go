@@ -54,6 +54,9 @@ func (s *Server) Routes(mux *http.ServeMux) {
 
 	// Perception Gap
 	s.perceptionRoutes(mux)
+
+	// Recommendations
+	s.recommendRoutes(mux)
 }
 
 // writeJSON encodes v as JSON and writes it with the given status code.

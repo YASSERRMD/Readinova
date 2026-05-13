@@ -1,0 +1,29 @@
+dimension: talent_culture
+recommendations:
+  - id: tc_001
+    title: Launch AI literacy programme
+    description: Roll out organisation-wide AI literacy training covering fundamentals, use-case identification, and responsible AI.
+    effort: medium
+    impact: high
+    threshold: 40
+
+  - id: tc_002
+    title: Hire dedicated AI/ML engineers
+    description: Create at least 2 dedicated AI/ML engineering roles to build internal capability.
+    effort: high
+    impact: high
+    threshold: 50
+
+  - id: tc_003
+    title: Establish an AI centre of excellence
+    description: Form a cross-functional CoE to set standards, share reusable assets, and mentor teams.
+    effort: high
+    impact: high
+    threshold: 65
+
+  - id: tc_004
+    title: Integrate AI KPIs into performance reviews
+    description: Include AI adoption and innovation metrics in employee goal-setting to embed culture change.
+    effort: low
+    impact: medium
+    threshold: 80

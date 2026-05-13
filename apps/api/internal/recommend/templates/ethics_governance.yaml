@@ -1,0 +1,29 @@
+dimension: ethics_governance
+recommendations:
+  - id: eg_001
+    title: Publish an AI ethics policy
+    description: Draft and board-approve a responsible AI policy covering fairness, transparency, accountability, and privacy.
+    effort: medium
+    impact: high
+    threshold: 40
+
+  - id: eg_002
+    title: Conduct algorithmic bias audits
+    description: Commission independent bias audits on customer-facing AI models and publish summaries.
+    effort: high
+    impact: high
+    threshold: 55
+
+  - id: eg_003
+    title: Implement model explainability tooling
+    description: Integrate XAI libraries (SHAP, LIME) into your model pipelines to support auditability.
+    effort: medium
+    impact: medium
+    threshold: 65
+
+  - id: eg_004
+    title: Establish an AI incident response process
+    description: Define a playbook for detecting and responding to AI model failures or harmful outputs.
+    effort: medium
+    impact: high
+    threshold: 75

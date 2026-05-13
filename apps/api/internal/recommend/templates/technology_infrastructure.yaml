@@ -1,0 +1,29 @@
+dimension: technology_infrastructure
+recommendations:
+  - id: ti_001
+    title: Adopt a cloud-first infrastructure policy
+    description: Mandate cloud-native deployment for all new AI workloads to accelerate scalability and reduce ops overhead.
+    effort: high
+    impact: high
+    threshold: 45
+
+  - id: ti_002
+    title: Deploy an ML platform
+    description: Implement a managed ML platform (e.g. MLflow, Vertex AI, SageMaker) for experiment tracking and model serving.
+    effort: high
+    impact: high
+    threshold: 55
+
+  - id: ti_003
+    title: Establish API-first integration standards
+    description: Define and enforce API contracts for all data and model endpoints to enable composable AI services.
+    effort: medium
+    impact: medium
+    threshold: 70
+
+  - id: ti_004
+    title: Automate infrastructure provisioning
+    description: Use IaC (Terraform/Pulumi) to provision AI environments reproducibly and reduce drift.
+    effort: medium
+    impact: medium
+    threshold: 80

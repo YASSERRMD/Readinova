@@ -1,0 +1,29 @@
+dimension: strategy_alignment
+recommendations:
+  - id: sa_001
+    title: Define a formal AI strategy
+    description: Develop a board-approved AI strategy document that aligns AI initiatives with business objectives.
+    effort: high
+    impact: high
+    threshold: 50   # apply when dimension score < threshold
+
+  - id: sa_002
+    title: Establish AI governance committee
+    description: Form a cross-functional AI steering committee with executive sponsorship.
+    effort: medium
+    impact: high
+    threshold: 60
+
+  - id: sa_003
+    title: Map AI use cases to strategic priorities
+    description: Create a use-case register linking each AI initiative to a measurable business outcome.
+    effort: medium
+    impact: medium
+    threshold: 70
+
+  - id: sa_004
+    title: Conduct annual AI strategy review
+    description: Schedule a recurring review cadence to update the AI strategy against market and technology changes.
+    effort: low
+    impact: medium
+    threshold: 85
