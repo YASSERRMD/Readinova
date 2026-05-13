@@ -2,6 +2,8 @@ package httpapi
 
 import (
 	"net/http"
+
+	"github.com/YASSERRMD/Readinova/apps/api/internal/billing"
 )
 
 func init() {
@@ -33,6 +35,23 @@ func (s *Server) handleCreateAssessment(w http.ResponseWriter, r *http.Request) 
 	if req.FrameworkID == "" || req.Title == "" {
 		writeError(w, http.StatusUnprocessableEntity, "framework_id and title are required")
 		return
+	}
+
+	// Enforce tier assessment limit.
+	var tier string
+	_ = s.db.QueryRow(r.Context(),
+		`SELECT tier FROM subscriptions WHERE organisation_id = $1`, claims.OrgID,
+	).Scan(&tier)
+	limits := billing.LimitsFor(billing.Tier(tier))
+	if limits.MaxAssessments > 0 {
+		var count int
+		_ = s.db.QueryRow(r.Context(),
+			`SELECT COUNT(*) FROM assessments WHERE organisation_id = $1`, claims.OrgID,
+		).Scan(&count)
+		if count >= limits.MaxAssessments {
+			writeError(w, http.StatusPaymentRequired, "assessment limit reached for your tier")
+			return
+		}
 	}
 
 	var id string
