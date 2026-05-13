@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { scoringApi, type ScoringResult, type PerceptionGapResult } from "../api/scoring";
 import { ReadinessRadarChart } from "../components/RadarChart";
 import { DimensionCard } from "../components/DimensionCard";
@@ -74,6 +74,12 @@ export function DashboardPage() {
             Engine: {result.engine_version} · Framework:{" "}
             {result.framework_version}
           </span>
+          <Link
+            to={`/app/assessments/${assessmentId}/recommendations`}
+            className="btn-ghost text-xs px-3 py-1.5"
+          >
+            Recommendations
+          </Link>
           <a
             href={reportUrl}
             target="_blank"

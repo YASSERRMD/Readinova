@@ -11,6 +11,7 @@ import { DashboardPage } from "./pages/DashboardPage";
 import { TeamPage } from "./pages/TeamPage";
 import { AcceptInvitePage } from "./pages/AcceptInvitePage";
 import ConnectorsPage from "./pages/ConnectorsPage";
+import RecommendationsPage from "./pages/RecommendationsPage";
 
 const queryClient = new QueryClient();
 
@@ -45,6 +46,10 @@ export function App() {
                 />
                 <Route path="/app/team" element={<TeamPage />} />
                 <Route path="/app/connectors" element={<ConnectorsPage />} />
+                <Route
+                  path="/app/assessments/:id/recommendations"
+                  element={<RecommendationsPage />}
+                />
               </Route>
             </Route>
           </Routes>
