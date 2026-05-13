@@ -57,6 +57,9 @@ func (s *Server) Routes(mux *http.ServeMux) {
 
 	// Recommendations
 	s.recommendRoutes(mux)
+
+	// Audit Artefacts
+	s.artefactRoutes(mux)
 }
 
 // writeJSON encodes v as JSON and writes it with the given status code.
