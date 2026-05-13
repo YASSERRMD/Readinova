@@ -39,4 +39,22 @@ web-lint:
 	pnpm --filter @readinova/web lint
 
 scoring:
-	cd crates && cargo build -p scoring
+	cd crates && cargo build --release -p scoring
+	@mkdir -p libs/go-scoring/lib
+	@OS=$$(uname -s | tr '[:upper:]' '[:lower:]'); ARCH=$$(uname -m); \
+	if [ "$$OS" = "darwin" ]; then \
+		cp crates/target/release/libscoring.dylib libs/go-scoring/lib/libscoring.dylib; \
+	else \
+		cp crates/target/release/libscoring.so libs/go-scoring/lib/libscoring.so; \
+	fi
+	@echo "Scoring cdylib copied to libs/go-scoring/lib/"
+
+scoring-linux-amd64:
+	cd crates && cargo build --release -p scoring --target x86_64-unknown-linux-gnu
+	@mkdir -p libs/go-scoring/lib/linux-amd64
+	@cp crates/target/x86_64-unknown-linux-gnu/release/libscoring.so libs/go-scoring/lib/linux-amd64/
+
+scoring-linux-arm64:
+	cd crates && cargo build --release -p scoring --target aarch64-unknown-linux-gnu
+	@mkdir -p libs/go-scoring/lib/linux-arm64
+	@cp crates/target/aarch64-unknown-linux-gnu/release/libscoring.so libs/go-scoring/lib/linux-arm64/
