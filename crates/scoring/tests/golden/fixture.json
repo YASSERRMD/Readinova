@@ -1,0 +1,59 @@
+{
+  "framework": {
+    "slug": "ai-readiness-v1",
+    "version": "1.0",
+    "dimensions": [
+      {
+        "slug": "strategy_and_business_alignment",
+        "weight": 0.4,
+        "sub_dimensions": [
+          {
+            "slug": "ai_strategy_definition",
+            "weight": 0.5,
+            "indicators": [
+              {
+                "slug": "strategy_document_existence",
+                "questions": [
+                  { "slug": "strategy_documented_and_current" },
+                  { "slug": "strategy_board_approved" }
+                ]
+              }
+            ]
+          },
+          {
+            "slug": "ai_investment_roadmap",
+            "weight": 0.5,
+            "indicators": [
+              {
+                "slug": "roadmap_existence",
+                "questions": [{ "slug": "roadmap_documented" }]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "slug": "data_foundations",
+        "weight": 0.6,
+        "sub_dimensions": [
+          {
+            "slug": "data_availability",
+            "weight": 1.0,
+            "indicators": [
+              {
+                "slug": "data_coverage",
+                "questions": [{ "slug": "data_sources_catalogued" }]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "responses": [
+    { "question_slug": "strategy_documented_and_current", "level": 3 },
+    { "question_slug": "strategy_board_approved", "level": 2 },
+    { "question_slug": "roadmap_documented", "level": 4 },
+    { "question_slug": "data_sources_catalogued", "level": 1 }
+  ]
+}
