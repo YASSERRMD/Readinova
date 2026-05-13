@@ -9,9 +9,39 @@ on:
       - "phase_*"
 
 jobs:
+  rust:
+    name: Rust
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy,rustfmt
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: crates
+      - run: cargo fmt --all -- --check
+        working-directory: crates
+      - run: cargo clippy --workspace --all-targets -- -D warnings
+        working-directory: crates
+      - run: cargo test --workspace
+        working-directory: crates
+      - name: Build scoring cdylib
+        run: |
+          cargo build --release -p scoring
+          mkdir -p ../libs/go-scoring/lib
+          cp target/release/libscoring.so ../libs/go-scoring/lib/libscoring.so
+        working-directory: crates
+      - name: Upload scoring lib
+        uses: actions/upload-artifact@v4
+        with:
+          name: libscoring-linux-amd64
+          path: libs/go-scoring/lib/libscoring.so
+
   go:
     name: Go ${{ matrix.go-version }}
     runs-on: ubuntu-latest
+    needs: rust
     services:
       postgres:
         image: postgres:16-alpine
@@ -38,6 +68,11 @@ jobs:
             go.sum
             apps/api/go.sum
             libs/go-scoring/go.sum
+      - name: Download scoring lib
+        uses: actions/download-artifact@v4
+        with:
+          name: libscoring-linux-amd64
+          path: libs/go-scoring/lib/
       - run: go work sync
       - run: go build ./...
       - run: go test ./...
@@ -46,24 +81,6 @@ jobs:
           READINOVA_DATABASE_URL: postgres://readinova:readinova@localhost:54329/readinova_test?sslmode=disable
       - run: go test ./...
         working-directory: libs/go-scoring
-
-  rust:
-    name: Rust
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          components: clippy,rustfmt
-      - uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: crates
-      - run: cargo fmt --all -- --check
-        working-directory: crates
-      - run: cargo clippy --workspace --all-targets -- -D warnings
-        working-directory: crates
-      - run: cargo test --workspace
-        working-directory: crates
 
   web:
     name: Web
