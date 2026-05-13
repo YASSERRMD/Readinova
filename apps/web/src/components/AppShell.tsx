@@ -4,6 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 const navItems = [
   { to: "/app/assessments", label: "Assessments" },
   { to: "/app/team", label: "Team" },
+  { to: "/app/connectors", label: "Connectors" },
 ];
 
 export function AppShell() {
