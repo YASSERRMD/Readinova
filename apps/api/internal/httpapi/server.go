@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/YASSERRMD/Readinova/apps/api/internal/platform/telemetry"
 )
 
 // Server holds shared dependencies.
@@ -19,8 +20,17 @@ func New(db *pgxpool.Pool, jwtSecret []byte) *Server {
 	return &Server{db: db, jwtSecret: jwtSecret}
 }
 
+// Handler returns an http.Handler wrapping all routes with telemetry middleware.
+func (s *Server) Handler() http.Handler {
+	mux := http.NewServeMux()
+	s.Routes(mux)
+	return telemetry.Middleware(mux)
+}
+
 // Routes registers all API routes on the given mux.
 func (s *Server) Routes(mux *http.ServeMux) {
+	// Metrics endpoint (no auth required; scrape from internal network only).
+	mux.Handle("GET /metrics", telemetry.MetricsHandler())
 	// Auth
 	mux.HandleFunc("POST /v1/organisations", s.handleSignup)
 	mux.HandleFunc("POST /v1/auth/login", s.handleLogin)
