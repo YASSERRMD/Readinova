@@ -1,0 +1,26 @@
+pre-commit:
+  parallel: true
+  commands:
+    gofmt:
+      glob: "*.go"
+      run: gofmt -w {staged_files}
+      stage_fixed: true
+    goimports:
+      glob: "*.go"
+      run: command -v goimports >/dev/null && goimports -w {staged_files} || true
+      stage_fixed: true
+    clippy:
+      glob: "*.rs"
+      run: cd crates && cargo clippy --workspace --all-targets -- -D warnings
+    eslint:
+      glob: "*.{ts,tsx,js,jsx}"
+      run: pnpm --filter @readinova/web lint
+    prettier:
+      glob: "*.{json,yml,yaml,md,css,ts,tsx,js,jsx}"
+      run: pnpm exec prettier --write {staged_files}
+      stage_fixed: true
+
+commit-msg:
+  commands:
+    commitlint:
+      run: pnpm exec commitlint --edit {1}
