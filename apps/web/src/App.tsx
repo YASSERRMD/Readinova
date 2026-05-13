@@ -6,6 +6,7 @@ import { AppShell } from "./components/AppShell";
 import { LoginPage } from "./pages/LoginPage";
 import { SignupPage } from "./pages/SignupPage";
 import { AssessmentsPage } from "./pages/AssessmentsPage";
+import { QuestionnairePage } from "./pages/QuestionnairePage";
 import { TeamPage } from "./pages/TeamPage";
 import { AcceptInvitePage } from "./pages/AcceptInvitePage";
 
@@ -32,6 +33,10 @@ export function App() {
                   element={<Navigate to="/app/assessments" replace />}
                 />
                 <Route path="/app/assessments" element={<AssessmentsPage />} />
+                <Route
+                  path="/app/assessments/:id/questionnaire"
+                  element={<QuestionnairePage />}
+                />
                 <Route path="/app/team" element={<TeamPage />} />
               </Route>
             </Route>

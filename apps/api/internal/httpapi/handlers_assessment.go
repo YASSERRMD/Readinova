@@ -329,6 +329,7 @@ func (s *Server) handleListQuestions(w http.ResponseWriter, r *http.Request) {
 		query += " AND qa.assigned_role = $2"
 		args = append(args, role)
 	}
+	query += " ORDER BY q.display_order"
 
 	rows, err := s.db.Query(r.Context(), query, args...)
 	if err != nil {
@@ -337,13 +338,19 @@ func (s *Server) handleListQuestions(w http.ResponseWriter, r *http.Request) {
 	}
 	defer rows.Close()
 
+	type rubricLevel struct {
+		Level       int    `json:"level"`
+		Label       string `json:"label"`
+		Description string `json:"description"`
+	}
 	type qrow struct {
-		ID             string  `json:"id"`
-		Slug           string  `json:"slug"`
-		Prompt         string  `json:"prompt"`
-		TargetRole     string  `json:"target_role"`
-		AssignedRole   string  `json:"assigned_role"`
-		AssignedUserID *string `json:"assigned_user_id,omitempty"`
+		ID             string        `json:"id"`
+		Slug           string        `json:"slug"`
+		Prompt         string        `json:"prompt"`
+		TargetRole     string        `json:"target_role"`
+		AssignedRole   string        `json:"assigned_role"`
+		AssignedUserID *string       `json:"assigned_user_id,omitempty"`
+		RubricLevels   []rubricLevel `json:"rubric_levels"`
 	}
 	var list []qrow
 	for rows.Next() {
@@ -351,8 +358,32 @@ func (s *Server) handleListQuestions(w http.ResponseWriter, r *http.Request) {
 		if err := rows.Scan(&q.ID, &q.Slug, &q.Prompt, &q.TargetRole, &q.AssignedRole, &q.AssignedUserID); err != nil {
 			continue
 		}
+		q.RubricLevels = []rubricLevel{}
 		list = append(list, q)
 	}
+	rows.Close()
+
+	// Fetch rubric levels for each question.
+	for i := range list {
+		rlRows, err := s.db.Query(r.Context(),
+			`SELECT level, label, description FROM rubric_levels
+			 WHERE question_id = (SELECT id FROM questions WHERE slug = $1)
+			 ORDER BY level`,
+			list[i].Slug,
+		)
+		if err != nil {
+			continue
+		}
+		for rlRows.Next() {
+			var rl rubricLevel
+			if err := rlRows.Scan(&rl.Level, &rl.Label, &rl.Description); err != nil {
+				continue
+			}
+			list[i].RubricLevels = append(list[i].RubricLevels, rl)
+		}
+		rlRows.Close()
+	}
+
 	if list == nil {
 		list = []qrow{}
 	}
