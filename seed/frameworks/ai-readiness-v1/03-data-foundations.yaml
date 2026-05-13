@@ -1,0 +1,560 @@
+slug: data_foundations
+name: Data Foundations
+description: >
+  Measures the quality, availability, integration, and management of data assets
+  required to develop, deploy, and operate AI systems reliably at scale.
+default_weight: "0.1400"
+display_order: 3
+
+sub_dimensions:
+
+  - slug: data_availability
+    name: Data Availability
+    description: Whether the data required for identified AI use cases exists and is accessible to AI teams.
+    weight_within_dimension: "0.2000"
+    display_order: 1
+    indicators:
+
+      - slug: data_inventory
+        name: Data Inventory
+        description: Whether the organisation maintains a current inventory of available data assets.
+        display_order: 1
+        questions:
+          - slug: data_inventory_exists
+            prompt: "Does the organisation maintain a current inventory of data assets that lists each dataset's owner, location, format, and refresh frequency?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MAP-3.1"]
+              eu_ai_act: ["Article 10"]
+              iso_42001: ["8.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No data inventory exists; AI teams discover datasets through word-of-mouth."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "A partial list of datasets exists in a spreadsheet but is not maintained and lacks owner, location, or format information."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A data inventory covers the majority of core business datasets, lists owner and location, and was updated within the last 12 months."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "A complete data inventory covers all systems of record, includes owner, location, format, refresh frequency, and sensitivity classification, and is updated at least quarterly."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "A data catalogue tool automatically discovers and registers datasets; the inventory is updated continuously; coverage gaps trigger automated alerts."
+                score: "100.00"
+
+      - slug: data_access_for_ai_teams
+        name: Data Access for AI Teams
+        description: Whether AI teams can access required datasets within a defined SLA.
+        display_order: 2
+        questions:
+          - slug: data_access_sla_exists
+            prompt: "Is there a documented SLA or service level defining how quickly AI teams can obtain access to a dataset they need, once the request is approved?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MAP-3.2"]
+              iso_42001: ["8.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No SLA exists; data access requests are resolved whenever convenient."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Data access is granted informally; timelines vary from days to months depending on the data owner."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A documented data access request process exists with a target turnaround time, but SLA compliance is not tracked."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "A data access process exists with a documented SLA; SLA compliance is tracked monthly and reported to the data governance body."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "SLA compliance is tracked, published, and above 90%; breaches trigger root-cause analysis; self-service data access is available for approved datasets."
+                score: "100.00"
+
+      - slug: historical_data_depth
+        name: Historical Data Depth
+        description: Whether sufficient historical data exists to train and validate AI models for planned use cases.
+        display_order: 3
+        questions:
+          - slug: historical_data_sufficient
+            prompt: "For your highest-priority AI use case, does the organisation have at least 24 months of relevant historical data in a machine-readable format?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MAP-3.1"]
+              eu_ai_act: ["Article 10"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Less than 6 months of relevant historical data exists in any usable format."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "6 to 12 months of historical data exists but is stored in inconsistent formats requiring significant transformation."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "12 to 24 months of relevant historical data exists in a machine-readable format with documented schema."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "More than 24 months of relevant historical data is available in a machine-readable format with documented schema, lineage, and a data dictionary."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "More than 36 months of relevant historical data is available, well-documented, continuously updated, and validated for completeness and consistency."
+                score: "100.00"
+
+  - slug: data_quality
+    name: Data Quality
+    description: Processes and measures in place to ensure data used in AI is accurate, complete, and consistent.
+    weight_within_dimension: "0.2500"
+    display_order: 2
+    indicators:
+
+      - slug: data_quality_measurement
+        name: Data Quality Measurement
+        description: Whether data quality is formally measured using defined dimensions and thresholds.
+        display_order: 1
+        questions:
+          - slug: data_quality_metrics_tracked
+            prompt: "Does the organisation track at least three data quality dimensions (completeness, accuracy, timeliness, consistency, uniqueness) with defined acceptable thresholds for datasets used in AI?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.2"]
+              eu_ai_act: ["Article 10"]
+              iso_42001: ["8.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Data quality is not formally measured; issues are discovered when models fail or produce incorrect outputs."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Data quality checks are run informally before specific projects but no defined dimensions, thresholds, or tracking exist."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "At least two data quality dimensions are measured for datasets used in AI, with defined acceptable thresholds documented."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "At least three data quality dimensions are tracked for all AI training datasets; scores are recorded; breaches of thresholds trigger remediation actions."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Five or more data quality dimensions are tracked automatically; scores are published; trend analysis identifies deteriorating datasets before they impact models."
+                score: "100.00"
+
+      - slug: data_quality_remediation
+        name: Data Quality Remediation
+        description: Whether identified data quality issues are tracked to resolution with defined ownership.
+        display_order: 2
+        questions:
+          - slug: dq_issues_tracked_to_closure
+            prompt: "Are data quality issues identified in AI datasets logged in a register with a named owner and target resolution date, and tracked to closure?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-2.4"]
+              eu_ai_act: ["Article 10"]
+              iso_42001: ["10.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Data quality issues are not formally tracked; they are addressed informally if noticed."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Issues are noted in project documentation but no register, owner, or resolution tracking exists."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A data quality issue register exists; issues are logged with owner and target date; some issues are tracked to resolution."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All identified data quality issues are logged, have a named owner and target date, and are tracked to closure; open issues are reviewed at each governance meeting."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "All issues are tracked to closure; resolution rate and ageing metrics are published; root-cause patterns inform preventive data engineering changes."
+                score: "100.00"
+
+      - slug: data_profiling_practice
+        name: Data Profiling Practice
+        description: Whether data profiling is performed systematically before data is used in AI model training.
+        display_order: 3
+        questions:
+          - slug: data_profiling_before_training
+            prompt: "Is a data profiling report produced and reviewed before any dataset is used for the first time in an AI model training run?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.2"]
+              eu_ai_act: ["Article 10"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No data profiling is performed before model training."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Data profiling is performed by individual data scientists at their own discretion but is not a required step."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A data profiling step is defined in the model development process; most new datasets are profiled before first use."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "A data profiling report is a mandatory artefact before any dataset is used in model training; reports are stored and linked to model documentation."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Profiling is automated and integrated into the data ingestion pipeline; profiling results are stored and compared across dataset versions to detect drift."
+                score: "100.00"
+
+  - slug: data_integration
+    name: Data Integration
+    description: Whether disparate data sources can be reliably combined and made available for AI workloads.
+    weight_within_dimension: "0.2000"
+    display_order: 3
+    indicators:
+
+      - slug: data_pipeline_reliability
+        name: Data Pipeline Reliability
+        description: Whether data pipelines that feed AI systems are monitored, tested, and meet reliability targets.
+        display_order: 1
+        questions:
+          - slug: pipeline_uptime_tracked
+            prompt: "Are the data pipelines that feed production AI systems monitored for failures, with uptime tracked against a defined target, and alerts configured for pipeline failures?"
+            target_role: ops
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.6"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Data pipeline failures are discovered when model outputs degrade; no monitoring exists."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Pipelines are checked manually when issues are suspected; no automated monitoring or alerting."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Key data pipelines have automated failure alerting; uptime is tracked informally but no formal target is set."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All production AI data pipelines have automated monitoring, defined uptime targets, and pager-style alerting; metrics are reviewed monthly."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Pipeline uptime is above 99% and tracked in an SLO dashboard; automated tests run on each pipeline execution; failures trigger automated rollback or fallback."
+                score: "100.00"
+
+      - slug: api_and_feed_standardisation
+        name: API and Feed Standardisation
+        description: Whether data feeds into AI systems use standardised interfaces rather than bespoke integrations.
+        display_order: 2
+        questions:
+          - slug: standardised_data_interfaces
+            prompt: "Are data sources consumed by AI systems accessed through standardised APIs or data contracts rather than direct database queries or one-off extracts?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MAP-3.2"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "AI systems consume data through direct database access or ad-hoc CSV exports; no standard interfaces exist."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Some data sources are accessed via APIs but most are consumed through direct queries or manual exports."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A policy exists requiring new AI data integrations to use APIs or defined data contracts; more than half of active integrations comply."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All production AI data feeds use documented APIs or data contracts; the data contract registry is maintained and reviewed at each integration change."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "All integrations use versioned, documented data contracts; contract changes trigger automated compatibility checks before deployment."
+                score: "100.00"
+
+      - slug: real_time_data_capability
+        name: Real-Time Data Capability
+        description: Whether the organisation can ingest and process streaming or near-real-time data for AI use cases that require it.
+        display_order: 3
+        questions:
+          - slug: streaming_ingestion_available
+            prompt: "Does the organisation have an operational streaming or near-real-time data ingestion capability (latency under 5 minutes) that at least one production AI system depends on?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MAP-3.2"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "All data ingestion is batch; no streaming or near-real-time capability exists."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Near-real-time ingestion exists for one system as a custom solution but is not a reusable platform capability."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A streaming ingestion platform exists and is used by at least one production AI system with documented latency targets."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "A managed streaming platform serves multiple AI systems; latency SLOs are tracked and met; the platform has an on-call support arrangement."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Streaming platform serves all AI use cases requiring sub-5-minute latency; SLOs are published; capacity planning covers the next 12 months."
+                score: "100.00"
+
+  - slug: data_lineage_and_cataloguing
+    name: Data Lineage and Cataloguing
+    description: Whether the organisation can trace the origin, movement, and transformation of data used in AI models.
+    weight_within_dimension: "0.2000"
+    display_order: 4
+    indicators:
+
+      - slug: lineage_tracking
+        name: Lineage Tracking
+        description: Whether data lineage is tracked from source through transformation to model training.
+        display_order: 1
+        questions:
+          - slug: end_to_end_lineage_documented
+            prompt: "For your production AI models, can you produce a documented lineage showing every transformation applied to the training data from its source system to the model training run?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MAP-3.1"]
+              eu_ai_act: ["Article 11"]
+              iso_42001: ["8.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No lineage documentation exists; the origin and transformation history of training data is unknown."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Lineage is documented in project notebooks informally; documentation is incomplete and not maintained after delivery."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Lineage documentation is a required artefact for each model; documents cover the main data sources and key transformations."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "End-to-end lineage is documented for all production models; documentation is stored in a system of record and linked to the model registry."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Lineage is captured automatically by pipeline tooling; documentation is version-controlled and updated on each pipeline change; lineage can be queried programmatically."
+                score: "100.00"
+
+      - slug: data_catalogue_usage
+        name: Data Catalogue Usage
+        description: Whether a data catalogue is in active use and covers AI-relevant datasets.
+        display_order: 2
+        questions:
+          - slug: data_catalogue_in_use
+            prompt: "Is a data catalogue tool (not a spreadsheet) in active use, covering at least the datasets used in production AI systems, with entries including schema, owner, sensitivity, and data quality status?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MAP-3.1"]
+              eu_ai_act: ["Article 10"]
+              iso_42001: ["8.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No data catalogue tool is in use; dataset metadata is undocumented or in spreadsheets."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "A catalogue tool has been deployed but most entries are incomplete; few AI teams use it actively."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A data catalogue is in active use; more than half of AI-relevant datasets have complete entries including schema and owner."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Catalogue covers all production AI datasets with complete schema, owner, sensitivity, and quality status fields; entries are reviewed quarterly."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Catalogue is the authoritative source for all data assets; schema discovery is automated; quality scores are refreshed automatically and visible in catalogue entries."
+                score: "100.00"
+
+      - slug: data_versioning
+        name: Data Versioning
+        description: Whether datasets used for model training are versioned so that model training can be reproduced.
+        display_order: 3
+        questions:
+          - slug: training_datasets_versioned
+            prompt: "Are datasets used for model training versioned and stored in a way that allows a specific training run to be reproduced exactly using the same dataset version?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.2"]
+              eu_ai_act: ["Article 11"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Training datasets are overwritten; previous versions are not retained and training cannot be reproduced."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Dataset snapshots are occasionally taken manually but version management is inconsistent and undocumented."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A dataset versioning practice is defined; training datasets for most production models are versioned and retained for at least 12 months."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All production model training datasets are versioned, tagged with a version identifier in the model registry, and retained for the model's operational lifetime."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Dataset versioning is automated; each training run records the exact dataset version used; any training run can be reproduced from the version record without manual steps."
+                score: "100.00"
+
+  - slug: data_pipelines
+    name: Data Pipelines and Engineering
+    description: Maturity of data engineering practices that produce reliable, tested data for AI workloads.
+    weight_within_dimension: "0.1500"
+    display_order: 5
+    indicators:
+
+      - slug: pipeline_testing
+        name: Pipeline Testing
+        description: Whether data pipelines have automated tests that run before changes are deployed.
+        display_order: 1
+        questions:
+          - slug: pipeline_tests_exist
+            prompt: "Do the data pipelines that serve production AI systems have automated tests (schema validation, row count checks, null rate checks) that run on every deployment?"
+            target_role: ops
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.6"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No automated tests exist for data pipelines; errors are detected by users or downstream systems."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Ad-hoc row count or sanity checks are run manually after deployments by engineers."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Automated tests (schema validation, row count) exist for most production pipelines and run on deployment."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All production AI pipelines have automated tests covering schema, row counts, null rates, and referential integrity; test failures block deployment."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Tests cover schema, row counts, null rates, referential integrity, and statistical distribution checks; test results are stored for trend analysis."
+                score: "100.00"
+
+      - slug: pipeline_documentation
+        name: Pipeline Documentation
+        description: Whether data pipelines are documented with sufficient detail for independent maintenance.
+        display_order: 2
+        questions:
+          - slug: pipelines_documented
+            prompt: "Is each production AI data pipeline documented with its purpose, data sources, transformation logic, schedule, and contact for escalation, in a location accessible to the on-call team?"
+            target_role: ops
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.2"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Pipelines are undocumented; only the original author knows how they work."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Some pipelines have README files but coverage is inconsistent and documentation goes stale after changes."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A documentation standard exists; most production pipelines have documentation covering purpose, sources, and schedule."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All production pipelines are documented with purpose, sources, transformation logic, schedule, and escalation contact; documentation is updated with each change."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Documentation is stored in a searchable system of record, linked from the on-call runbook, and reviewed for accuracy at least annually."
+                score: "100.00"
+
+      - slug: data_contract_enforcement
+        name: Data Contract Enforcement
+        description: Whether breaking changes to upstream data are detected and communicated before they impact AI models.
+        display_order: 3
+        questions:
+          - slug: schema_change_notifications
+            prompt: "Is there a mechanism that automatically detects schema or semantic changes to upstream data sources and notifies the AI team before those changes reach production models?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.6"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Breaking upstream changes reach production models without warning; issues are discovered through model errors."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Upstream teams notify downstream teams informally of major changes; minor changes often go unannounced."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A change notification process requires upstream teams to notify AI teams of schema changes with at least one sprint of lead time."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Automated schema validation runs against data contracts on each pipeline execution; mismatches alert the AI team before data reaches the model."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Automated contract enforcement blocks pipeline execution on contract violation; violations are logged and reviewed; repeated violations trigger supplier management actions."
+                score: "100.00"

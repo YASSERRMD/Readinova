@@ -1,0 +1,450 @@
+slug: technical_infrastructure
+name: Technical Infrastructure
+description: >
+  Measures the maturity of the compute, storage, MLOps, and observability infrastructure
+  required to develop, deploy, and operate AI systems reliably in production.
+default_weight: "0.0800"
+display_order: 5
+
+sub_dimensions:
+
+  - slug: compute_and_storage
+    name: Compute and Storage
+    description: Whether the organisation has sufficient, scalable compute and storage resources for AI workloads.
+    weight_within_dimension: "0.2500"
+    display_order: 1
+    indicators:
+
+      - slug: gpu_or_accelerator_access
+        name: GPU or Accelerator Access
+        description: Whether GPU or other AI accelerator resources are available on demand for model training.
+        display_order: 1
+        questions:
+          - slug: accelerated_compute_available
+            prompt: "Can an AI engineer provision GPU or equivalent accelerated compute for a model training job within one business day without requiring a manual procurement request?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MAP-3.2"]
+              iso_42001: ["7.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No GPU or accelerated compute is available; AI training relies on CPU only."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "GPU access exists but requires a manual procurement or approval process taking more than one business day."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "GPU access is available via a cloud or on-premises resource pool; provisioning takes less than one business day but is not self-service."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Self-service GPU provisioning is available via a platform tool; an AI engineer can provision resources within one business day; quota limits are documented."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Self-service provisioning completes in under 30 minutes; capacity planning covers the next 12 months; cost per training run is tracked against model performance."
+                score: "100.00"
+
+      - slug: storage_for_ai_artefacts
+        name: Storage for AI Artefacts
+        description: Whether the organisation has designated, managed storage for AI datasets, models, and experiment artefacts.
+        display_order: 2
+        questions:
+          - slug: designated_ai_artefact_storage
+            prompt: "Does the organisation have designated, managed object or blob storage for AI artefacts (datasets, models, experiment outputs) with retention policies and access controls configured?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-1.1"]
+              eu_ai_act: ["Article 12"]
+              iso_42001: ["7.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "AI artefacts are stored on individual engineer workstations or shared drives without retention policies or access controls."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "A shared storage location exists but has no configured retention policy, access controls, or naming conventions."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Designated object storage for AI artefacts exists with documented naming conventions and access controls."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Designated storage has configured retention policies, access controls, versioning, and capacity monitoring; policies are reviewed annually."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Artefact storage is tiered by access frequency, lifecycle policies are automated, costs are tracked by project, and storage health is in the on-call monitoring stack."
+                score: "100.00"
+
+      - slug: environment_parity
+        name: Environment Parity
+        description: Whether development, staging, and production AI environments are consistent enough to prevent environment-specific failures.
+        display_order: 3
+        questions:
+          - slug: dev_staging_prod_parity
+            prompt: "Are the AI development, staging, and production environments managed using the same infrastructure-as-code definitions, ensuring that a model validated in staging will behave identically in production?"
+            target_role: ops
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-1.1"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Development and production environments are configured manually and are known to differ significantly."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Environments are similar in intent but are configured manually; differences exist and are discovered during deployments."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Infrastructure-as-code defines production and staging environments; development may still differ; known differences are documented."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All three environments (dev, staging, prod) are defined using the same IaC templates; differences are tracked in a delta register and reviewed before each release."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "All environments are identical by definition via IaC; automated drift detection runs continuously and alerts on any divergence."
+                score: "100.00"
+
+  - slug: mlops_platform
+    name: MLOps Platform
+    description: Whether the organisation has a managed MLOps platform covering the model lifecycle from training to deployment.
+    weight_within_dimension: "0.2500"
+    display_order: 2
+    indicators:
+
+      - slug: model_registry
+        name: Model Registry
+        description: Whether a centralised model registry stores all model versions with metadata.
+        display_order: 1
+        questions:
+          - slug: model_registry_in_use
+            prompt: "Does the organisation use a model registry that records every production model version with its training dataset version, evaluation metrics, and deployment history?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-1.1"]
+              eu_ai_act: ["Article 11"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No model registry exists; model files are stored in ad-hoc locations without metadata."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Model files are stored in a shared folder with version numbers in filenames but no metadata or deployment history."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A model registry tool is in use; models are registered with evaluation metrics and the training dataset identifier."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All production models are registered with dataset version, evaluation metrics, training parameters, and deployment history; the registry is the single source of truth for production models."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Registry records full lineage including dataset version, code version, training parameters, and deployment history; queries are available via API; all stakeholders can audit the registry."
+                score: "100.00"
+
+      - slug: automated_training_pipelines
+        name: Automated Training Pipelines
+        description: Whether model training can be triggered and run via automated pipelines rather than manual steps.
+        display_order: 2
+        questions:
+          - slug: training_pipeline_automated
+            prompt: "Can a production model be retrained by triggering an automated pipeline (not by an engineer running scripts manually), with the result automatically registered in the model registry?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-1.1"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Model retraining requires engineers to run scripts manually with no pipeline automation."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Some retraining steps are scripted but the full pipeline is not automated and requires manual intervention."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "An automated training pipeline exists for at least one production model; results are manually checked before registration."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Automated training pipelines exist for all production models; outputs are automatically registered in the model registry after passing defined quality gates."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "All retraining is automated; pipelines are triggered by data drift or a schedule; promotion to production requires only quality gate approval; pipeline execution is logged and auditable."
+                score: "100.00"
+
+      - slug: deployment_automation
+        name: Deployment Automation
+        description: Whether model deployment to production is automated and follows a defined promotion process.
+        display_order: 3
+        questions:
+          - slug: model_deployment_automated
+            prompt: "Is model deployment to production automated through a CI/CD pipeline that requires a defined approval gate (human or automated) before the model serves live traffic?"
+            target_role: ops
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-1.1"]
+              eu_ai_act: ["Article 9"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Model deployment is done manually by engineers uploading files to production servers."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "A deployment script exists but is run manually and does not include an approval gate."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A deployment pipeline exists that includes a manual approval gate before production promotion."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Deployment is fully automated via CI/CD; a required approval gate (human or automated quality check) is enforced before production promotion; deployments are logged."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Deployment pipeline includes automated testing, approval gates, canary or blue-green promotion, and automatic rollback on performance degradation; all promotions are auditable."
+                score: "100.00"
+
+  - slug: devops_maturity
+    name: DevOps and Engineering Maturity
+    description: Whether software engineering and DevOps practices are applied consistently to AI system development.
+    weight_within_dimension: "0.2500"
+    display_order: 3
+    indicators:
+
+      - slug: version_control_for_ai_code
+        name: Version Control for AI Code
+        description: Whether all AI model code, configuration, and infrastructure definitions are under version control.
+        display_order: 1
+        questions:
+          - slug: ai_code_in_version_control
+            prompt: "Is 100% of AI model code, training scripts, feature engineering code, and infrastructure-as-code for AI systems stored in a version-controlled repository with branch protection on the main branch?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-1.1"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "AI code is on individual laptops or shared drives; no version control is used."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Some AI code is in version control but some critical scripts or configurations are stored outside of it."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "All AI model code is in version control; some infrastructure configuration and scripts may still be outside."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All AI code, infrastructure-as-code, and configuration are in version control with branch protection on the main branch."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "All code, config, and IaC are version-controlled; secrets are never committed (enforced by pre-commit hooks); signed commits are required in production repos."
+                score: "100.00"
+
+      - slug: code_review_practice
+        name: Code Review Practice
+        description: Whether AI code changes are reviewed by at least one other engineer before merging.
+        display_order: 2
+        questions:
+          - slug: code_review_enforced_for_ai
+            prompt: "Is a peer code review by at least one engineer (other than the author) required and technically enforced before any AI model or pipeline code change is merged to the main branch?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.2"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "AI code is committed directly to the main branch by individual engineers without review."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Code reviews happen informally when the author requests one; they are not required or enforced."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A code review policy requires review before merge; it is not technically enforced but is followed for most changes."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Peer review is technically enforced by branch protection rules; the main branch cannot be merged without at least one approving review."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Peer review is enforced; reviews cover model cards, data usage, and bias considerations in addition to code correctness; review quality is periodically audited."
+                score: "100.00"
+
+      - slug: automated_testing_for_ai
+        name: Automated Testing for AI Code
+        description: Whether automated tests exist for AI model code and data processing logic.
+        display_order: 3
+        questions:
+          - slug: automated_tests_for_ai_code
+            prompt: "Do data processing functions and model evaluation utilities in the AI codebase have automated unit or integration tests that run in CI on every pull request?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.2"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No automated tests exist for AI code."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Some unit tests exist but do not run automatically in CI; coverage is low and inconsistent."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Automated tests run in CI on every pull request; critical data processing functions have test coverage."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Unit and integration tests run in CI; test coverage is measured and must meet a defined threshold (e.g., 70%) before merge; test results are tracked over time."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Coverage threshold is enforced in CI; tests include data validation, feature engineering, and model evaluation utilities; flaky tests are tracked and removed."
+                score: "100.00"
+
+  - slug: observability
+    name: Observability
+    description: Whether production AI systems have sufficient monitoring, logging, and alerting to detect and diagnose issues.
+    weight_within_dimension: "0.2500"
+    display_order: 4
+    indicators:
+
+      - slug: model_performance_monitoring
+        name: Model Performance Monitoring
+        description: Whether production model performance metrics are monitored and trigger alerts when they degrade.
+        display_order: 1
+        questions:
+          - slug: model_kpis_monitored_with_alerts
+            prompt: "Are production AI models monitored for at least one performance KPI (accuracy, precision, recall, or business metric) with automated alerts configured to fire when the metric drops below a defined threshold?"
+            target_role: ops
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.6"]
+              eu_ai_act: ["Article 9"]
+              iso_42001: ["9.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Production model performance is not monitored; degradation is discovered by users or through business complaints."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Model performance is checked manually on an ad-hoc basis; no automated monitoring or alerting exists."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "At least one performance metric is monitored automatically for production models; an alert fires when the threshold is breached."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Multiple performance metrics are monitored for all production models; alerts are configured, tested, and linked to an incident response process."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Performance metrics and data drift metrics are monitored; SLOs are defined and tracked; alert thresholds are reviewed quarterly against operational data."
+                score: "100.00"
+
+      - slug: data_drift_detection
+        name: Data Drift Detection
+        description: Whether changes in the statistical properties of input data to production AI models are detected automatically.
+        display_order: 2
+        questions:
+          - slug: input_drift_monitored
+            prompt: "Is statistical drift in the input feature distribution of production AI models monitored automatically, with an alert triggered when drift exceeds a defined threshold?"
+            target_role: ops
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.6"]
+              eu_ai_act: ["Article 9"]
+              iso_42001: ["9.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No input drift monitoring exists; model degradation from distribution shift is discovered only after impacting users."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Engineers periodically compare input distributions manually but no automated monitoring exists."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "At least one production model has automated drift monitoring for its primary input features."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All production models have automated input drift monitoring; alerts trigger investigation and potential retraining; drift events are logged."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Drift monitoring covers all features; alerts trigger automated retraining pipelines; drift trend reports are reviewed monthly and feed retraining schedules."
+                score: "100.00"
+
+      - slug: inference_latency_monitoring
+        name: Inference Latency Monitoring
+        description: Whether the latency and throughput of AI model serving endpoints are monitored against defined SLOs.
+        display_order: 3
+        questions:
+          - slug: serving_latency_slo_tracked
+            prompt: "Is the p95 inference latency of production AI serving endpoints monitored against a defined SLO, with an alert triggered when the SLO is breached?"
+            target_role: ops
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.6"]
+              iso_42001: ["9.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Inference latency is not monitored; endpoint slowness is reported by users."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Latency can be checked manually in infrastructure dashboards but no SLO or alert is configured."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A latency SLO is defined for production endpoints; automated monitoring tracks p95 latency against the SLO."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "p95 latency and throughput are monitored for all production endpoints; SLO breaches alert the on-call team; SLO compliance is reported monthly."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "SLOs cover latency, throughput, and error rate; compliance is published; SLO budgets are tracked; alerts page the on-call team within 5 minutes of breach."
+                score: "100.00"

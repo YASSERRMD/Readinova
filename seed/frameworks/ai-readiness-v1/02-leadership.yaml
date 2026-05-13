@@ -1,0 +1,448 @@
+slug: leadership_and_executive_sponsorship
+name: Leadership and Executive Sponsorship
+description: >
+  Measures the depth and consistency of C-suite and senior leadership commitment to AI,
+  including governance structures, resource allocation decisions, and cross-functional alignment.
+default_weight: "0.0800"
+display_order: 2
+
+sub_dimensions:
+
+  - slug: executive_sponsorship
+    name: Executive Sponsorship
+    description: Visibility and accountability of C-suite sponsors for AI initiatives.
+    weight_within_dimension: "0.2500"
+    display_order: 1
+    indicators:
+
+      - slug: named_executive_sponsor
+        name: Named Executive Sponsor
+        description: Whether a C-suite executive is formally accountable for the AI programme.
+        display_order: 1
+        questions:
+          - slug: ceo_or_c_suite_sponsor_exists
+            prompt: "Is there a named C-suite executive (CEO, COO, CDO, or equivalent) who is formally accountable for the organisational AI programme, with this role documented in writing?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              iso_42001: ["5.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No C-suite executive has accountability for AI; the programme is owned entirely within IT."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "A C-suite executive informally champions AI but has no documented accountability or formal role description."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A named C-suite executive is formally designated as AI sponsor in writing, with the role appearing in the AI governance documentation."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "The AI sponsor role has a documented terms of reference, the sponsor chairs or co-chairs the AI governance body, and the role is reviewed annually."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "The AI sponsor role has documented terms of reference, the sponsor is evaluated on AI outcomes in their performance review, and a succession plan exists for the role."
+                score: "100.00"
+
+      - slug: sponsor_engagement_frequency
+        name: Sponsor Engagement Frequency
+        description: How regularly the executive sponsor is actively engaged with the AI programme.
+        display_order: 2
+        questions:
+          - slug: sponsor_engaged_regularly
+            prompt: "Has the named AI executive sponsor attended an AI programme review meeting, made a visible public commitment to AI (internal or external), or made a significant resource decision for AI in the last 90 days?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              iso_42001: ["5.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "The executive sponsor has had no visible engagement with the AI programme in the last 90 days."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Sponsor engagement occurs when escalations arise but not on a regular cadence."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Sponsor attends a programme review at least quarterly and has made at least one public commitment to AI in the last 12 months."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Sponsor attends monthly AI governance meetings, is visible internally as an AI advocate, and has made at least one resource decision for AI in the last quarter."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Sponsor engagement is documented; attendance records exist for governance meetings; sponsor has made measurable resource decisions for AI in the last quarter with outcomes tracked."
+                score: "100.00"
+
+      - slug: sponsor_decision_authority
+        name: Sponsor Decision Authority
+        description: Whether the executive sponsor has actual authority to approve AI investments and unblock initiatives.
+        display_order: 3
+        questions:
+          - slug: sponsor_can_approve_budget
+            prompt: "Can the executive AI sponsor approve a new AI initiative budget up to a defined threshold without requiring a separate committee approval process?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.2"]
+              iso_42001: ["5.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "The sponsor has no budget authority; all AI spending requires a separate approval committee."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "The sponsor can approve small expenses but must escalate AI investment decisions of any significance."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A documented delegation of authority exists specifying the threshold up to which the sponsor can approve AI investments."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "The sponsor has delegated authority with a documented threshold, and can also fast-track approvals above the threshold through a defined expedited process."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "The sponsor has tiered delegated authority, thresholds are reviewed annually, and the sponsor's exercise of this authority is logged and auditable."
+                score: "100.00"
+
+  - slug: ai_governance_structure
+    name: AI Governance Structure
+    description: Maturity of the formal governance bodies and accountabilities for AI decisions.
+    weight_within_dimension: "0.2500"
+    display_order: 2
+    indicators:
+
+      - slug: governance_body_existence
+        name: Governance Body Existence
+        description: Whether a formal AI governance committee or board exists with documented membership and mandate.
+        display_order: 1
+        questions:
+          - slug: ai_committee_established
+            prompt: "Does the organisation have a standing AI governance committee or board with documented membership, terms of reference, and a regular meeting schedule?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              eu_ai_act: ["Article 26"]
+              iso_42001: ["5.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No AI governance body exists; AI decisions are made by individuals on an ad-hoc basis."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "An AI steering group meets irregularly with no documented membership or mandate."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A standing AI governance committee exists with documented membership, a terms of reference, and meets at least quarterly."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "The governance committee has documented membership, a terms of reference, meets monthly, produces written minutes, and includes cross-functional representation (business, IT, risk, legal)."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "The governance body meets monthly, produces written minutes, tracks decisions to closure, and its effectiveness is reviewed annually with findings acted upon."
+                score: "100.00"
+
+      - slug: roles_and_responsibilities
+        name: Roles and Responsibilities
+        description: Whether AI-specific roles and responsibilities are documented and filled.
+        display_order: 2
+        questions:
+          - slug: raci_for_ai_decisions
+            prompt: "Does the organisation have a documented RACI or equivalent that assigns responsibility for AI deployment approvals, model monitoring, and incident response?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.2"]
+              iso_42001: ["5.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No RACI or role assignment document exists for AI decisions."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Roles are understood informally but not documented; gaps are covered by whoever is available."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A RACI document exists covering at least AI deployment approvals and incident response, and is accessible to relevant staff."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "A RACI covers deployment approvals, model monitoring, incident response, and data governance; all named roles are filled; the document is reviewed at least annually."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "RACI is reviewed annually, vacancies are tracked and filled within a defined SLA, and coverage gaps identified during incidents trigger RACI updates."
+                score: "100.00"
+
+      - slug: escalation_pathways
+        name: Escalation Pathways
+        description: Whether clear escalation pathways exist for AI risk or ethical concerns.
+        display_order: 3
+        questions:
+          - slug: escalation_path_documented
+            prompt: "Is there a documented escalation path that any employee can follow to raise an AI risk or ethical concern, with a defined response SLA?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.3"]
+              eu_ai_act: ["Article 9"]
+              iso_42001: ["6.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No escalation path exists; employees have no formal channel for AI concerns."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Employees can raise concerns verbally to their manager but no formal channel or documented process exists."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A documented escalation path exists and is communicated to staff; it routes concerns to a named AI risk contact."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "A documented escalation path exists with a defined response SLA; concerns are tracked in a register; outcomes are reported to the governance body."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Escalation path is documented, SLAs are tracked and published, and escalation volume and outcomes are reviewed quarterly to identify systemic issues."
+                score: "100.00"
+
+  - slug: resource_commitment
+    name: Resource Commitment
+    description: Whether leadership translates AI intent into concrete resource allocation decisions.
+    weight_within_dimension: "0.2500"
+    display_order: 3
+    indicators:
+
+      - slug: dedicated_ai_headcount
+        name: Dedicated AI Headcount
+        description: Whether the organisation has dedicated staff for AI, separate from general IT operations.
+        display_order: 1
+        questions:
+          - slug: dedicated_ai_team_exists
+            prompt: "Does the organisation have at least one full-time employee whose primary job responsibility is AI or machine learning, and whose role title reflects this?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              iso_42001: ["7.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No full-time employee is dedicated to AI; all AI work is done on a part-time or project basis."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "One or two staff dedicate most of their time to AI but their job titles do not reflect this and they have other primary responsibilities."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "At least one full-time employee has an AI or ML role title and AI as their primary job responsibility."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "A dedicated AI team of three or more full-time employees exists, with a named team lead and defined scope of work."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "A dedicated AI team exists with headcount planned against the roadmap, skills mix documented, and a workforce plan covering the next 18 months."
+                score: "100.00"
+
+      - slug: tooling_investment
+        name: Tooling Investment
+        description: Whether the organisation has invested in dedicated AI development or management tooling.
+        display_order: 2
+        questions:
+          - slug: ai_tooling_licensed_and_used
+            prompt: "Has the organisation made a funded procurement decision for AI-specific tooling (MLOps platform, data labelling tool, model registry, or equivalent) in the last 24 months?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-1.1"]
+              iso_42001: ["7.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No dedicated AI tooling has been procured; teams use general-purpose tools only."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Free-tier or trial AI tools are used but no funded procurement decision for dedicated AI tooling has been made."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "At least one dedicated AI tool has been procured with a funded licence in the last 24 months and is in active use."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "AI tooling stack covers at least model development, experiment tracking, and deployment; all tools are on funded licences and usage is tracked."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Full MLOps tooling stack is funded and in production use; tooling choices are reviewed annually against the roadmap; total cost of ownership is tracked."
+                score: "100.00"
+
+      - slug: external_expertise
+        name: External Expertise
+        description: Whether the organisation supplements internal capability with external AI expertise when needed.
+        display_order: 3
+        questions:
+          - slug: external_ai_expertise_accessed
+            prompt: "Has the organisation engaged an external AI specialist (consultant, academic partner, vendor professional services) in the last 12 months for a defined, scoped engagement?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.2"]
+              iso_42001: ["7.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No external AI expertise has been accessed in the last 24 months."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "External expertise is accessed informally through personal networks but without a scoped engagement or documented outcomes."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "At least one formal external engagement (contract or MOU) has been completed in the last 12 months with a defined scope and documented deliverables."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "External expertise is accessed through a managed process; engagements are scoped, knowledge transfer is required, and outputs are documented and retained."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "A panel of approved external AI partners exists; all engagements include knowledge transfer requirements; learnings are incorporated into internal capability plans."
+                score: "100.00"
+
+  - slug: cross_functional_alignment
+    name: Cross-Functional Alignment
+    description: Whether AI initiatives have consistent support and collaboration across business, IT, legal, risk, and operations.
+    weight_within_dimension: "0.2500"
+    display_order: 4
+    indicators:
+
+      - slug: business_it_partnership
+        name: Business-IT Partnership
+        description: Whether business units and IT co-own AI initiatives rather than IT delivering to business requirements.
+        display_order: 1
+        questions:
+          - slug: ai_co_ownership_model
+            prompt: "Are AI initiatives formally co-owned by a business unit lead and an IT or data lead, both named in project documentation, with joint accountability for outcomes?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.2"]
+              iso_42001: ["5.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "AI initiatives are owned entirely by IT; business units are treated as requirements providers only."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Business units participate in AI projects but are not formally co-owners; accountability for outcomes sits with IT."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A co-ownership model is defined in the project methodology; most active AI initiatives have both a business lead and IT lead named in project documents."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All active AI initiatives have a named business lead and IT lead with documented joint accountability for delivery and outcomes."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Co-ownership is mandatory for all AI initiatives above a defined threshold; the co-ownership model is evaluated in post-implementation reviews and refined."
+                score: "100.00"
+
+      - slug: legal_and_risk_involvement
+        name: Legal and Risk Involvement
+        description: Whether legal and risk functions are involved in AI initiatives before deployment.
+        display_order: 2
+        questions:
+          - slug: legal_risk_review_required
+            prompt: "Is a documented review by legal and risk functions required before any AI system that makes or recommends decisions affecting customers or employees is deployed?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.3"]
+              eu_ai_act: ["Article 9"]
+              iso_42001: ["6.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Legal and risk functions are not involved in AI deployments."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Legal or risk are consulted informally for some initiatives but no formal review requirement exists."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A documented requirement exists for legal and risk review before deployment; the requirement is applied to high-risk use cases but not consistently to all."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All AI systems that affect customers or employees require documented sign-off from both legal and risk before deployment; records are retained."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Legal and risk involvement is embedded in the deployment pipeline; sign-off is tracked in a system of record; recurring issues inform process improvements."
+                score: "100.00"
+
+      - slug: change_management_inclusion
+        name: Change Management Inclusion
+        description: Whether change management and communications functions are engaged in AI rollouts.
+        display_order: 3
+        questions:
+          - slug: change_management_plan_required
+            prompt: "Is a change management plan required for AI deployments that affect the day-to-day work of more than 20 employees, and is this plan reviewed before go-live?"
+            target_role: ops
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-1.3"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Change management is not considered for AI deployments."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Change management activities happen informally at the discretion of the project team."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A change management plan template exists and is recommended for AI deployments; some projects use it."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "A change management plan is required for AI deployments affecting more than 20 employees; plans are reviewed by a change manager before go-live."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Change management plans are mandatory above the defined threshold, reviewed before go-live, and evaluated post-deployment; learnings update the template."
+                score: "100.00"

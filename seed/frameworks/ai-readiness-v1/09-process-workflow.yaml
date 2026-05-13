@@ -1,0 +1,452 @@
+slug: process_and_workflow_readiness
+name: Process and Workflow Readiness
+description: >
+  Measures whether the organisation's operational processes and workflows are documented,
+  understood, and ready to integrate AI systems, including feedback mechanisms to
+  continuously improve AI-augmented processes.
+default_weight: "0.0800"
+display_order: 9
+
+sub_dimensions:
+
+  - slug: process_documentation
+    name: Process Documentation
+    description: Whether business processes that AI systems will augment or automate are documented with sufficient detail.
+    weight_within_dimension: "0.2500"
+    display_order: 1
+    indicators:
+
+      - slug: target_process_mapped
+        name: Target Process Mapped
+        description: Whether the process to be augmented by each AI initiative is documented before development starts.
+        display_order: 1
+        questions:
+          - slug: current_state_process_documented
+            prompt: "For each AI initiative in the current roadmap, has the current-state process (pre-AI) been documented in a process map or equivalent before AI development begins?"
+            target_role: ops
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MAP-1.1"]
+              iso_42001: ["8.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "AI is built without a documented understanding of the current process it is intended to improve."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Processes are understood informally by the AI team but not documented before development."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A current-state process map is produced for most AI initiatives before development begins; maps include steps, decision points, and key roles."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Current-state process documentation is a required artefact before AI development starts for all initiatives; maps are reviewed by process owners."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Process maps are mandatory, reviewed by process owners and reviewed again after deployment to produce a verified future-state map; both versions are retained."
+                score: "100.00"
+
+      - slug: exception_handling_documented
+        name: Exception Handling Documented
+        description: Whether the exception cases not handled by AI are documented and a human fallback process exists.
+        display_order: 2
+        questions:
+          - slug: human_fallback_for_exceptions
+            prompt: "For each production AI system that makes or recommends decisions, is there a documented procedure defining which cases will not be handled by the AI and describing the human fallback process?"
+            target_role: ops
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-1.3"]
+              eu_ai_act: ["Article 14"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No exception handling documentation exists; all cases are routed to the AI regardless of appropriateness."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Exceptions are handled by whoever is available; no documented procedure exists."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Exception categories are defined for most production AI systems; a human fallback procedure is documented."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All production AI decision systems have documented exception categories and human fallback procedures; procedures are tested at least annually."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Exception procedures are documented, tested annually, and exception rates are monitored; unusual spikes in exceptions trigger AI review."
+                score: "100.00"
+
+      - slug: sop_update_process
+        name: SOP Update Process
+        description: Whether standard operating procedures are formally updated when AI changes a workflow.
+        display_order: 3
+        questions:
+          - slug: sops_updated_after_ai_deployment
+            prompt: "Is there a documented process requiring that standard operating procedures (SOPs) for affected teams are updated within 30 days of an AI system going live?"
+            target_role: ops
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-1.3"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "SOPs are not updated when AI is deployed; existing procedures remain unchanged even when workflows change significantly."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "SOP updates are discussed after deployment but happen months later or not at all."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A requirement to update SOPs after AI deployment is documented; most qualifying deployments result in updated SOPs within 60 days."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "SOP update within 30 days is required for all AI deployments that change a workflow; compliance is tracked; outstanding updates are reviewed at governance meetings."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "SOP update compliance is tracked, above 95%, and audited annually; SOP versions are linked to the AI deployment record for traceability."
+                score: "100.00"
+
+  - slug: ai_workflow_integration
+    name: AI Workflow Integration
+    description: Whether AI systems are integrated into operational workflows in a way that preserves appropriate human oversight.
+    weight_within_dimension: "0.2500"
+    display_order: 2
+    indicators:
+
+      - slug: human_in_the_loop_design
+        name: Human-in-the-Loop Design
+        description: Whether AI decision systems are designed with appropriate human review steps for high-risk outputs.
+        display_order: 1
+        questions:
+          - slug: human_review_designed_for_high_risk
+            prompt: "For AI systems that make or recommend decisions with material impact on individuals (credit, hiring, medical, safety), is a mandatory human review step designed into the workflow for all outputs above a defined risk threshold?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-1.3"]
+              eu_ai_act: ["Article 14"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "AI outputs are acted upon automatically with no human review step for any decision."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Human review happens informally for some AI outputs based on individual employee judgment."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Human review steps are designed into workflows for high-risk AI outputs; thresholds for what constitutes high-risk are documented."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Human review is mandatory and technically enforced for all high-risk AI outputs above defined thresholds; review decisions are logged."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Human review is mandatory, logged, and audited; review override rates are tracked; high override rates trigger model review; review quality is assessed."
+                score: "100.00"
+
+      - slug: ai_output_explainability_in_workflow
+        name: AI Output Explainability in Workflow
+        description: Whether staff who act on AI outputs can access an explanation of how the recommendation was generated.
+        display_order: 2
+        questions:
+          - slug: explanations_accessible_to_operators
+            prompt: "Can employees who act on AI recommendations access a plain-language explanation of the key factors that influenced each recommendation, within the same interface they use to review it?"
+            target_role: ops
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.9"]
+              eu_ai_act: ["Article 13"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "AI outputs are presented with no explanation; staff cannot determine why a recommendation was made."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Technical staff can query the model for explanations but operational staff cannot access them without specialist help."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A documented process allows operational staff to request an explanation within one business day."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Plain-language explanations for the top influencing factors are displayed alongside AI recommendations in the operational interface."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Explanations are available in real time in the operational interface; explanation quality is assessed in user testing annually; staff can flag unexplained outputs for review."
+                score: "100.00"
+
+      - slug: workflow_performance_measurement
+        name: Workflow Performance Measurement
+        description: Whether the business process performance is measured before and after AI integration.
+        display_order: 3
+        questions:
+          - slug: pre_post_process_metrics_compared
+            prompt: "Has the organisation measured at least one process performance metric (cycle time, error rate, cost) before and after AI integration for each production AI deployment, and documented the comparison?"
+            target_role: ops
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.5"]
+              iso_42001: ["9.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No process performance metrics are measured before or after AI deployment."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Post-deployment metrics are collected but pre-deployment baselines were not recorded, making comparison impossible."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A pre-deployment baseline metric is recorded for most AI deployments; post-deployment measurement is done informally."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Pre-deployment baselines and post-deployment metrics are recorded for all AI deployments; results are documented and shared with the business sponsor."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Metrics are tracked continuously post-deployment; trends are reviewed quarterly; deteriorating metrics trigger AI model or process review."
+                score: "100.00"
+
+  - slug: decision_automation_readiness
+    name: Decision Automation Readiness
+    description: Whether the organisation has assessed which decisions are appropriate for automation and has governance for automated decisions.
+    weight_within_dimension: "0.2500"
+    display_order: 3
+    indicators:
+
+      - slug: decision_automation_framework
+        name: Decision Automation Framework
+        description: Whether a framework exists to classify decisions by their suitability for full or partial automation.
+        display_order: 1
+        questions:
+          - slug: automation_suitability_framework_exists
+            prompt: "Does the organisation have a documented framework that classifies business decisions by their suitability for full automation, human-assisted automation, or human-only decision making?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MAP-1.5"]
+              eu_ai_act: ["Article 14"]
+              iso_42001: ["8.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No framework for classifying decision automation suitability exists."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Automation suitability is assessed case-by-case with no common framework or criteria."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A documented framework for automation suitability classification exists and has been applied to at least the current pipeline of AI initiatives."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "The framework is used for all new AI decision use cases; outcomes (full, assisted, or human-only) are recorded and reviewed by the risk function."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Framework is used consistently, reviewed annually against regulatory changes, and automation suitability decisions are auditable; reclassification is triggered by regulatory or incident events."
+                score: "100.00"
+
+      - slug: automated_decision_audit_trail
+        name: Automated Decision Audit Trail
+        description: Whether every automated decision made by an AI system is logged with sufficient detail for audit.
+        display_order: 2
+        questions:
+          - slug: automated_decisions_logged
+            prompt: "Does every automated decision made by a production AI system generate a log record that includes the input data used, the model version, the output, and a timestamp, retained for at least the legally required period?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.7"]
+              eu_ai_act: ["Article 12"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Automated decisions are not logged; there is no audit trail."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Some decisions are logged but not consistently; logs do not include all required fields."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Decision logs exist for most production AI systems; logs include output and timestamp; input data and model version may be missing."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All production AI decision logs include input data, model version, output, and timestamp; retention periods meet legal requirements; logs are auditable."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Logs meet all requirements; retention is automated; logs are queryable by audit teams; integrity of logs is verified cryptographically or by equivalent means."
+                score: "100.00"
+
+      - slug: right_to_explanation_process
+        name: Right to Explanation Process
+        description: Whether a process exists to provide individuals affected by automated AI decisions with an explanation.
+        display_order: 3
+        questions:
+          - slug: subject_explanation_process_exists
+            prompt: "Is there a documented process for providing an individual who was subject to an automated AI decision with an explanation of that decision, within the legally required timeframe?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.9"]
+              eu_ai_act: ["Article 13"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No process exists to provide individuals with explanations of automated decisions."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Explanation requests are handled on a case-by-case basis by whoever is available, with no defined process or timeframe."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A documented explanation process exists; most requests are fulfilled within the legal timeframe."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "A documented process exists with a defined timeframe; compliance with the timeframe is tracked; all requests are fulfilled within it."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Process is documented, timeframe compliance is above 98%, tracked and reported to governance; test requests are run quarterly to verify process integrity."
+                score: "100.00"
+
+  - slug: feedback_and_iteration
+    name: Feedback and Iteration
+    description: Whether structured feedback loops exist to continuously improve AI systems based on operational experience.
+    weight_within_dimension: "0.2500"
+    display_order: 4
+    indicators:
+
+      - slug: user_feedback_collection
+        name: User Feedback Collection
+        description: Whether operational users of AI systems have a structured channel to provide feedback on AI outputs.
+        display_order: 1
+        questions:
+          - slug: user_feedback_channel_in_ai_interface
+            prompt: "Do operational staff who interact with AI outputs have a feedback mechanism built into the interface (thumbs up/down, correction field, or flag button) that routes feedback to the AI team?"
+            target_role: ops
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.6"]
+              iso_42001: ["9.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No user feedback mechanism exists; the AI team has no direct channel for operational feedback."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Users can raise feedback via email or Slack informally; there is no structured in-interface mechanism."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A feedback form or in-interface mechanism exists for at least one production AI system; feedback is routed to the AI team."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "An in-interface feedback mechanism exists for all production AI systems that operational staff interact with; feedback is logged, reviewed monthly, and acted upon."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Feedback mechanisms exist for all systems; feedback volume and themes are reported monthly; feedback trends drive the model improvement backlog."
+                score: "100.00"
+
+      - slug: feedback_action_rate
+        name: Feedback Action Rate
+        description: Whether feedback from users results in measurable improvements to AI systems.
+        display_order: 2
+        questions:
+          - slug: user_feedback_results_in_improvements
+            prompt: "In the last 12 months, has at least 25% of user feedback categorised as actionable resulted in a documented change to an AI model, pipeline, or interface?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-4.1"]
+              iso_42001: ["10.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No feedback has been acted upon; the AI team has no record of feedback-driven changes."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Some feedback has been acted upon but there is no tracking of the rate of action."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Feedback is categorised as actionable or non-actionable; some actionable feedback leads to changes but no target rate is set."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "At least 25% of actionable feedback results in a documented change within 90 days; action rate is tracked and reported quarterly."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Action rate exceeds 40%; all acted-upon changes are linked back to the feedback that triggered them; users are informed when their feedback led to a change."
+                score: "100.00"
+
+      - slug: continuous_improvement_cadence
+        name: Continuous Improvement Cadence
+        description: Whether AI systems are regularly reviewed for improvement opportunities on a defined schedule.
+        display_order: 3
+        questions:
+          - slug: ai_systems_reviewed_for_improvement
+            prompt: "Are all production AI systems reviewed at least twice per year for improvement opportunities (model updates, feature changes, threshold adjustments) with findings documented and prioritised?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-4.1"]
+              iso_42001: ["10.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Production AI systems are not reviewed for improvement; they remain unchanged until they break."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Reviews happen when performance concerns arise; no scheduled review cadence."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "An annual review is conducted for production AI systems; findings are documented informally."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All production AI systems are reviewed at least twice per year; findings are documented, prioritised, and tracked in a backlog reviewed by the AI governance body."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Bi-annual reviews are standard; findings feed a prioritised backlog; improvement velocity (time from finding to production change) is tracked and targeted."
+                score: "100.00"

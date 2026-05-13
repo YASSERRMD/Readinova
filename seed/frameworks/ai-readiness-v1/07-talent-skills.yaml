@@ -1,0 +1,448 @@
+slug: talent_and_skills
+name: Talent and Skills
+description: >
+  Measures the organisation's AI and data science talent depth, skills distribution,
+  training investment, and ability to attract, develop, and retain AI professionals.
+default_weight: "0.0900"
+display_order: 7
+
+sub_dimensions:
+
+  - slug: ai_and_ml_expertise
+    name: AI and ML Expertise
+    description: Whether the organisation has sufficient depth of AI and ML engineering capability.
+    weight_within_dimension: "0.2500"
+    display_order: 1
+    indicators:
+
+      - slug: ml_engineer_headcount
+        name: ML Engineer Headcount
+        description: Whether the organisation has enough ML engineers to support its AI roadmap.
+        display_order: 1
+        questions:
+          - slug: ml_engineers_vs_roadmap
+            prompt: "Has the organisation completed a skills gap analysis in the last 12 months comparing current ML engineer headcount and skills to what is required to deliver the current AI roadmap?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.2"]
+              iso_42001: ["7.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No skills gap analysis has been done; the gap between current capability and roadmap requirements is unknown."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Skill gaps are identified informally when initiatives stall due to missing expertise."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A skills gap analysis was completed in the last 24 months and its findings were used to inform at least one hiring or training decision."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "A skills gap analysis is conducted annually, findings are reported to leadership, and a plan with funded actions (hiring, training, contracting) is produced within 60 days of the analysis."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Skills gap analysis is annual, findings drive a funded workforce plan covering the next 18 months, and plan execution is tracked quarterly."
+                score: "100.00"
+
+      - slug: ml_practitioner_seniority
+        name: ML Practitioner Seniority
+        description: Whether the AI team has sufficient senior practitioners to guide architectural and technical decisions.
+        display_order: 2
+        questions:
+          - slug: senior_ml_practitioners_present
+            prompt: "Does the AI team include at least one senior or principal-level ML practitioner (5 or more years of applied ML experience) who can make independent architectural and modelling decisions?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.2"]
+              iso_42001: ["7.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "The AI team has no practitioners with more than 2 years of applied ML experience."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Team members have 2 to 4 years of ML experience; all complex decisions require external support."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "At least one team member has 5 or more years of applied ML experience and leads technical decisions."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "The team has at least two senior ML practitioners; architectural decisions are reviewed by the senior practitioners before implementation."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Senior practitioners lead a structured technical review process for all model architecture decisions; at least one practitioner has deep domain knowledge in the organisation's AI use cases."
+                score: "100.00"
+
+      - slug: ml_specialisation_coverage
+        name: ML Specialisation Coverage
+        description: Whether the team covers the specialisations required for the organisation's AI use cases.
+        display_order: 3
+        questions:
+          - slug: required_specialisations_covered
+            prompt: "For the AI use cases in the current roadmap, are all required ML specialisations (e.g., NLP, computer vision, time-series, reinforcement learning) covered by at least one team member or approved contractor?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.2"]
+              iso_42001: ["7.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Specialisation gaps exist for current roadmap use cases and no plan to address them."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Gaps are filled by asking generalist ML engineers to self-train when a new specialisation is needed."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Required specialisations for the current roadmap are documented; at least 75% are covered by current staff or contractors."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All required specialisations for the current roadmap are covered; coverage gaps for the next 12-month roadmap are identified and have funded plans."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Specialisation coverage is reviewed at each roadmap update; gaps trigger hiring or training actions within a defined SLA; coverage metrics are reported to leadership."
+                score: "100.00"
+
+  - slug: data_engineering_skills
+    name: Data Engineering Skills
+    description: Whether the organisation has the data engineering capability to build and maintain the data pipelines AI systems depend on.
+    weight_within_dimension: "0.2500"
+    display_order: 2
+    indicators:
+
+      - slug: data_engineer_to_ml_ratio
+        name: Data Engineer to ML Ratio
+        description: Whether the organisation has sufficient data engineers to support its ML engineers.
+        display_order: 1
+        questions:
+          - slug: data_engineers_available
+            prompt: "Does the organisation have at least one dedicated data engineer for every three ML engineers, ensuring that data pipeline work does not block model development?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.2"]
+              iso_42001: ["7.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No dedicated data engineers exist; ML engineers build and maintain all data pipelines."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Data engineering tasks are done by one shared engineer across multiple teams; pipeline backlogs regularly block model development."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "At least one dedicated data engineer supports the AI team; the ratio is below 1:3 but pipeline backlogs are manageable."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "At least one data engineer per three ML engineers is staffed; pipeline development does not regularly block model work; capacity is reviewed quarterly."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Ratio meets or exceeds 1:3; pipeline backlog metrics are tracked; data engineering capacity is planned against the AI roadmap 12 months ahead."
+                score: "100.00"
+
+      - slug: data_engineering_best_practices
+        name: Data Engineering Best Practices
+        description: Whether data engineers follow software engineering best practices for pipeline code.
+        display_order: 2
+        questions:
+          - slug: pipeline_code_reviewed_and_tested
+            prompt: "Is pipeline code written by data engineers subject to the same code review, testing, and CI/CD requirements as application code?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-1.1"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Pipeline code is written in notebooks, not reviewed, and has no automated tests."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Pipeline code is in version control but is not consistently reviewed or tested."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A policy requires pipeline code to go through code review; automated tests exist for most pipelines."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Pipeline code is subject to the same code review, unit testing, and CI requirements as application code; these requirements are technically enforced."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Pipeline code meets the same engineering standards as application code; code quality metrics (coverage, lint scores) are tracked and meet defined targets."
+                score: "100.00"
+
+      - slug: data_engineering_tooling_proficiency
+        name: Data Engineering Tooling Proficiency
+        description: Whether data engineers are proficient in the tools and platforms used in the organisation's data stack.
+        display_order: 3
+        questions:
+          - slug: tooling_proficiency_assessed
+            prompt: "Has the organisation assessed data engineering team proficiency against the specific tools in its data stack (e.g., Spark, dbt, Airflow, Kafka) within the last 12 months, and addressed gaps?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.2"]
+              iso_42001: ["7.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Tooling proficiency has never been formally assessed."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Proficiency is assessed informally during hiring but not for the existing team."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Tooling proficiency was assessed for the team in the last 24 months; findings were informally addressed."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Annual proficiency assessment against the current tooling stack is conducted; gaps result in a funded training plan delivered within 90 days."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Annual assessment drives a funded training plan; training completion and post-training assessment results are tracked; tool adoption metrics confirm proficiency in practice."
+                score: "100.00"
+
+  - slug: ai_literacy_across_org
+    name: AI Literacy Across the Organisation
+    description: Whether staff outside the AI team have sufficient AI literacy to work effectively alongside AI systems and teams.
+    weight_within_dimension: "0.2500"
+    display_order: 3
+    indicators:
+
+      - slug: baseline_ai_literacy_training
+        name: Baseline AI Literacy Training
+        description: Whether a baseline AI literacy programme has been delivered to non-technical staff.
+        display_order: 1
+        questions:
+          - slug: ai_literacy_programme_exists
+            prompt: "Has the organisation delivered a structured AI literacy programme (not just an email or intranet article) to at least 70% of non-technical management staff in the last 24 months?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              eu_ai_act: ["Article 4"]
+              iso_42001: ["7.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No AI literacy programme or training has been delivered to non-technical staff."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Ad-hoc AI awareness sessions have been run for some teams but with no curriculum, tracking, or completion records."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A structured AI literacy programme exists; it has been delivered to at least half of non-technical management staff; completion is tracked."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Structured AI literacy training has been completed by at least 70% of non-technical management staff; completion records are maintained; the curriculum is reviewed annually."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "AI literacy training is part of onboarding; completion rates exceed 90%; post-training knowledge checks are used to update the curriculum; advanced modules exist for AI-adjacent roles."
+                score: "100.00"
+
+      - slug: ai_literacy_for_decision_makers
+        name: AI Literacy for Decision Makers
+        description: Whether executives and senior managers can critically evaluate AI outputs and limitations.
+        display_order: 2
+        questions:
+          - slug: decision_makers_trained_on_ai_limitations
+            prompt: "Have all executives and senior managers who use or approve AI outputs completed training that specifically covers AI limitations, bias risks, and when not to rely on AI recommendations?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              eu_ai_act: ["Article 4"]
+              iso_42001: ["7.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Decision makers have no training on AI limitations or bias risks."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Some decision makers have attended general AI awareness sessions but none have covered limitations and bias specifically."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A training module covering AI limitations and bias exists; at least half of decision makers who use AI outputs have completed it."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All decision makers who approve or rely on AI outputs have completed the AI limitations and bias training module; completion is tracked and included in onboarding for new decision makers."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Training completion is 100% for decision makers; knowledge is tested via scenario exercises; modules are updated when new AI capabilities or risks emerge."
+                score: "100.00"
+
+      - slug: domain_expert_ai_collaboration
+        name: Domain Expert and AI Collaboration
+        description: Whether domain experts are integrated into AI project teams and trained to validate model outputs.
+        display_order: 3
+        questions:
+          - slug: domain_experts_in_ai_teams
+            prompt: "Are domain experts from the business unit being served formally embedded in AI project teams and trained to validate model outputs against domain knowledge?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MAP-1.1"]
+              eu_ai_act: ["Article 14"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "AI projects are built entirely by the AI team with no domain expert involvement."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Domain experts are consulted informally during AI projects but are not formally embedded or trained in output validation."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Domain experts are included in AI project teams for requirements and testing phases; they receive informal guidance on output validation."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Domain experts are formally embedded in AI project teams for the full project lifecycle; they complete a structured training module on AI output validation before the project starts."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Domain expert participation is mandatory; training is tailored to each AI use case; domain experts formally sign off on model outputs before production deployment."
+                score: "100.00"
+
+  - slug: talent_strategy
+    name: Talent Acquisition and Retention
+    description: Whether the organisation can attract and retain the AI talent required to deliver its strategy.
+    weight_within_dimension: "0.2500"
+    display_order: 4
+    indicators:
+
+      - slug: ai_hiring_pipeline
+        name: AI Hiring Pipeline
+        description: Whether the organisation has a defined, active pipeline for hiring AI talent.
+        display_order: 1
+        questions:
+          - slug: ai_hiring_process_defined
+            prompt: "Does the organisation have a documented AI hiring process with defined job profiles, technical assessments, and an average time-to-hire target for AI engineering roles?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.2"]
+              iso_42001: ["7.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "AI roles are filled using the same generic process as other IT roles; no specialised profiles or assessments exist."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Specialised technical assessments are used for some AI roles but job profiles and time-to-hire targets are not defined."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Defined job profiles and technical assessments exist for key AI roles; average time-to-hire is tracked."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Documented hiring process exists with defined profiles, technical assessments, and time-to-hire targets; actual time-to-hire is tracked and reviewed quarterly."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Hiring process is documented, targets are met, and offer acceptance rate is tracked; hiring quality is assessed 90 days after start via structured feedback from the hiring team."
+                score: "100.00"
+
+      - slug: ai_talent_retention
+        name: AI Talent Retention
+        description: Whether the organisation's voluntary AI talent turnover rate is within an acceptable range.
+        display_order: 2
+        questions:
+          - slug: ai_staff_turnover_tracked
+            prompt: "Is voluntary turnover for AI and data engineering roles tracked separately from general IT turnover, and is the rate below 20% annually?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.2"]
+              iso_42001: ["7.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "AI staff turnover is not tracked separately; the rate is unknown."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Turnover is tracked but not separately for AI roles; the rate is believed to be high but is not measured."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "AI role turnover is tracked separately; the current annual rate is known but exceeds 20%."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "AI role turnover is tracked separately, the rate is below 20%, and turnover data is used to inform retention initiatives reviewed by HR and the AI sponsor."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Turnover is below 15%, tracked quarterly, and below-market rates trigger structured stay interviews; exit interview themes are analysed and feed retention programme updates."
+                score: "100.00"
+
+      - slug: career_development_for_ai_staff
+        name: Career Development for AI Staff
+        description: Whether the organisation provides visible career development pathways for AI professionals.
+        display_order: 3
+        questions:
+          - slug: ai_career_ladder_exists
+            prompt: "Does the organisation have a documented AI career ladder (individual contributor and management tracks) that was shared with all AI staff in the last 12 months?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.2"]
+              iso_42001: ["7.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No AI career ladder exists; AI engineers progress through general IT grade structures."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Career progression for AI staff is discussed informally in one-to-ones but no documented career ladder exists."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A documented AI career ladder exists covering at least the individual contributor track."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "A documented AI career ladder covers both individual contributor and management tracks; it was shared with all AI staff in the last 12 months; annual career conversations reference it."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Career ladder is shared annually, promotions are tracked against it, promotion rates are reviewed for equity, and the ladder is updated when market benchmarking identifies gaps."
+                score: "100.00"

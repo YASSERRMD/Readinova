@@ -1,0 +1,449 @@
+slug: culture_and_change_readiness
+name: Culture and Change Readiness
+description: >
+  Measures the organisation's cultural readiness to adopt AI, including AI literacy,
+  openness to experimentation, change management capability, and psychological safety
+  to raise concerns about AI systems.
+default_weight: "0.0700"
+display_order: 8
+
+sub_dimensions:
+
+  - slug: ai_literacy
+    name: AI Literacy and Awareness
+    description: The degree to which staff across the organisation understand what AI is, what it can and cannot do, and how it affects their work.
+    weight_within_dimension: "0.2500"
+    display_order: 1
+    indicators:
+
+      - slug: awareness_baseline_measured
+        name: AI Awareness Baseline Measured
+        description: Whether the organisation has measured current AI awareness levels among its workforce.
+        display_order: 1
+        questions:
+          - slug: ai_awareness_survey_conducted
+            prompt: "Has the organisation conducted a quantitative survey measuring AI awareness and attitudes among its non-technical workforce in the last 24 months, with results documented?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              eu_ai_act: ["Article 4"]
+              iso_42001: ["7.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No measurement of AI awareness has ever been conducted."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Informal feedback from AI presentations has been collected but no quantitative survey."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A quantitative AI awareness survey was conducted in the last 24 months; results were documented and shared with leadership."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "An AI awareness survey is conducted annually; results are compared year-on-year; findings drive specific literacy programme updates."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Annual survey results are published internally, compared to prior years, and directly linked to changes in the AI literacy programme; programme effectiveness is tracked."
+                score: "100.00"
+
+      - slug: misconceptions_addressed
+        name: Common Misconceptions Addressed
+        description: Whether the organisation actively addresses common AI misconceptions that could impede adoption or create risk.
+        display_order: 2
+        questions:
+          - slug: ai_myths_addressed_in_training
+            prompt: "Does the AI literacy programme explicitly cover at least three common AI misconceptions (e.g., AI is always objective, AI can do anything, AI results are always explainable) with evidence-based corrections?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              iso_42001: ["7.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No literacy programme exists; misconceptions are not addressed."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Misconceptions are corrected informally when raised but no structured content addresses them."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "The AI literacy programme addresses at least two misconceptions with examples relevant to the organisation's AI use cases."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "The programme addresses at least three misconceptions with domain-specific examples; knowledge checks verify understanding; content is updated annually."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Programme addresses five or more misconceptions; knowledge checks before and after training measure attitude change; persistent misconceptions are escalated and addressed."
+                score: "100.00"
+
+      - slug: ai_impact_communication
+        name: AI Impact Communication
+        description: Whether the organisation communicates the anticipated impact of AI on roles and workflows before deployment.
+        display_order: 3
+        questions:
+          - slug: role_impact_communicated_before_deployment
+            prompt: "Before deploying an AI system that changes the workflow of a group of employees, does the organisation communicate to those employees what the AI will do, what will change in their role, and how they can raise concerns?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-1.3"]
+              eu_ai_act: ["Article 13"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "AI systems are deployed to end users with no advance communication about what will change."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Some teams are informed close to go-live but communication is not structured or consistent across deployments."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A communication requirement exists for AI deployments; communications cover what the AI will do and what changes for affected staff."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Structured communications are sent at least 4 weeks before go-live; they cover AI function, role changes, and the concern-raising pathway; communications are reviewed by HR."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Pre-deployment communications are standard, reviewed by HR and legal, sent at least 4 weeks ahead, and followed by a post-deployment survey measuring clarity and concerns."
+                score: "100.00"
+
+  - slug: change_management
+    name: Change Management Capability
+    description: Whether the organisation applies structured change management to AI deployments that affect working practices.
+    weight_within_dimension: "0.2500"
+    display_order: 2
+    indicators:
+
+      - slug: change_impact_assessment
+        name: Change Impact Assessment
+        description: Whether the impact of AI on affected roles and processes is formally assessed before deployment.
+        display_order: 1
+        questions:
+          - slug: change_impact_assessed_before_go_live
+            prompt: "Is a change impact assessment completed for every AI deployment that affects the day-to-day tasks of more than 10 employees, identifying affected roles, process changes, and training needs?"
+            target_role: ops
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-1.3"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No change impact assessment is performed for AI deployments."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Impact is assessed informally by project managers; findings are not documented."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A change impact assessment template exists and is used for most AI deployments affecting more than 10 employees."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Impact assessment is mandatory for all AI deployments above the defined threshold; assessments are reviewed by HR; training needs identified are funded."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "All qualifying deployments have impact assessments; assessments are reviewed by HR; effectiveness of change activities is measured in a post-deployment survey."
+                score: "100.00"
+
+      - slug: user_adoption_tracking
+        name: User Adoption Tracking
+        description: Whether AI system adoption is tracked after go-live to identify and address barriers.
+        display_order: 2
+        questions:
+          - slug: adoption_metrics_tracked_post_launch
+            prompt: "For AI systems deployed in the last 12 months, are user adoption metrics (active user rate, feature usage rate) tracked and reviewed within 60 days of go-live to identify adoption barriers?"
+            target_role: ops
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.5"]
+              iso_42001: ["9.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "User adoption is not measured after AI system go-live."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Usage is checked informally if complaints arise; no structured adoption review process exists."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Adoption metrics are tracked for new AI deployments; a review is conducted within 90 days of go-live."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Adoption metrics are reviewed within 60 days of go-live; barriers are documented and resolved with funded follow-up actions."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Adoption review at 30 and 60 days is standard; barriers are tracked to resolution; adoption learnings feed future deployment planning."
+                score: "100.00"
+
+      - slug: change_fatigue_management
+        name: Change Fatigue Management
+        description: Whether the organisation monitors and manages the pace of AI-driven change to avoid change fatigue.
+        display_order: 3
+        questions:
+          - slug: change_volume_monitored
+            prompt: "Does the organisation track the total number of AI-driven workflow changes deployed to each business unit per quarter, and pause or sequence deployments if the volume exceeds a defined threshold?"
+            target_role: ops
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-1.3"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "AI deployments are approved without considering total change volume; change fatigue is not monitored."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Change volume is considered informally when scheduling is discussed; no formal tracking or threshold."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Change volume per business unit is tracked; a guideline threshold exists but is not enforced."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Change volume per unit is tracked; breaching the threshold requires approval from the business unit head before additional deployments proceed."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Change volume is tracked, thresholds are enforced, and employee experience surveys measure change fatigue; threshold levels are adjusted based on survey data."
+                score: "100.00"
+
+  - slug: experimentation_culture
+    name: Experimentation Culture
+    description: Whether the organisation has a culture that encourages controlled experimentation with AI and learns from failures.
+    weight_within_dimension: "0.2500"
+    display_order: 3
+    indicators:
+
+      - slug: safe_to_fail_environment
+        name: Safe to Fail Environment
+        description: Whether the organisation has created safe environments for AI experimentation that do not risk production systems.
+        display_order: 1
+        questions:
+          - slug: sandbox_environments_available
+            prompt: "Are sandbox or non-production environments available for AI experimentation that are isolated from production data and systems and accessible to all AI team members?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-1.1"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No sandbox environments exist; experiments are run directly in or close to production."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Individual engineers set up their own isolated environments; no managed sandbox platform exists."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A shared sandbox environment exists that is isolated from production; most AI engineers have access."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Managed sandbox environments are available to all AI engineers, contain representative (anonymised or synthetic) data, and are refreshed at least monthly."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Sandbox environments are self-service, refreshed on a defined schedule, and contain synthetic data that mirrors production statistical properties; usage is monitored."
+                score: "100.00"
+
+      - slug: failure_review_practice
+        name: Failure Review Practice
+        description: Whether AI experiments and initiatives that fail or underperform are reviewed and learnings are documented.
+        display_order: 2
+        questions:
+          - slug: failed_experiments_reviewed
+            prompt: "When an AI initiative is cancelled or a model fails to meet its business target, is a structured retrospective or post-mortem conducted and its findings documented and shared?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-4.2"]
+              iso_42001: ["10.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Failed AI initiatives are abandoned without review; no learnings are captured."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Some team members reflect informally after failures but no structured retrospective or documentation requirement exists."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A retrospective process is defined for failed or cancelled AI initiatives; most qualifying events have a documented retrospective."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All failed or cancelled AI initiatives above a defined investment threshold have a documented retrospective; findings are shared with the AI team and stored in a searchable system."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Retrospectives are standard for all qualifying failures; findings are indexed and referenced in new project kick-offs; recurring root causes inform process changes."
+                score: "100.00"
+
+      - slug: innovation_time_allocation
+        name: Innovation Time Allocation
+        description: Whether the organisation allocates dedicated time for AI engineers to pursue exploratory research.
+        display_order: 3
+        questions:
+          - slug: innovation_time_budgeted
+            prompt: "Does the organisation formally allocate dedicated time (e.g., 10% or one day per fortnight) for AI engineers to pursue exploratory AI research outside of project commitments, with this time protected by management?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              iso_42001: ["7.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No innovation time is allocated; AI engineers work 100% on project commitments."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Engineers are encouraged to explore but no formal allocation exists; innovation time is consumed by project work during busy periods."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "An innovation time policy is documented; at least some AI engineers have dedicated time in their capacity plans."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Innovation time is formally allocated (minimum 10%) in capacity plans for all AI engineers; managers protect it from project overrun."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Innovation time is allocated, protected, tracked, and outputs (ideas, prototypes, papers) are presented quarterly; successful ideas enter the use-case backlog."
+                score: "100.00"
+
+  - slug: psychological_safety
+    name: Psychological Safety and Ethical Speak-Up
+    description: Whether staff feel safe raising concerns about AI systems and whether those concerns are acted upon.
+    weight_within_dimension: "0.2500"
+    display_order: 4
+    indicators:
+
+      - slug: concern_raising_channel
+        name: Concern Raising Channel
+        description: Whether a formal, accessible channel exists for staff to raise concerns about AI systems.
+        display_order: 1
+        questions:
+          - slug: ai_concern_channel_exists_and_known
+            prompt: "Is there a documented channel (not just 'speak to your manager') through which any employee can raise a concern about an AI system, and is this channel communicated to all staff at least annually?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.3"]
+              eu_ai_act: ["Article 9"]
+              iso_42001: ["6.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No formal channel for raising AI concerns exists beyond standard management escalation."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Employees are told informally that they can raise AI concerns but no dedicated channel or process is documented."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A documented channel (email alias, portal, or named contact) exists for AI concerns; it is included in AI deployment communications."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "A documented AI concern channel exists, is communicated to all staff annually, has a named owner, and has a defined response SLA."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Channel is documented, communicated annually, SLA-tracked, and concern volumes and outcomes are reported to the AI governance body; no retaliation incidents are recorded."
+                score: "100.00"
+
+      - slug: concern_response_rate
+        name: Concern Response Rate
+        description: Whether AI concerns raised by staff are responded to within the defined SLA and tracked to resolution.
+        display_order: 2
+        questions:
+          - slug: concerns_responded_within_sla
+            prompt: "Are 100% of concerns raised through the AI concern channel acknowledged within the defined SLA, tracked in a register, and closed with a documented outcome communicated to the person who raised the concern?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.3"]
+              iso_42001: ["6.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Concerns are not tracked; there is no register or response process."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Concerns are addressed but not tracked; response timeliness and outcomes are not recorded."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A concern register exists; concerns are tracked to closure; most are acknowledged within the SLA."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "100% of concerns are acknowledged within the SLA, tracked in a register, closed with a documented outcome, and the outcome communicated to the raiser."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "SLA compliance is above 95%, tracked monthly, and published to governance; concern themes are analysed quarterly for systemic issues; the process is assessed for potential deterrents annually."
+                score: "100.00"
+
+      - slug: leadership_modelling
+        name: Leadership Modelling of AI Ethics
+        description: Whether leadership visibly models the behaviour they expect from staff in relation to AI ethics.
+        display_order: 3
+        questions:
+          - slug: leaders_publicly_acknowledge_ai_limits
+            prompt: "Have senior leaders (VP level and above) publicly acknowledged at least one case where an AI system produced an incorrect or biased output in the last 12 months, and described what was done about it?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              iso_42001: ["5.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Senior leaders have not publicly acknowledged any AI errors or limitations."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Leaders acknowledge AI limitations in private settings but not in public communications."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "At least one senior leader has publicly acknowledged an AI error or limitation in a companywide communication in the last 12 months."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Senior leaders regularly (at least quarterly) communicate about AI limitations and ethics in companywide forums; communications include specific examples and actions taken."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Leadership communication about AI ethics is documented, quarterly, cites specific examples, and is rated for clarity and trust in the annual AI awareness survey."
+                score: "100.00"
