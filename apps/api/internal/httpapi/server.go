@@ -42,6 +42,9 @@ func (s *Server) Routes(mux *http.ServeMux) {
 
 	// Scoring
 	s.scoringRoutes(mux)
+
+	// Reports
+	s.reportRoutes(mux)
 }
 
 // writeJSON encodes v as JSON and writes it with the given status code.
