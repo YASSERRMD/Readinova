@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: readinova_test
+      POSTGRES_PASSWORD: readinova
+      POSTGRES_USER: readinova
+    ports:
+      - "54329:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U readinova -d readinova_test"]
+      interval: 2s
+      timeout: 5s
+      retries: 20
