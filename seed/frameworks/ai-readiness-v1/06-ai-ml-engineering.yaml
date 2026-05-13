@@ -1,0 +1,452 @@
+slug: ai_ml_engineering_capability
+name: AI and ML Engineering Capability
+description: >
+  Measures the maturity of engineering practices for developing, evaluating,
+  deploying, and maintaining AI and machine learning models in production.
+default_weight: "0.0800"
+display_order: 6
+
+sub_dimensions:
+
+  - slug: model_development
+    name: Model Development Practices
+    description: Whether AI models are developed using reproducible, documented, and peer-reviewed practices.
+    weight_within_dimension: "0.2500"
+    display_order: 1
+    indicators:
+
+      - slug: experiment_reproducibility
+        name: Experiment Reproducibility
+        description: Whether model training experiments can be reproduced exactly from recorded parameters.
+        display_order: 1
+        questions:
+          - slug: experiment_parameters_logged
+            prompt: "Are all model training experiment parameters (hyperparameters, random seeds, dataset version, code version) automatically logged so that any experiment can be reproduced exactly?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.2"]
+              eu_ai_act: ["Article 11"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Experiment parameters are not logged; training cannot be reproduced."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Some engineers record parameters in notebooks manually; logging is inconsistent and not maintained."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Experiment tracking tooling is in use; most training runs log hyperparameters and evaluation metrics."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All training runs automatically log hyperparameters, dataset version, code commit hash, and evaluation metrics via experiment tracking tooling."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Full experiment reproducibility is verified by policy; any logged experiment can be re-run to produce an identical model; reproducibility checks run in CI."
+                score: "100.00"
+
+      - slug: model_evaluation_standards
+        name: Model Evaluation Standards
+        description: Whether a defined set of evaluation metrics and thresholds must be met before a model is promoted.
+        display_order: 2
+        questions:
+          - slug: evaluation_thresholds_defined
+            prompt: "Does each production AI model have a documented set of evaluation metrics and minimum thresholds that must be met on a held-out test set before the model is eligible for deployment?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.2"]
+              eu_ai_act: ["Article 9"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Models are promoted to production based on subjective assessment with no defined metrics or thresholds."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Evaluation metrics are reported informally but no minimum thresholds are documented or enforced."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Documented evaluation metrics and thresholds exist for most production models; threshold checks are manual before promotion."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Documented metrics and thresholds exist for all production models; threshold checks are automated in the deployment pipeline; failures block promotion."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Thresholds are documented, automated, and enforced; they include fairness and robustness metrics in addition to accuracy; thresholds are reviewed after each production incident."
+                score: "100.00"
+
+      - slug: feature_engineering_standards
+        name: Feature Engineering Standards
+        description: Whether feature computation is centralised and consistent across training and inference.
+        display_order: 3
+        questions:
+          - slug: feature_store_or_shared_library
+            prompt: "Does the organisation use a feature store or shared feature library to ensure that feature computation logic is identical between model training and production inference?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.2"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Feature computation is implemented separately in training code and inference code; training-serving skew exists."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Feature logic is partially shared but some features are computed differently in training and serving environments."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A shared feature library or set of shared utility functions is used; most features are computed consistently across training and inference."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "A feature store or shared library ensures identical feature computation in training and inference for all production models; training-serving skew tests run in CI."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Feature store is the single source of truth; training-serving skew tests are automated; new features must be registered before use; feature lineage is tracked."
+                score: "100.00"
+
+  - slug: model_deployment
+    name: Model Deployment and Serving
+    description: Whether models are deployed to production using safe, repeatable, and auditable processes.
+    weight_within_dimension: "0.2500"
+    display_order: 2
+    indicators:
+
+      - slug: model_serving_infrastructure
+        name: Model Serving Infrastructure
+        description: Whether models are served via a managed inference platform rather than ad-hoc deployments.
+        display_order: 1
+        questions:
+          - slug: models_served_via_managed_platform
+            prompt: "Are production AI models served via a managed inference platform (not custom Flask/FastAPI apps deployed manually) that provides horizontal scaling, health checks, and automated restarts?"
+            target_role: ops
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-1.1"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Models are deployed as custom scripts on individual VMs with no infrastructure management."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Models are deployed as containerised services but managed manually without a serving platform."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A managed serving platform is in use for at least one production model with health checks and automated restarts."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All production models are served via a managed platform with health checks, horizontal scaling, and automated restarts; platform is on the on-call monitoring stack."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "All models use the managed serving platform; traffic is auto-scaled; blue-green or canary deployments are standard; serving platform SLO is tracked."
+                score: "100.00"
+
+      - slug: canary_and_rollback
+        name: Canary Deployment and Rollback
+        description: Whether production model updates are deployed progressively and can be rolled back automatically.
+        display_order: 2
+        questions:
+          - slug: canary_or_rollback_in_use
+            prompt: "Are new model versions deployed to production using a canary or blue-green strategy that can route traffic back to the previous version within 15 minutes if a performance threshold is breached?"
+            target_role: ops
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-1.3"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "All traffic is switched to a new model version at once with no rollback capability."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Rollback is possible by redeploying the previous model file manually; no automated process or canary exists."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A rollback procedure is documented and can be executed manually in under 30 minutes."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Canary or blue-green deployment is standard; rollback is automated and completes within 15 minutes when triggered; rollback events are logged."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Automated rollback is triggered by performance threshold breaches; canary traffic percentage is configurable; all rollback events trigger post-mortem reviews."
+                score: "100.00"
+
+      - slug: model_versioning_in_production
+        name: Model Versioning in Production
+        description: Whether every production inference request is traceable to the specific model version that served it.
+        display_order: 3
+        questions:
+          - slug: inference_requests_logged_with_model_version
+            prompt: "Is the model version identifier included in the metadata logged for every production inference request, allowing any individual prediction to be traced to its exact model version?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.7"]
+              eu_ai_act: ["Article 12"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Inference request logs do not include model version information."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Model version is logged informally in some systems but not consistently."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Model version is included in inference logs for most production models."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Model version identifier is included in inference logs for all production models; logs are retained for the model's operational lifetime."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Every inference request is logged with model version, input hash, and output; logs are queryable; individual predictions can be fully audited."
+                score: "100.00"
+
+  - slug: model_monitoring
+    name: Model Monitoring and Retraining
+    description: Whether production models are monitored for degradation and retrained systematically.
+    weight_within_dimension: "0.2500"
+    display_order: 3
+    indicators:
+
+      - slug: prediction_quality_monitoring
+        name: Prediction Quality Monitoring
+        description: Whether model prediction quality is monitored in production using ground truth when available.
+        display_order: 1
+        questions:
+          - slug: ground_truth_feedback_loop
+            prompt: "For production models where ground truth is available within a reasonable delay, is actual vs predicted performance tracked automatically and used to detect model degradation?"
+            target_role: ops
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.6"]
+              eu_ai_act: ["Article 9"]
+              iso_42001: ["9.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Ground truth feedback is not collected or used for monitoring."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Ground truth is available but compared to predictions only during ad-hoc audits."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Ground truth is collected and actual vs predicted comparison is run at least monthly for production models where it is available."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Ground truth feedback is collected automatically and compared against predictions continuously; alerts fire when accuracy drops below the production threshold."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Ground truth loop is automated; alerts trigger retraining workflows; accuracy trend reports are produced monthly and reviewed by the team."
+                score: "100.00"
+
+      - slug: retraining_triggers
+        name: Retraining Triggers
+        description: Whether model retraining is triggered by defined conditions rather than ad-hoc schedule.
+        display_order: 2
+        questions:
+          - slug: retraining_criteria_documented
+            prompt: "Does each production model have documented retraining trigger criteria (e.g., drift threshold, accuracy drop, or calendar schedule) that are monitored and acted upon?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-4.1"]
+              eu_ai_act: ["Article 9"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Models are retrained when an engineer decides to; no trigger criteria exist."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Retraining happens on a loose time-based schedule set by the team but without documented trigger criteria."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Retraining trigger criteria are documented for most production models; criteria include at least one metric-based condition."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Documented retraining criteria exist for all production models; monitoring systems check criteria continuously and trigger retraining pipelines automatically."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Retraining is fully automated based on criteria; trigger events are logged; retraining frequency and trigger causes are reviewed quarterly to refine criteria."
+                score: "100.00"
+
+      - slug: model_retirement_process
+        name: Model Retirement Process
+        description: Whether a defined process exists to deprecate and retire models that are no longer performant or needed.
+        display_order: 3
+        questions:
+          - slug: retirement_process_exists
+            prompt: "Is there a documented process for retiring a production AI model that includes notifying downstream consumers, removing the serving endpoint, and archiving model artefacts?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-4.2"]
+              eu_ai_act: ["Article 12"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Models are retired informally by removing files; no process, notification, or archiving standard exists."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Retirement is done on a case-by-case basis; some consumers may not be notified."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A retirement process is documented; it includes a deprecation notice period and archiving of model artefacts."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All model retirements follow the documented process; downstream consumers are notified with at least 30 days of lead time; artefacts are archived and retained per policy."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Retirement process is tracked in the model registry; deprecation notices are generated automatically; archived artefacts are queryable; process compliance is audited annually."
+                score: "100.00"
+
+  - slug: experiment_management
+    name: Experiment Management
+    description: Whether AI experiments are tracked, compared, and documented systematically to support learning and reproducibility.
+    weight_within_dimension: "0.2500"
+    display_order: 4
+    indicators:
+
+      - slug: experiment_tracking_tooling
+        name: Experiment Tracking Tooling
+        description: Whether an experiment tracking tool is in active use across the AI team.
+        display_order: 1
+        questions:
+          - slug: experiment_tracker_in_active_use
+            prompt: "Is an experiment tracking tool (MLflow, W&B, Neptune, or equivalent) in active use by all AI engineers, with every training run registered before model evaluation?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.2"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No experiment tracking tool is in use; results are recorded in notebooks or spreadsheets."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "An experiment tracking tool exists but is used by some engineers only and inconsistently."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "An experiment tracking tool is used by most engineers; training runs for production model candidates are registered."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All engineers use the experiment tracking tool; every training run for a production model candidate is registered before evaluation; tool usage is audited monthly."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Tool usage is enforced via CI; unregistered training runs are blocked from promotion; experiment data is used in post-project reviews and shared across teams."
+                score: "100.00"
+
+      - slug: model_card_documentation
+        name: Model Card Documentation
+        description: Whether model cards are produced and maintained for every production AI model.
+        display_order: 2
+        questions:
+          - slug: model_cards_for_all_production_models
+            prompt: "Does every model deployed to production have a current model card that documents its intended use, training data, evaluation results, limitations, and known biases?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              eu_ai_act: ["Article 13"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No model cards or equivalent documentation exist."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Model documentation exists for some models in project reports but is not in a standard format and is not updated after deployment."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A model card template exists; model cards are produced for new production models and stored in the model registry."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Model cards are a required deployment gate for all models; they are stored in the model registry, updated with each major model version, and accessible to stakeholders."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Model cards are mandatory, version-controlled, updated with each model version, and made available to affected users and governance bodies on request."
+                score: "100.00"
+
+      - slug: cross_team_knowledge_sharing
+        name: Cross-Team Knowledge Sharing
+        description: Whether AI teams share experiment learnings to avoid duplicating failed approaches.
+        display_order: 3
+        questions:
+          - slug: experiment_learnings_shared
+            prompt: "Does the organisation have a structured mechanism (internal wiki, regular demo session, or shared experiment repository) through which AI teams share learnings from completed and failed experiments?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              iso_42001: ["7.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Each AI team works in isolation; no mechanism for sharing experiment learnings exists."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Knowledge is shared informally through conversations or Slack messages; there is no structured artefact or session."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A structured knowledge-sharing mechanism (wiki or regular demo session) exists and is used at least monthly."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "A wiki or shared repository contains documented learnings from all completed AI projects; a regular demo or review session is held at least monthly and is attended by all AI engineers."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Learnings from both successful and failed experiments are documented, searchable, and referenced in new project kick-offs; the knowledge base is maintained and links to experiment records."
+                score: "100.00"
