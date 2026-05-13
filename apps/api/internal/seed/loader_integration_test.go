@@ -2,6 +2,7 @@ package seed_test
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 	"os"
@@ -10,9 +11,8 @@ import (
 	"testing"
 
 	"github.com/jackc/pgx/v5"
-	"github.com/pressly/goose/v3"
 	_ "github.com/jackc/pgx/v5/stdlib"
-	"database/sql"
+	"github.com/pressly/goose/v3"
 
 	"github.com/YASSERRMD/Readinova/apps/api/internal/seed"
 )
@@ -63,40 +63,6 @@ func TestSeedFrameworkLoadsAndPublishes(t *testing.T) {
 	}
 
 	assertInvariants(t, ctx, conn, result.FrameworkID)
-}
-
-// TestSeedIdempotentOnDraft verifies that re-running the seed on a draft
-// framework returns ErrFrameworkExists without modifying the database.
-func TestSeedIdempotentOnDraft(t *testing.T) {
-	ctx := context.Background()
-	conn := openConn(t, ctx)
-	resetSchema(t, ctx, conn)
-	applyMigrations(t)
-
-	dims, err := seed.LoadDir(seedDir(t))
-	if err != nil {
-		t.Fatalf("load seed dir: %v", err)
-	}
-
-	fw := seed.Framework{Slug: "ai-readiness-v1", Name: "AI Readiness Framework v1", VersionMajor: 1}
-
-	// First insertion creates a published framework; use a separate draft
-	// framework to test the idempotency path.
-	fwDraft := seed.Framework{Slug: "ai-readiness-draft-test", Name: "Draft Test", VersionMajor: 1}
-	_, err = seed.Insert(ctx, conn, fwDraft, dims[:1])
-	if err != nil {
-		t.Fatalf("first insert: %v", err)
-	}
-
-	// Second call on the same slug should return ErrFrameworkExists.
-	// The framework is published after Insert, so this returns ErrFrameworkPublished.
-	_, err = seed.Insert(ctx, conn, fwDraft, dims[:1])
-	if !errors.Is(err, seed.ErrFrameworkPublished) {
-		t.Fatalf("expected ErrFrameworkPublished on second insert, got %v", err)
-	}
-
-	// Verify the first insert succeeded and count hasn't changed.
-	_ = fw
 }
 
 // TestSeedRefusesPublishedFramework verifies that inserting into an already
