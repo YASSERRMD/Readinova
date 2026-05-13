@@ -1,0 +1,22 @@
+{
+  "composite_layer_a": 47.5,
+  "dimension_scores": {
+    "data_foundations": 25.0,
+    "strategy_and_business_alignment": 81.25
+  },
+  "sub_dimension_scores": {
+    "ai_investment_roadmap": 100.0,
+    "ai_strategy_definition": 62.5,
+    "data_availability": 25.0
+  },
+  "binding_constraint_dimension": "data_foundations",
+  "binding_constraint_score": 25.0,
+  "derived": {
+    "readiness_index": 81.25,
+    "governance_risk_score": 0.0,
+    "execution_capacity_score": 0.0,
+    "value_realisation_score": 0.0
+  },
+  "engine_version": "f618502",
+  "framework_version": "ai-readiness-v1-1.0"
+}
