@@ -18,6 +18,17 @@ export interface ScoringResult {
   framework_version: string;
 }
 
+export interface PerceptionGapResult {
+  layer_a_score: number;
+  layer_b_score: number;
+  gap_score: number;
+  master_composite: number;
+  detail?: {
+    dimension_scores_a?: Record<string, number>;
+    dimension_scores_b?: Record<string, number>;
+  };
+}
+
 export const scoringApi = {
   trigger: (assessmentId: string) =>
     apiClient.post<{ run_id: string; composite_layer_a: number }>(
@@ -26,4 +37,10 @@ export const scoringApi = {
 
   getResult: (assessmentId: string) =>
     apiClient.get<ScoringResult>(`/v1/assessments/${assessmentId}/score`),
+
+  runPerceptionGap: (assessmentId: string) =>
+    apiClient.post<PerceptionGapResult>(`/v1/assessments/${assessmentId}/perception-gap`),
+
+  getPerceptionGap: (assessmentId: string) =>
+    apiClient.get<PerceptionGapResult>(`/v1/assessments/${assessmentId}/perception-gap`),
 };
