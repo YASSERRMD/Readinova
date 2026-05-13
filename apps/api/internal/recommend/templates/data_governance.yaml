@@ -1,0 +1,29 @@
+dimension: data_governance
+recommendations:
+  - id: dg_001
+    title: Implement a data catalogue
+    description: Deploy a centralised data catalogue to inventory datasets, owners, lineage, and quality metrics.
+    effort: high
+    impact: high
+    threshold: 40
+
+  - id: dg_002
+    title: Define data quality standards
+    description: Establish measurable data quality dimensions (completeness, accuracy, timeliness) with SLAs.
+    effort: medium
+    impact: high
+    threshold: 55
+
+  - id: dg_003
+    title: Introduce data stewardship roles
+    description: Assign formal data stewards per domain responsible for quality and access control.
+    effort: medium
+    impact: medium
+    threshold: 65
+
+  - id: dg_004
+    title: Automate data lineage tracking
+    description: Integrate lineage tracking into your data pipelines to enable impact analysis and audit trails.
+    effort: high
+    impact: high
+    threshold: 75
