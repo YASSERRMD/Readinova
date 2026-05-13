@@ -13,7 +13,8 @@ export function DashboardPage() {
 
   useEffect(() => {
     if (!assessmentId) return;
-    scoringApi.getResult(assessmentId)
+    scoringApi
+      .getResult(assessmentId)
       .then((res) => setResult(res.data))
       .catch(() => setError("No scoring result available for this assessment."))
       .finally(() => setLoading(false));
@@ -26,7 +27,10 @@ export function DashboardPage() {
   if (error || !result) {
     return (
       <div>
-        <button onClick={() => navigate("/app/assessments")} className="btn-ghost text-xs mb-6">
+        <button
+          onClick={() => navigate("/app/assessments")}
+          className="btn-ghost text-xs mb-6"
+        >
           ← Back to assessments
         </button>
         <p className="text-sm text-red-400">{error ?? "No result"}</p>
@@ -35,6 +39,8 @@ export function DashboardPage() {
   }
 
   const composite = Math.round(result.composite_layer_a);
+  const apiBase = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
+  const reportUrl = `${apiBase}/v1/assessments/${assessmentId}/report?format=pdf`;
 
   function compositeColor(score: number): string {
     if (score >= 75) return "text-green-400";
@@ -46,12 +52,26 @@ export function DashboardPage() {
   return (
     <div className="mx-auto max-w-5xl space-y-10">
       <div className="flex items-start justify-between gap-4">
-        <button onClick={() => navigate("/app/assessments")} className="btn-ghost text-xs">
+        <button
+          onClick={() => navigate("/app/assessments")}
+          className="btn-ghost text-xs"
+        >
           ← Back
         </button>
-        <span className="text-xs text-slate-500">
-          Engine: {result.engine_version} · Framework: {result.framework_version}
-        </span>
+        <div className="flex items-center gap-4">
+          <span className="text-xs text-slate-500">
+            Engine: {result.engine_version} · Framework:{" "}
+            {result.framework_version}
+          </span>
+          <a
+            href={reportUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary text-xs px-3 py-1.5"
+          >
+            Download PDF
+          </a>
+        </div>
       </div>
 
       {/* Composite score hero */}
@@ -59,7 +79,9 @@ export function DashboardPage() {
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500">
           AI Readiness Composite Score
         </p>
-        <p className={`mt-2 text-7xl font-bold tabular-nums ${compositeColor(composite)}`}>
+        <p
+          className={`mt-2 text-7xl font-bold tabular-nums ${compositeColor(composite)}`}
+        >
           {composite}
         </p>
         <p className="mt-1 text-sm text-slate-500">out of 100</p>
@@ -96,7 +118,9 @@ export function DashboardPage() {
         </div>
 
         <div className="space-y-4">
-          <h3 className="text-sm font-semibold text-slate-300">Derived indices</h3>
+          <h3 className="text-sm font-semibold text-slate-300">
+            Derived indices
+          </h3>
           {[
             { key: "readiness_index", label: "Readiness Index" },
             { key: "governance_risk_score", label: "Governance & Risk" },

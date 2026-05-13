@@ -1,0 +1,105 @@
+package report
+
+const htmlTemplate = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Readiness Report — {{.AssessmentTitle}}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#0f172a;font-size:14px;line-height:1.6}
+  .page{max-width:860px;margin:0 auto;padding:48px 40px}
+  .watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-30deg);font-size:80px;font-weight:700;color:rgba(0,0,0,0.04);pointer-events:none;white-space:nowrap;z-index:9999}
+  h1{font-size:28px;font-weight:700;color:#0f172a;margin-bottom:4px}
+  h2{font-size:18px;font-weight:600;color:#1e293b;margin:32px 0 16px}
+  .meta{color:#64748b;font-size:12px;margin-bottom:40px}
+  .hero{text-align:center;padding:40px;background:#f8fafc;border-radius:12px;margin-bottom:32px;border:1px solid #e2e8f0}
+  .composite{font-size:72px;font-weight:700;line-height:1}
+  .composite.high{color:#16a34a}
+  .composite.med{color:#d97706}
+  .composite.low{color:#dc2626}
+  .composite-label{font-size:13px;color:#64748b;margin-top:8px}
+  .binding{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:16px;margin-bottom:32px}
+  .binding-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#c2410c;margin-bottom:4px}
+  .binding-text{font-size:14px;color:#7c2d12}
+  .dim-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:32px}
+  .dim-card{border:1px solid #e2e8f0;border-radius:8px;padding:16px}
+  .dim-card.binding{border-color:#fed7aa;background:#fff7ed}
+  .dim-name{font-size:12px;color:#475569;margin-bottom:4px}
+  .dim-score{font-size:28px;font-weight:700;color:#0f172a}
+  .bar-bg{height:6px;background:#e2e8f0;border-radius:999px;margin-top:8px;overflow:hidden}
+  .bar-fill{height:100%;border-radius:999px}
+  .bar-high{background:#22c55e}
+  .bar-med{background:#f59e0b}
+  .bar-low{background:#ef4444}
+  .derived-table{width:100%;border-collapse:collapse}
+  .derived-table th,.derived-table td{text-align:left;padding:8px 12px;border-bottom:1px solid #f1f5f9;font-size:13px}
+  .derived-table th{font-weight:600;color:#475569;font-size:11px;text-transform:uppercase;letter-spacing:0.05em}
+  .footer{margin-top:48px;padding-top:16px;border-top:1px solid #e2e8f0;font-size:11px;color:#94a3b8;text-align:center}
+  @media print{.watermark{position:fixed}}
+</style>
+</head>
+<body>
+{{if .FreeTier}}<div class="watermark">FREE TIER — READINOVA</div>{{end}}
+<div class="page">
+  <p style="font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#06b6d4;margin-bottom:8px">Readinova</p>
+  <h1>AI Readiness Report</h1>
+  <p class="meta">
+    {{.AssessmentTitle}} &nbsp;·&nbsp; {{.OrgName}}<br>
+    Framework v{{.FrameworkVersion}} &nbsp;·&nbsp; Engine {{.EngineVersion}}
+  </p>
+
+  <div class="hero">
+    <p style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.15em;color:#64748b;margin-bottom:12px">Composite AI Readiness Score</p>
+    {{$r := round .Composite}}
+    <div class="composite {{if ge $r 75}}high{{else if ge $r 50}}med{{else}}low{{end}}">{{$r}}</div>
+    <p class="composite-label">out of 100</p>
+  </div>
+
+  {{if .Binding}}
+  <div class="binding">
+    <p class="binding-label">Binding Constraint</p>
+    <p class="binding-text">
+      <strong>{{.Binding}}</strong> is currently the lowest-scoring dimension
+      ({{round .BindingScore}}/100) and is limiting your composite score.
+      Prioritise improvements here for maximum impact.
+    </p>
+  </div>
+  {{end}}
+
+  <h2>Dimension Scores</h2>
+  <div class="dim-grid">
+  {{range .Dimensions}}
+    <div class="dim-card{{if .Binding}} binding{{end}}">
+      <p class="dim-name">{{.Label}}{{if .Binding}} ★ binding{{end}}</p>
+      <p class="dim-score">{{.Rounded}}<span style="font-size:14px;font-weight:400;color:#94a3b8">/100</span></p>
+      <div class="bar-bg">
+        <div class="bar-fill {{if ge .Rounded 75}}bar-high{{else if ge .Rounded 50}}bar-med{{else}}bar-low{{end}}"
+             style="width:{{pctWidth .Score}}"></div>
+      </div>
+    </div>
+  {{end}}
+  </div>
+
+  <h2>Derived Indices</h2>
+  <table class="derived-table">
+    <thead>
+      <tr><th>Index</th><th>Score</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Readiness Index</td><td>{{round .DerivedIndices.ReadinessIndex}}</td></tr>
+      <tr><td>Governance &amp; Risk Score</td><td>{{round .DerivedIndices.GovernanceRiskScore}}</td></tr>
+      <tr><td>Execution Capacity Score</td><td>{{round .DerivedIndices.ExecutionCapacityScore}}</td></tr>
+      <tr><td>Value Realisation Score</td><td>{{round .DerivedIndices.ValueRealisationScore}}</td></tr>
+    </tbody>
+  </table>
+
+  <div class="footer">
+    Generated by Readinova AI Readiness Platform
+    {{if .FreeTier}} &nbsp;·&nbsp; Upgrade to remove watermark{{end}}
+  </div>
+</div>
+</body>
+</html>`
