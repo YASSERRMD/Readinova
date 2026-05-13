@@ -1,0 +1,566 @@
+slug: governance_risk_and_compliance
+name: Governance Risk and Compliance
+description: >
+  Measures the maturity of AI risk management, regulatory compliance, model risk
+  governance, audit accountability, and incident management frameworks.
+default_weight: "0.1000"
+display_order: 10
+
+sub_dimensions:
+
+  - slug: ai_risk_framework
+    name: AI Risk Framework
+    description: Whether the organisation has a defined framework for identifying, assessing, and managing AI-specific risks.
+    weight_within_dimension: "0.2000"
+    display_order: 1
+    indicators:
+
+      - slug: ai_risk_taxonomy
+        name: AI Risk Taxonomy
+        description: Whether the organisation has a documented taxonomy of AI risk categories.
+        display_order: 1
+        questions:
+          - slug: ai_risk_categories_defined
+            prompt: "Does the organisation have a documented taxonomy of AI-specific risk categories (e.g., model failure, bias, data privacy, adversarial attack, third-party dependency) that has been reviewed in the last 12 months?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MAP-1.5"]
+              eu_ai_act: ["Article 9"]
+              iso_42001: ["6.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No AI-specific risk taxonomy exists; AI risks are managed under general IT risk categories."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "AI risks are identified informally per project; no common taxonomy exists."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A documented AI risk taxonomy exists covering at least five categories; it was reviewed within the last 24 months."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "A comprehensive AI risk taxonomy is reviewed annually, mapped to the organisation's enterprise risk framework, and used consistently across all AI initiatives."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Taxonomy is reviewed annually, updated based on emerging AI risk research and regulatory guidance, and published to all risk owners."
+                score: "100.00"
+
+      - slug: ai_risk_register
+        name: AI Risk Register
+        description: Whether AI-specific risks are maintained in a register with owners, likelihood, impact, and treatment plans.
+        display_order: 2
+        questions:
+          - slug: ai_risk_register_maintained
+            prompt: "Is there a dedicated AI risk register (or a clearly identified AI section in the enterprise risk register) with current entries for all production AI systems, each with a named owner, likelihood, impact, and treatment plan?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MAP-1.5"]
+              eu_ai_act: ["Article 9"]
+              iso_42001: ["6.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No AI risk register exists."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "AI risks are captured in project-level logs but not in a central register."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A dedicated AI risk register exists; entries cover most production systems but may lack treatment plans or named owners for some risks."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All production AI systems have entries with named owners, current likelihood/impact ratings, and documented treatment plans; register is reviewed quarterly by governance."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Register is reviewed quarterly, treatment plan completion is tracked, overdue treatments are escalated, and the register is audited annually for completeness."
+                score: "100.00"
+
+      - slug: risk_appetite_statement
+        name: AI Risk Appetite Statement
+        description: Whether the organisation has defined and communicated its appetite for AI risk.
+        display_order: 3
+        questions:
+          - slug: ai_risk_appetite_defined
+            prompt: "Has the board or executive leadership approved a written AI risk appetite statement that specifies acceptable risk levels for at least model accuracy, data privacy, and regulatory compliance dimensions?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              iso_42001: ["6.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No AI risk appetite statement exists."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Risk appetite is described verbally by leadership but not in a written, approved document."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A written AI risk appetite statement has been approved and covers at least two risk dimensions."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "An approved statement covers at least three dimensions; it is reviewed annually; AI risk owners are briefed on it; decisions are tested against it."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Statement covers all material AI risk dimensions, is reviewed annually, communicated to all AI risk owners, and used as a criterion in AI deployment approval gates."
+                score: "100.00"
+
+  - slug: model_risk_management
+    name: Model Risk Management
+    description: Whether models are risk-tiered and subject to validation, monitoring, and review commensurate with their risk level.
+    weight_within_dimension: "0.2500"
+    display_order: 2
+    indicators:
+
+      - slug: model_risk_tiering
+        name: Model Risk Tiering
+        description: Whether all production AI models are assigned a risk tier that drives the level of oversight applied.
+        display_order: 1
+        questions:
+          - slug: all_models_risk_tiered
+            prompt: "Is every production AI model assigned a risk tier (e.g., high, medium, low) based on a documented tiering criteria, with higher-tier models subject to more rigorous validation and monitoring?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MAP-1.5"]
+              eu_ai_act: ["Article 9"]
+              iso_42001: ["6.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No model risk tiering exists; all models are treated identically regardless of their impact."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Some models are informally considered higher risk but no documented tiering criteria or formal tier assignments exist."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A risk tiering criteria document exists; most production models have been assigned a tier."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All production models have a documented risk tier assigned using the criteria; tier assignments are reviewed annually and when the model's use changes."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "All models are tiered; tiering drives differentiated validation, monitoring, and governance requirements; tier changes trigger reassessment of controls."
+                score: "100.00"
+
+      - slug: independent_model_validation
+        name: Independent Model Validation
+        description: Whether high-risk AI models are independently validated before production deployment.
+        display_order: 2
+        questions:
+          - slug: high_risk_models_validated_independently
+            prompt: "Are all high-risk-tiered AI models reviewed by a validator who is independent of the model development team before they are deployed to production?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.2"]
+              eu_ai_act: ["Article 9"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No independent validation exists; models are validated only by the team that built them."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Peer review by another team member is used informally for some models but no independent validation process exists."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "An independent validation requirement exists for high-risk models; a validator outside the development team reviews most high-risk models."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All high-risk models are reviewed by an independent validator before production; validation reports are documented and stored; findings must be resolved before deployment."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Independent validation is a mandatory gate for all high-risk models; validation reports are auditable; validators are assessed for independence annually."
+                score: "100.00"
+
+      - slug: model_performance_review_schedule
+        name: Model Performance Review Schedule
+        description: Whether all production models are reviewed on a defined schedule by a risk or governance body.
+        display_order: 3
+        questions:
+          - slug: models_reviewed_on_schedule
+            prompt: "Does every production AI model have a scheduled governance review (separate from technical monitoring) at a frequency proportionate to its risk tier, with outcomes documented?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-4.1"]
+              eu_ai_act: ["Article 9"]
+              iso_42001: ["9.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No governance reviews are scheduled for production AI models."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Model reviews happen when concerns arise but not on a scheduled basis."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "An annual governance review is scheduled for all production models; outcomes are documented for most models."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All production models have a scheduled governance review; frequency is proportionate to risk tier (e.g., quarterly for high, annually for low); outcomes are documented and tracked."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Review schedule is documented, tracked, and met; missed reviews are escalated; review outcomes feed the risk register and model improvement backlog."
+                score: "100.00"
+
+  - slug: regulatory_compliance
+    name: Regulatory Compliance
+    description: Whether the organisation monitors and complies with applicable AI regulations and standards.
+    weight_within_dimension: "0.2000"
+    display_order: 3
+    indicators:
+
+      - slug: regulatory_landscape_monitoring
+        name: Regulatory Landscape Monitoring
+        description: Whether the organisation actively monitors AI-relevant regulatory developments.
+        display_order: 1
+        questions:
+          - slug: ai_regulatory_monitoring_in_place
+            prompt: "Does the organisation have a defined process for monitoring AI regulatory developments (EU AI Act, national legislation, sector-specific guidance) with a named owner responsible for updating compliance plans when new requirements emerge?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              eu_ai_act: ["Article 9"]
+              iso_42001: ["6.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No process for monitoring AI regulatory developments exists; the organisation is reactive to regulatory changes."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Regulatory updates are noticed informally through news or vendor communications; no systematic monitoring."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A monitoring process exists; a named owner subscribes to regulatory alerts and reviews new requirements at least quarterly."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Regulatory monitoring is systematic; new requirements are assessed for impact within 30 days of publication; compliance plans are updated; governance is briefed."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Monitoring covers all applicable jurisdictions; horizon scanning includes pre-legislative developments; impact assessments are completed within 30 days and tracked to implementation."
+                score: "100.00"
+
+      - slug: compliance_gap_assessment
+        name: Compliance Gap Assessment
+        description: Whether the organisation has assessed its AI systems against applicable regulatory requirements.
+        display_order: 2
+        questions:
+          - slug: compliance_gap_assessed_for_production_ai
+            prompt: "Has the organisation completed a compliance gap assessment comparing all production AI systems against applicable AI regulations (e.g., EU AI Act, GDPR) in the last 12 months, with findings documented?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              eu_ai_act: ["Article 9"]
+              iso_42001: ["9.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No compliance gap assessment has been conducted."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Compliance is assessed informally for specific regulations when a concern is raised."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A compliance gap assessment was conducted in the last 24 months; findings were documented and shared with leadership."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Annual compliance gap assessment covers all production AI systems against all applicable regulations; findings have documented remediation plans with owners and deadlines."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Annual assessment is conducted, findings are tracked to closure, compliance posture is reported to governance, and closed gaps are verified by independent review."
+                score: "100.00"
+
+      - slug: third_party_ai_compliance
+        name: Third-Party AI Compliance
+        description: Whether the organisation assesses the regulatory compliance of third-party AI systems or models it deploys.
+        display_order: 3
+        questions:
+          - slug: third_party_ai_compliance_assessed
+            prompt: "Before deploying a third-party AI system or model, does the organisation assess and document the provider's compliance posture against applicable regulations and require contractual compliance commitments?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MAP-1.6"]
+              eu_ai_act: ["Article 9"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Third-party AI is deployed without regulatory compliance assessment."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Compliance is reviewed informally for major third-party AI deployments; no standard process or contractual requirements exist."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A compliance assessment is conducted for third-party AI above a defined investment threshold; contractual compliance commitments are required."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All third-party AI deployments require a documented compliance assessment and contractual compliance commitments; assessments are retained and reviewed at contract renewal."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "All third-party AI is assessed; contracts include compliance commitments, right-to-audit, and breach notification; annual reviews check ongoing compliance."
+                score: "100.00"
+
+  - slug: audit_and_accountability
+    name: Audit and Accountability
+    description: Whether the organisation maintains the records and accountability structures needed to support internal and external AI audits.
+    weight_within_dimension: "0.2000"
+    display_order: 4
+    indicators:
+
+      - slug: ai_audit_readiness
+        name: AI Audit Readiness
+        description: Whether the organisation can demonstrate compliance with its AI policies to an independent auditor.
+        display_order: 1
+        questions:
+          - slug: audit_evidence_readily_available
+            prompt: "Can the organisation produce, within five business days, evidence of compliance with its AI governance policies (risk register, validation reports, model cards, access logs) for any production AI system?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              eu_ai_act: ["Article 11"]
+              iso_42001: ["9.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Compliance evidence does not exist or cannot be assembled in a reasonable timeframe."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Evidence exists but is scattered across systems; assembly takes weeks and is incomplete."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Key evidence artefacts are stored in known locations; assembly within 10 business days is achievable for most systems."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Evidence artefacts are stored systematically in a compliance repository; a named owner can compile an audit pack within five business days for any production system."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Audit readiness is tested annually via a simulated audit; assembly time is tracked; deficiencies found in simulations are remediated before the next test."
+                score: "100.00"
+
+      - slug: accountability_chain
+        name: Accountability Chain
+        description: Whether there is a documented chain of accountability from each production AI system to a named executive.
+        display_order: 2
+        questions:
+          - slug: accountability_chain_documented
+            prompt: "Is there a documented accountability chain for every production AI system, showing the accountable executive, the responsible AI team lead, and the business process owner, with no system without a named accountable executive?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.2"]
+              eu_ai_act: ["Article 26"]
+              iso_42001: ["5.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No accountability chain exists for production AI systems."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Accountability is understood informally but not documented for any production system."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "An accountability register exists for most production AI systems, naming at least the AI team lead and business process owner."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All production AI systems have a documented accountability chain including the accountable executive; the register is reviewed at each new deployment and annually."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Register is complete, current, audited annually, and changes to accountability are tracked with effective dates; executives are formally notified when they become accountable."
+                score: "100.00"
+
+      - slug: internal_audit_coverage
+        name: Internal Audit Coverage
+        description: Whether AI systems are included in the internal audit plan at a frequency appropriate to their risk level.
+        display_order: 3
+        questions:
+          - slug: ai_in_internal_audit_plan
+            prompt: "Are production AI systems included in the organisation's internal audit plan, with high-risk systems audited at least every two years?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              iso_42001: ["9.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "AI systems are not included in the internal audit plan."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "AI has been included in a specific audit when a concern was raised, but is not in the routine audit plan."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "AI systems are included in the internal audit plan; at least one high-risk system has been audited in the last three years."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All high-risk AI systems are audited at least every two years; audit findings have documented management responses and remediation plans."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "All production AI systems are in the audit cycle at risk-appropriate frequency; audit findings are tracked to closure; the audit plan is reviewed annually for coverage gaps."
+                score: "100.00"
+
+  - slug: incident_and_escalation
+    name: Incident and Escalation Management
+    description: Whether the organisation has defined processes for detecting, responding to, and learning from AI system incidents.
+    weight_within_dimension: "0.1500"
+    display_order: 5
+    indicators:
+
+      - slug: ai_incident_classification
+        name: AI Incident Classification
+        description: Whether AI-specific incidents are classified and triaged using a defined severity framework.
+        display_order: 1
+        questions:
+          - slug: ai_incident_severity_framework
+            prompt: "Does the organisation have a documented severity classification framework specifically for AI incidents (e.g., model producing harmful outputs, bias detected, data breach via AI), separate from or extending the general IT incident framework?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-2.4"]
+              eu_ai_act: ["Article 62"]
+              iso_42001: ["10.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "AI incidents are handled under general IT incident procedures with no AI-specific classification."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "AI incidents are escalated informally when they are serious; no documented severity framework for AI exists."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A documented AI incident severity framework exists, covering at least three severity levels with examples; it extends the general IT framework."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All AI incidents are classified against the framework; severity determines response SLA, stakeholder notification, and regulatory reporting requirements."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Framework is reviewed annually, updated when new incident types emerge, and classification accuracy is assessed in post-incident reviews."
+                score: "100.00"
+
+      - slug: ai_incident_response_process
+        name: AI Incident Response Process
+        description: Whether a defined and tested incident response process exists for AI-specific incidents.
+        display_order: 2
+        questions:
+          - slug: ai_incident_response_tested
+            prompt: "Is there a documented AI incident response process that has been tested (via tabletop exercise or live drill) in the last 12 months, with findings documented and acted upon?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-2.4"]
+              eu_ai_act: ["Article 62"]
+              iso_42001: ["10.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No AI-specific incident response process exists."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "An AI incident response process is documented but has never been tested."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A documented process exists and was tested at least once in the last 24 months; findings were documented."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Process is documented, tested annually via tabletop or drill, findings are documented, and improvement actions are completed before the next test."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Annual testing is standard; test scenarios are updated based on new threat intelligence; all identified improvements are tracked to completion; regulators are included in relevant exercises."
+                score: "100.00"
+
+      - slug: post_incident_learning
+        name: Post-Incident Learning
+        description: Whether AI incidents result in documented root-cause analysis and systemic improvements.
+        display_order: 3
+        questions:
+          - slug: ai_incidents_have_rca
+            prompt: "For every AI incident classified as Severity 1 or 2 in the last 24 months, was a root-cause analysis completed and documented, with systemic improvement actions tracked to completion?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-4.2"]
+              iso_42001: ["10.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "AI incidents are resolved without root-cause analysis; no learning is captured."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Some incidents have informal post-mortems but no standard RCA process or improvement tracking exists."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A documented RCA process is required for Severity 1 incidents; most qualify have completed RCAs with documented findings."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "RCAs are completed for all Severity 1 and 2 incidents; systemic improvement actions have owners, deadlines, and are tracked to completion."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "RCAs are completed for all qualifying incidents; improvement actions are tracked; recurring root causes are escalated to the governance body; incident trends are reviewed quarterly."
+                score: "100.00"

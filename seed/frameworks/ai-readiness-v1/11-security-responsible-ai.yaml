@@ -1,0 +1,458 @@
+slug: security_and_responsible_ai
+name: Security and Responsible AI
+description: >
+  Measures the controls in place to secure AI systems against adversarial threats
+  and to ensure that AI systems are fair, transparent, explainable, and operate
+  within the boundaries of responsible AI principles.
+default_weight: "0.0600"
+display_order: 11
+
+sub_dimensions:
+
+  - slug: ai_security_controls
+    name: AI Security Controls
+    description: Whether AI systems and their data are protected against unauthorised access, manipulation, and theft.
+    weight_within_dimension: "0.2500"
+    display_order: 1
+    indicators:
+
+      - slug: model_artefact_protection
+        name: Model Artefact Protection
+        description: Whether trained model weights and artefacts are protected against unauthorised access or theft.
+        display_order: 1
+        questions:
+          - slug: model_weights_access_controlled
+            prompt: "Are trained model weights and serialised model artefacts stored in access-controlled storage with audit logging, preventing access by anyone other than authorised deployers and the model registry system?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-2.2"]
+              eu_ai_act: ["Article 15"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Model artefacts are stored in shared drives accessible to all IT staff."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Model artefacts are in a restricted folder but access controls are not formally managed or audited."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Model artefacts are in access-controlled storage; access is limited to named roles; access changes are reviewed quarterly."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Model artefacts are encrypted at rest, access is access-controlled and audit-logged, and logs are reviewed monthly for anomalies."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Artefacts are encrypted at rest and in transit, access is logged and monitored with automated anomaly detection, and integrity checks verify artefacts have not been tampered with."
+                score: "100.00"
+
+      - slug: api_security_for_ai_endpoints
+        name: API Security for AI Endpoints
+        description: Whether AI serving endpoints are secured against unauthorised access and abuse.
+        display_order: 2
+        questions:
+          - slug: ai_api_authentication_enforced
+            prompt: "Do all AI model serving endpoints require authentication (API key, OAuth, or equivalent) and enforce rate limiting to prevent abuse?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-2.2"]
+              eu_ai_act: ["Article 15"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "AI endpoints are accessible without authentication."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Some endpoints require authentication but others are open; rate limiting is not in place."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "All production AI endpoints require authentication; rate limiting is configured on most."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All production AI endpoints require authentication, enforce rate limits, and log all requests; anomalous request patterns trigger alerts."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "All endpoints are authenticated, rate-limited, and monitored; API security tests (automated) run on each deployment; penetration testing covers AI endpoints annually."
+                score: "100.00"
+
+      - slug: supply_chain_security
+        name: AI Supply Chain Security
+        description: Whether third-party AI components (models, libraries, datasets) are verified before use.
+        display_order: 3
+        questions:
+          - slug: third_party_ai_components_verified
+            prompt: "Is there a documented process requiring that third-party AI models, libraries, and datasets are verified for integrity (checksum or signature), scanned for vulnerabilities, and reviewed for licence compliance before use in production?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MAP-1.6"]
+              eu_ai_act: ["Article 9"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Third-party AI components are used without verification, scanning, or licence review."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Some engineers informally check major third-party components; no standard process exists."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A documented verification process exists; it covers integrity verification and licence review for most third-party components."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All third-party AI components used in production are verified for integrity, scanned for vulnerabilities, and licence-reviewed before use; a component register is maintained."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Verification is automated in CI/CD; the component register is continuously monitored for new CVEs; licence violations block deployment; supply chain risk reviews are annual."
+                score: "100.00"
+
+  - slug: adversarial_robustness
+    name: Adversarial Robustness
+    description: Whether AI systems are tested and hardened against adversarial inputs and manipulation attempts.
+    weight_within_dimension: "0.2500"
+    display_order: 2
+    indicators:
+
+      - slug: adversarial_testing
+        name: Adversarial Testing
+        description: Whether AI systems are tested for robustness against adversarial inputs before production deployment.
+        display_order: 1
+        questions:
+          - slug: adversarial_tests_before_deployment
+            prompt: "For AI systems that process user-supplied inputs, are adversarial robustness tests (adversarial examples, prompt injection for LLMs, or equivalent) run and documented before production deployment?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.5"]
+              eu_ai_act: ["Article 15"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No adversarial testing is performed on AI systems."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Some manual adversarial testing is done informally by engineers; results are not documented."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Adversarial testing is defined as a requirement before deployment; tests are conducted and documented for most AI systems processing user inputs."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Adversarial tests are conducted and documented for all AI systems processing user inputs; results are reviewed before deployment approval; critical vulnerabilities block deployment."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Adversarial testing is automated where possible, runs in CI, covers current threat categories (OWASP AI Top 10), and findings are tracked in the risk register."
+                score: "100.00"
+
+      - slug: input_validation
+        name: Input Validation
+        description: Whether AI serving endpoints validate and sanitise inputs before passing them to models.
+        display_order: 2
+        questions:
+          - slug: ai_inputs_validated_and_sanitised
+            prompt: "Do AI serving endpoints enforce input validation (schema, type, range checks) and sanitisation before passing inputs to the model, rejecting malformed or out-of-range inputs with a logged error response?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-2.2"]
+              eu_ai_act: ["Article 15"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Raw user inputs are passed directly to AI models without validation or sanitisation."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Basic type checking exists but schema and range validation are not enforced; rejected inputs are not logged."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Schema and type validation are enforced; most endpoints sanitise inputs; rejected inputs are logged."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All AI endpoints enforce schema, type, and range validation; inputs are sanitised; rejections are logged with the reason and monitored for anomalous patterns."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Validation is tested in CI; rejection rates are monitored; high rejection rates trigger investigation; validation rules are updated when new attack patterns are discovered."
+                score: "100.00"
+
+      - slug: model_extraction_protection
+        name: Model Extraction Protection
+        description: Whether controls exist to prevent attackers from extracting a proprietary AI model through repeated queries.
+        display_order: 3
+        questions:
+          - slug: model_extraction_controls_in_place
+            prompt: "Are controls in place to detect and prevent model extraction attacks, including rate limiting per client, output confidence truncation, and alerts for query patterns consistent with model extraction?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-2.2"]
+              eu_ai_act: ["Article 15"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No controls exist to prevent model extraction; full confidence scores are returned to all callers."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Rate limiting is in place but no specific controls for extraction attack patterns exist."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Confidence scores are truncated or withheld; rate limiting is configured per client."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Rate limiting, confidence truncation, and anomalous query pattern alerting are all in place for high-risk models; alerts are reviewed weekly."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "All three controls are in place; automated detection runs continuously; suspected extraction events trigger investigation and temporary access suspension pending review."
+                score: "100.00"
+
+  - slug: fairness_and_bias_management
+    name: Fairness and Bias Management
+    description: Whether AI models are tested for bias and disparate impact, and whether mitigation actions are tracked.
+    weight_within_dimension: "0.2500"
+    display_order: 3
+    indicators:
+
+      - slug: bias_testing_pre_deployment
+        name: Bias Testing Pre-Deployment
+        description: Whether AI models are tested for bias and disparate impact across protected characteristics before production deployment.
+        display_order: 1
+        questions:
+          - slug: bias_tested_before_production
+            prompt: "Are AI models that make or recommend decisions affecting individuals tested for bias across applicable protected characteristics (age, gender, race, disability) before production deployment, with results documented?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.3"]
+              eu_ai_act: ["Article 10"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No bias testing is performed before deployment."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Bias is considered informally by data scientists but no structured test or documentation requirement exists."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A bias testing requirement exists; tests are run and documented for most models affecting individuals before deployment."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All models affecting individuals are tested for bias across defined protected characteristics before deployment; results are reviewed by a named reviewer; findings above a threshold block deployment."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Bias tests are automated and run in CI; results are stored in the model registry; tests cover multiple fairness metrics; persistent bias findings trigger a bias mitigation process."
+                score: "100.00"
+
+      - slug: ongoing_bias_monitoring
+        name: Ongoing Bias Monitoring
+        description: Whether production AI models are monitored for emerging bias after deployment.
+        display_order: 2
+        questions:
+          - slug: production_bias_monitored
+            prompt: "Are production AI models that affect individuals monitored for bias in their outputs on an ongoing basis (at least quarterly), with reports reviewed by a named owner?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.3"]
+              eu_ai_act: ["Article 10"]
+              iso_42001: ["9.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Bias is not monitored after deployment."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Bias analysis is run when a complaint or concern is raised."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Bias metrics are computed at least annually for production models affecting individuals; results are shared with the governance body."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Bias metrics are computed quarterly for all production models affecting individuals; a named owner reviews results; results that exceed thresholds trigger a remediation process."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Bias monitoring is automated and continuous; threshold breaches trigger immediate alerts; all monitoring results are retained and trend analysis identifies worsening patterns."
+                score: "100.00"
+
+      - slug: bias_remediation_process
+        name: Bias Remediation Process
+        description: Whether a documented process exists to address bias findings above accepted thresholds.
+        display_order: 3
+        questions:
+          - slug: bias_above_threshold_has_remediation_plan
+            prompt: "When bias testing or monitoring identifies a result above the acceptable threshold, is there a documented process requiring a remediation plan to be produced within 30 days with a named owner and target completion date?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-4.1"]
+              eu_ai_act: ["Article 10"]
+              iso_42001: ["10.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No remediation process exists; bias findings above thresholds are noted but not acted upon."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Bias findings are discussed but no formal remediation process, owner assignment, or deadline exists."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A remediation process is documented; findings above threshold lead to a remediation discussion; plans are informal."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "A documented remediation process requires a plan within 30 days of a threshold breach; plans have named owners and target dates; completion is tracked by governance."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "30-day plan requirement is enforced; completion rates are tracked; governance reviews outstanding plans monthly; remediation effectiveness is verified by re-testing."
+                score: "100.00"
+
+  - slug: transparency_and_explainability
+    name: Transparency and Explainability
+    description: Whether the organisation provides appropriate transparency about its AI systems to affected parties and regulators.
+    weight_within_dimension: "0.2500"
+    display_order: 4
+    indicators:
+
+      - slug: ai_disclosure_to_affected_parties
+        name: AI Disclosure to Affected Parties
+        description: Whether individuals who are subject to AI-assisted decisions are informed that AI is involved.
+        display_order: 1
+        questions:
+          - slug: ai_use_disclosed_to_subjects
+            prompt: "Are individuals informed that an AI system was involved in making or materially influencing a decision that affects them, prior to or at the time the decision is communicated?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.9"]
+              eu_ai_act: ["Article 13"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Individuals are not informed when AI is used in decisions that affect them."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "AI involvement is disclosed informally in some contexts but there is no policy or consistent practice."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A disclosure policy exists; disclosure is included in communications for most AI-assisted decisions affecting individuals."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "A documented disclosure policy requires notification for all AI-assisted decisions affecting individuals; disclosure is included in standard decision communications; compliance is audited."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Disclosure is standard and audited; disclosed wording is plain language and legally reviewed; disclosure compliance is tracked and reported to governance."
+                score: "100.00"
+
+      - slug: explainability_method_documented
+        name: Explainability Method Documented
+        description: Whether the explainability method for each production model is documented and appropriate to its risk level.
+        display_order: 2
+        questions:
+          - slug: explainability_method_documented_per_model
+            prompt: "Is the explainability method (SHAP, LIME, attention visualisation, or equivalent) documented for every production AI model, with the method appropriate to the model's risk tier?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.9"]
+              eu_ai_act: ["Article 13"]
+              iso_42001: ["8.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No explainability method is used or documented for any production model."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Explainability is implemented for some models informally by the data scientist who built them; no documentation standard."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "An explainability method is documented for most production models; documentation is stored in the model registry."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "An explainability method is documented for all production models; the method's appropriateness for the model's risk tier is reviewed as part of the model card."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Explainability methods are documented, appropriate to risk tier, validated with affected users for comprehensibility, and updated when model architecture changes."
+                score: "100.00"
+
+      - slug: public_transparency_reporting
+        name: Public Transparency Reporting
+        description: Whether the organisation publishes information about its AI systems for external stakeholders.
+        display_order: 3
+        questions:
+          - slug: ai_transparency_report_published
+            prompt: "Has the organisation published (externally accessible) an AI transparency report or AI use policy in the last 24 months that describes the types of AI systems in use, their purposes, and how they affect customers?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              eu_ai_act: ["Article 13"]
+              iso_42001: ["5.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No external-facing information about the organisation's AI use is published."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "General statements about AI use appear in annual reports or website copy but are too vague to be informative."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "An AI use policy or transparency statement has been published externally; it describes the main categories of AI systems in use and their purpose."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "An AI transparency report or policy is published annually; it covers system types, purposes, safeguards, and how individuals can raise concerns."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Annual transparency report is published, reviewed by legal before publication, includes specific examples, and is assessed for clarity by an external reviewer; report completeness is compared year-on-year."
+                score: "100.00"

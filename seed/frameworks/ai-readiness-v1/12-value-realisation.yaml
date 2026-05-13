@@ -1,0 +1,446 @@
+slug: value_realisation_and_measurement
+name: Value Realisation and Measurement
+description: >
+  Measures the organisation's ability to define, track, and report the business value
+  delivered by AI initiatives, and to use those measurements to continuously improve
+  its AI investment decisions.
+default_weight: "0.0400"
+display_order: 12
+
+sub_dimensions:
+
+  - slug: roi_and_business_case
+    name: ROI and Business Case Quality
+    description: Whether AI initiatives are underpinned by robust business cases with measurable ROI targets.
+    weight_within_dimension: "0.2500"
+    display_order: 1
+    indicators:
+
+      - slug: business_case_standard
+        name: Business Case Standard
+        description: Whether a standard business case template is required for AI initiatives above a defined investment threshold.
+        display_order: 1
+        questions:
+          - slug: standard_business_case_required
+            prompt: "Is a business case produced using a standard template required for all AI initiatives above a defined investment threshold, with quantified benefit projections and a payback period?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              iso_42001: ["6.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "AI initiatives are approved based on verbal proposals with no written business case."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Some initiatives have written business cases but the format varies and quantified benefits are often missing."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A standard business case template is required for initiatives above a defined threshold; most qualifying initiatives have quantified benefit projections."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All qualifying initiatives have a standard business case with quantified benefits, cost projections, a payback period, and a named benefits owner."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Standard business cases are mandatory; projections are reviewed by finance before approval; actual vs projected comparisons are done at 6 and 12 months post-delivery."
+                score: "100.00"
+
+      - slug: total_cost_of_ownership
+        name: Total Cost of Ownership
+        description: Whether the total cost of ownership of AI systems (including maintenance, compute, monitoring) is tracked.
+        display_order: 2
+        questions:
+          - slug: ai_tco_tracked
+            prompt: "Is the total cost of ownership (development, compute, licences, monitoring, maintenance staff time) tracked per production AI system and reported to the AI sponsor at least annually?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              iso_42001: ["7.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "AI system costs are not tracked beyond initial development; ongoing costs are unknown."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Some ongoing costs (e.g., compute bills) are tracked but staff time and licence costs are not included in a total view."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "TCO is calculated for most production systems at least annually, covering compute, licences, and major maintenance costs."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "TCO is tracked for all production systems, covers all cost categories, and is reported to the AI sponsor at least annually; TCO is used in ROI calculations."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "TCO is tracked in real time by cost category; monthly reports compare TCO to business value delivered; cost anomalies trigger review; TCO per unit of business value is a reported metric."
+                score: "100.00"
+
+      - slug: investment_portfolio_optimisation
+        name: Investment Portfolio Optimisation
+        description: Whether AI investment decisions are made with reference to the full portfolio ROI picture.
+        display_order: 3
+        questions:
+          - slug: portfolio_roi_informs_investment
+            prompt: "Are new AI investment decisions made with reference to the measured ROI of existing AI systems, using that data to prioritise higher-ROI initiatives over lower-ROI ones?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              iso_42001: ["6.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "New AI investments are approved independently without reference to the ROI of existing systems."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Portfolio ROI data exists informally but is not systematically used in new investment decisions."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Portfolio ROI data is included in new investment proposal reviews; the link between existing ROI data and prioritisation is documented."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Portfolio ROI data is presented at every investment decision meeting; new proposals explicitly reference portfolio performance data to justify prioritisation."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Portfolio ROI data drives a formal scoring model for investment prioritisation; scoring results are documented; decisions that deviate from the ranking require written justification."
+                score: "100.00"
+
+  - slug: performance_metrics
+    name: Performance Metrics and KPIs
+    description: Whether appropriate KPIs are defined, measured, and reported for each AI system.
+    weight_within_dimension: "0.2500"
+    display_order: 2
+    indicators:
+
+      - slug: kpi_definition_quality
+        name: KPI Definition Quality
+        description: Whether AI system KPIs are specific, measurable, and linked to business outcomes.
+        display_order: 1
+        questions:
+          - slug: kpis_are_measurable_and_linked
+            prompt: "Does each production AI system have at least one KPI that is specific (with a numeric target), measurable (data exists to calculate it), and explicitly linked to a business outcome that the AI sponsor tracks?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.5"]
+              iso_42001: ["9.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No KPIs are defined for production AI systems."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Technical metrics (accuracy, latency) are tracked but are not linked to business outcomes."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "At least one business-linked KPI with a numeric target is defined for most production systems."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All production systems have at least one specific, measurable, business-linked KPI with a numeric target; KPIs are reviewed at each quarterly governance meeting."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "All systems have business-linked KPIs; targets are set before deployment, reviewed quarterly, and adjusted based on operational learnings; KPI history is retained for trend analysis."
+                score: "100.00"
+
+      - slug: kpi_reporting_cadence
+        name: KPI Reporting Cadence
+        description: Whether AI system KPIs are reported to the AI sponsor and business owner on a defined schedule.
+        display_order: 2
+        questions:
+          - slug: kpis_reported_monthly
+            prompt: "Are AI system KPIs reported to the relevant business owner and AI sponsor at least monthly, in a dashboard or report that also shows the target and trend?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.5"]
+              iso_42001: ["9.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "AI KPIs are not reported on any regular schedule."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "KPIs are reported when requested by the sponsor; no regular reporting cadence."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "KPIs are reported at least quarterly to business owners; reports include current value and target."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "KPIs are reported monthly to business owners and AI sponsors; reports include current value, target, and trend; reports are produced automatically from monitored data."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Monthly reporting is automated; reports include value, target, trend, and a commentary on variances; reports are distributed to a defined list of stakeholders."
+                score: "100.00"
+
+      - slug: lagging_and_leading_indicators
+        name: Lagging and Leading Indicators
+        description: Whether both lagging outcome metrics and leading process metrics are tracked for AI systems.
+        display_order: 3
+        questions:
+          - slug: leading_indicators_defined
+            prompt: "In addition to outcome KPIs, does each production AI system have at least one leading indicator (a process or input metric that predicts future business performance) tracked and reviewed?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.5"]
+              iso_42001: ["9.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Only lagging outcome metrics are tracked; no leading indicators are defined."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Some leading indicators are discussed informally but not formally tracked or reported."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Leading indicators are defined for most production systems and are tracked, though not always reviewed alongside outcome KPIs."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Leading indicators are defined and tracked for all production systems; they are reviewed alongside outcome KPIs in monthly reports and used to anticipate performance changes."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Leading indicators are defined, tracked, and correlated with actual outcomes to validate their predictive value; indicators that do not predict outcomes are replaced."
+                score: "100.00"
+
+  - slug: benefit_realisation_tracking
+    name: Benefit Realisation Tracking
+    description: Whether the benefits projected in AI business cases are tracked against actuals through the lifetime of each system.
+    weight_within_dimension: "0.2500"
+    display_order: 3
+    indicators:
+
+      - slug: baseline_measurement_before_deployment
+        name: Baseline Measurement Before Deployment
+        description: Whether baseline measurements of the target business metric are recorded before AI is deployed.
+        display_order: 1
+        questions:
+          - slug: pre_deployment_baseline_recorded
+            prompt: "Is the target business metric measured and formally recorded as a baseline in the business case before any AI system is deployed, enabling a pre-post comparison after deployment?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.5"]
+              iso_42001: ["9.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Pre-deployment baselines are not recorded; post-deployment comparisons are impossible."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Baselines are sometimes estimated retrospectively but are not formally recorded before deployment."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Pre-deployment baselines are recorded for most AI initiatives before deployment; baselines are referenced in post-deployment reviews."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Pre-deployment baselines are a mandatory element of the business case for all initiatives; baselines are recorded in a system of record before go-live."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Baselines are mandatory, recorded before go-live, stored in a system of record linked to the deployment, and used in mandatory 3-month and 12-month post-deployment reviews."
+                score: "100.00"
+
+      - slug: post_implementation_review
+        name: Post-Implementation Review
+        description: Whether structured post-implementation reviews compare actual benefits to projected benefits.
+        display_order: 2
+        questions:
+          - slug: pir_conducted_for_all_deployments
+            prompt: "Is a post-implementation review conducted for all AI deployments above a defined investment threshold at both 3 months and 12 months post-go-live, comparing actual benefits to projected benefits?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.5"]
+              iso_42001: ["10.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No post-implementation reviews are conducted."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Reviews are conducted for some deployments when specifically requested; format and timing vary."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A 12-month post-implementation review is conducted for most qualifying deployments; results are documented."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Both 3-month and 12-month reviews are conducted for all qualifying deployments; results compare actuals to projections; findings are shared with the AI sponsor."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Reviews are conducted at 3 and 12 months, completed on time above 90%, findings feed future business case accuracy improvements, and variance patterns inform the investment prioritisation model."
+                score: "100.00"
+
+      - slug: benefits_realisation_register
+        name: Benefits Realisation Register
+        description: Whether the organisation maintains a register tracking realised benefits across all AI initiatives.
+        display_order: 3
+        questions:
+          - slug: benefits_register_maintained
+            prompt: "Does the organisation maintain a benefits realisation register listing every AI initiative, its projected benefits, its actual delivered benefits, and the variance, updated at least annually?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.5"]
+              iso_42001: ["9.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No benefits register exists."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Benefits data is compiled ad hoc on request but no maintained register exists."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A benefits register exists covering most AI initiatives; projected and actual values are recorded."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "A complete register covering all AI initiatives is updated at least annually; it shows projected benefits, actual benefits, and variance; the register is reviewed by the AI governance body."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Register is updated after each post-implementation review; variance trends inform future projection accuracy targets; cumulative portfolio ROI is reported to board level."
+                score: "100.00"
+
+  - slug: continuous_improvement
+    name: Continuous Improvement
+    description: Whether value measurement insights are used to improve AI investment decisions and system performance.
+    weight_within_dimension: "0.2500"
+    display_order: 4
+    indicators:
+
+      - slug: improvement_backlog_from_metrics
+        name: Improvement Backlog from Metrics
+        description: Whether performance metrics directly feed a managed improvement backlog for AI systems.
+        display_order: 1
+        questions:
+          - slug: metric_findings_feed_backlog
+            prompt: "Are underperforming AI system metrics (KPI miss, declining trend) automatically or systematically translated into improvement items in a managed backlog reviewed at least quarterly?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-4.1"]
+              iso_42001: ["10.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Metric findings are noted but no improvement backlog or systematic follow-up exists."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Improvement ideas are generated after metric reviews but are not tracked in a managed backlog."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "An improvement backlog exists; significant metric underperformance leads to backlog items in most cases."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All KPI misses and declining trends automatically generate backlog items; the backlog is reviewed quarterly by the AI governance body; items have owners and target dates."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Backlog items from metric findings are prioritised by projected business impact; completion rates are tracked; improvement velocity (backlog item age) is a reported metric."
+                score: "100.00"
+
+      - slug: benchmarking
+        name: Benchmarking Against Industry
+        description: Whether the organisation benchmarks its AI business value metrics against industry peers.
+        display_order: 2
+        questions:
+          - slug: ai_value_benchmarked_externally
+            prompt: "Has the organisation compared at least one AI business value metric against an industry benchmark or peer group in the last 24 months, with findings used to update its targets?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.5"]
+              iso_42001: ["9.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No external benchmarking has been done; targets are set internally without reference to industry standards."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "External benchmarks are occasionally referenced in presentations but not used to set targets."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "At least one AI business value metric has been benchmarked against published industry data in the last 24 months; findings were documented."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Annual benchmarking covers at least two AI value metrics; findings are used to update the organisation's KPI targets; gaps are included in the improvement backlog."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Annual benchmarking is standard; results are presented to the AI governance body; targets are updated based on findings; the organisation participates in industry working groups to maintain benchmark access."
+                score: "100.00"
+
+      - slug: value_communication
+        name: Value Communication to Stakeholders
+        description: Whether AI business value results are communicated to internal and external stakeholders.
+        display_order: 3
+        questions:
+          - slug: ai_value_results_communicated
+            prompt: "Are the measured business value results of AI initiatives communicated to at least two of the following stakeholder groups annually: board, senior leadership, all staff, external customers?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              iso_42001: ["7.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "AI value results are not communicated to any stakeholder group."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Results are shared informally with the immediate project team only."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "AI value results are included in at least one annual report or presentation to a named stakeholder group."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "AI value results are communicated at least annually to board, senior leadership, and all staff; communications include both successes and lessons learned."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Value results are communicated to all four stakeholder groups annually; content includes successes, lessons learned, and next-year targets; communication effectiveness is measured by survey."
+                score: "100.00"
