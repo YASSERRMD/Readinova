@@ -67,6 +67,14 @@ export function AssessmentsPage() {
                   Continue
                 </Link>
               )}
+              {a.status === "scored" && (
+                <Link
+                  to={`/app/assessments/${a.id}/dashboard`}
+                  className="btn-primary text-xs px-3 py-1"
+                >
+                  View Results
+                </Link>
+              )}
             </div>
           </div>
         ))}

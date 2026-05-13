@@ -7,6 +7,7 @@ import { LoginPage } from "./pages/LoginPage";
 import { SignupPage } from "./pages/SignupPage";
 import { AssessmentsPage } from "./pages/AssessmentsPage";
 import { QuestionnairePage } from "./pages/QuestionnairePage";
+import { DashboardPage } from "./pages/DashboardPage";
 import { TeamPage } from "./pages/TeamPage";
 import { AcceptInvitePage } from "./pages/AcceptInvitePage";
 
@@ -36,6 +37,10 @@ export function App() {
                 <Route
                   path="/app/assessments/:id/questionnaire"
                   element={<QuestionnairePage />}
+                />
+                <Route
+                  path="/app/assessments/:id/dashboard"
+                  element={<DashboardPage />}
                 />
                 <Route path="/app/team" element={<TeamPage />} />
               </Route>
