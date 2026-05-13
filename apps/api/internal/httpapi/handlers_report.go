@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/YASSERRMD/Readinova/apps/api/internal/billing"
 	"github.com/YASSERRMD/Readinova/apps/api/internal/report"
 )
 
@@ -69,8 +70,15 @@ func (s *Server) handleReport(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Determine tier (free tier = viewer role).
-	freeTier := claims.Role == "viewer"
+	// Determine tier from subscription.
+	var tier string
+	if err := s.db.QueryRow(r.Context(),
+		`SELECT tier FROM subscriptions WHERE organisation_id = $1`,
+		claims.OrgID,
+	).Scan(&tier); err != nil {
+		tier = string(billing.TierFree)
+	}
+	freeTier := billing.LimitsFor(billing.Tier(tier)).PDFWatermark
 
 	// Build dimension list.
 	dims := make([]report.DimensionScore, 0, len(sr.DimensionScores))
@@ -87,12 +95,12 @@ func (s *Server) handleReport(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := report.Data{
-		OrgName:         orgName,
-		AssessmentTitle: assessmentTitle,
-		Composite:       sr.CompositeLayerA,
+		OrgName:          orgName,
+		AssessmentTitle:  assessmentTitle,
+		Composite:        sr.CompositeLayerA,
 		FrameworkVersion: sr.FrameworkVersion,
-		EngineVersion:   sr.EngineVersion,
-		Dimensions:      dims,
+		EngineVersion:    sr.EngineVersion,
+		Dimensions:       dims,
 		DerivedIndices: report.DerivedIndices{
 			ReadinessIndex:         sr.Derived.ReadinessIndex,
 			GovernanceRiskScore:    sr.Derived.GovernanceRiskScore,
