@@ -10,6 +10,7 @@ import { QuestionnairePage } from "./pages/QuestionnairePage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { TeamPage } from "./pages/TeamPage";
 import { AcceptInvitePage } from "./pages/AcceptInvitePage";
+import ConnectorsPage from "./pages/ConnectorsPage";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +44,7 @@ export function App() {
                   element={<DashboardPage />}
                 />
                 <Route path="/app/team" element={<TeamPage />} />
+                <Route path="/app/connectors" element={<ConnectorsPage />} />
               </Route>
             </Route>
           </Routes>
