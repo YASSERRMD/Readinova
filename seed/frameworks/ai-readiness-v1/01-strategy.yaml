@@ -1,0 +1,444 @@
+slug: strategy_and_business_alignment
+name: Strategy and Business Alignment
+description: >
+  Measures how well the organisation has defined, documented, and operationalised
+  an AI strategy that is explicitly tied to business goals and backed by a funded roadmap.
+default_weight: "0.1000"
+display_order: 1
+
+sub_dimensions:
+
+  - slug: ai_strategy_definition
+    name: AI Strategy Definition
+    description: Existence and quality of a documented AI strategy aligned to business objectives.
+    weight_within_dimension: "0.2500"
+    display_order: 1
+    indicators:
+
+      - slug: strategy_document_existence
+        name: Strategy Document Existence
+        description: Whether a formal AI strategy document exists and is actively maintained.
+        display_order: 1
+        questions:
+          - slug: strategy_documented_and_current
+            prompt: "Does your organisation have a written AI strategy document that was reviewed or updated within the last 12 months?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              iso_42001: ["6.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No AI strategy document exists in any form."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "AI intentions are described informally in presentation slides or emails but no standalone strategy document exists."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A written AI strategy document exists, is accessible to senior leadership, and was produced within the last 24 months."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "A written AI strategy document exists, was reviewed within the last 12 months, and has a named owner responsible for keeping it current."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "The AI strategy document is version-controlled, updated at least annually, incorporates lessons from completed AI initiatives, and is publicly accessible to all staff."
+                score: "100.00"
+
+      - slug: business_goal_alignment
+        name: Business Goal Alignment
+        description: Whether AI objectives are explicitly mapped to measurable business outcomes.
+        display_order: 2
+        questions:
+          - slug: ai_objectives_mapped_to_kpis
+            prompt: "Are each of your stated AI objectives explicitly linked to a named business KPI or OKR that the organisation already tracks?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.2"]
+              iso_42001: ["6.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "AI objectives exist with no reference to any business metric."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Some AI objectives mention business outcomes in general terms but without reference to specific tracked KPIs."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "At least half of documented AI objectives are linked to a specific KPI the organisation already reports."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Every documented AI objective has a named KPI or OKR mapping, and progress is reported to leadership quarterly."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Every AI objective has a KPI mapping, targets are set before the initiative starts, and actuals are reported in the same dashboard as other business metrics."
+                score: "100.00"
+
+      - slug: strategy_communication
+        name: Strategy Communication
+        description: How widely the AI strategy is communicated and understood across the organisation.
+        display_order: 3
+        questions:
+          - slug: strategy_communicated_to_staff
+            prompt: "Can a randomly selected department head articulate the top two AI priorities from the current strategy without being prompted?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              iso_42001: ["7.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "The AI strategy has not been shared beyond the team that wrote it."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "The strategy was shared in a single all-hands or email; no follow-up or awareness check has been done."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "The strategy is published on the intranet and was the subject of at least one structured briefing session for department heads."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Department heads have completed a briefing session and can be demonstrated, when surveyed, to name the top priorities correctly at a rate above 70%."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "AI strategy awareness is measured annually by survey; results are published; gaps inform the next communication cycle."
+                score: "100.00"
+
+  - slug: use_case_portfolio
+    name: Use-Case Portfolio
+    description: Whether the organisation maintains a structured, prioritised pipeline of AI use cases.
+    weight_within_dimension: "0.2500"
+    display_order: 2
+    indicators:
+
+      - slug: backlog_existence
+        name: Backlog Existence
+        description: Whether a ranked backlog of AI use cases with owners and value hypotheses exists.
+        display_order: 1
+        questions:
+          - slug: ranked_backlog_maintained
+            prompt: "Does your organisation maintain a ranked backlog of AI use cases with value hypotheses and named owners?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MAP-1.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No backlog exists; AI initiatives are decided ad hoc."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "A list of ideas exists in a spreadsheet but is not prioritised and has no named owners."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A backlog is documented, reviewed at least quarterly, and most items have named owners."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Backlog has value hypotheses, named owners, and a documented prioritisation scoring method applied to every item."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Backlog is continuously rebalanced based on measured ROI data from completed items; rejected items include a documented rationale."
+                score: "100.00"
+
+      - slug: feasibility_assessment
+        name: Feasibility Assessment
+        description: Whether use cases are assessed for technical and data feasibility before investment.
+        display_order: 2
+        questions:
+          - slug: feasibility_gate_in_place
+            prompt: "Does every use case in the backlog pass a documented feasibility gate that checks data availability, technical complexity, and regulatory risk before investment is approved?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MAP-1.5"]
+              eu_ai_act: ["Article 9"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No feasibility assessment is performed before approving AI investment."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Feasibility is discussed informally but there is no documented checklist or gate criteria."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A feasibility checklist exists and is applied to new use cases, but is not mandatory or consistently followed."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Every new use case above a defined investment threshold must pass a documented feasibility gate before approval; gate outcomes are recorded."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Feasibility gate results are tracked; historical gate data informs threshold calibration; gate criteria are reviewed annually against outcome evidence."
+                score: "100.00"
+
+      - slug: portfolio_review_cadence
+        name: Portfolio Review Cadence
+        description: Regularity with which the AI use-case portfolio is reviewed and rebalanced.
+        display_order: 3
+        questions:
+          - slug: portfolio_reviewed_regularly
+            prompt: "Is the AI use-case portfolio reviewed by a named governance body on a fixed schedule, with outcomes recorded?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.4"]
+              iso_42001: ["9.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No portfolio review process exists."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Review happens when a specific decision needs to be made, not on a fixed schedule."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A fixed review schedule exists (at least annually) and is followed, but meeting minutes or outcomes are not recorded."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Portfolio is reviewed at least quarterly by a named body; meeting minutes are recorded and decisions are tracked to completion."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Review is quarterly or more frequent; decisions are logged in a system of record; a trend report comparing portfolio health across reviews is produced."
+                score: "100.00"
+
+  - slug: investment_and_roadmap
+    name: Investment and Roadmap
+    description: Whether AI investment is planned, funded, and tracked against a multi-year roadmap.
+    weight_within_dimension: "0.2500"
+    display_order: 3
+    indicators:
+
+      - slug: budget_allocation
+        name: Budget Allocation
+        description: Whether a dedicated AI budget line exists and is tracked separately from general IT spend.
+        display_order: 1
+        questions:
+          - slug: dedicated_ai_budget_exists
+            prompt: "Does the organisation have a dedicated AI budget line item, separate from general IT, with an assigned budget owner?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              iso_42001: ["7.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "AI spending is not tracked; costs are absorbed into other budget lines."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "AI costs can be identified retrospectively from general IT budgets but no dedicated line item exists."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A dedicated AI budget line exists in the current financial year with a named owner."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "A dedicated AI budget line exists, is tracked monthly, and variances are reviewed by the AI governance body."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "AI budget covers at least a 3-year horizon, is reviewed at each portfolio review, and spend-to-outcome ratios are calculated and reported."
+                score: "100.00"
+
+      - slug: roadmap_existence
+        name: Roadmap Existence
+        description: Whether a documented AI roadmap with milestones and dependencies exists.
+        display_order: 2
+        questions:
+          - slug: multi_year_roadmap_exists
+            prompt: "Does the organisation have a documented AI roadmap covering at least 18 months, with milestones, owners, and inter-project dependencies?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              iso_42001: ["6.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No roadmap exists; AI projects are planned one at a time in isolation."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "A list of planned AI projects exists but without milestones, dates, or dependency mapping."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A roadmap covering the next 12 months exists with milestones; it is presented to leadership at least once per year."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "A roadmap covers at least 18 months, has named owners per milestone, maps dependencies, and is updated at each quarterly review."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Roadmap covers 3 years, is version-controlled, includes dependency mapping to enterprise architecture, and is adjusted based on post-implementation reviews."
+                score: "100.00"
+
+      - slug: benefits_tracking
+        name: Benefits Tracking
+        description: Whether realised benefits from AI investments are tracked against original business cases.
+        display_order: 3
+        questions:
+          - slug: benefits_measured_post_delivery
+            prompt: "For AI initiatives delivered in the last two years, has the organisation measured whether the projected business benefits were realised?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.5"]
+              iso_42001: ["9.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No post-delivery benefits measurement has been done for any AI initiative."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Benefits were measured informally for one or two initiatives at the request of a sponsor, but no standard process exists."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A benefits realisation process exists; at least half of delivered initiatives have post-implementation reviews completed."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All initiatives above a defined investment threshold have a post-implementation review; findings are reported to the AI governance body."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "All delivered initiatives have a post-implementation review; findings feed directly into the next use-case backlog prioritisation cycle."
+                score: "100.00"
+
+  - slug: business_outcome_linkage
+    name: Business Outcome Linkage
+    description: The degree to which AI outcomes are measured and reported alongside business performance metrics.
+    weight_within_dimension: "0.2500"
+    display_order: 4
+    indicators:
+
+      - slug: outcome_reporting
+        name: Outcome Reporting
+        description: Whether AI outcomes appear in standard business performance reports.
+        display_order: 1
+        questions:
+          - slug: ai_metrics_in_business_reports
+            prompt: "Do any regular business performance reports (board, management, departmental) include AI-specific outcome metrics alongside financial or operational metrics?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.5"]
+              iso_42001: ["9.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No AI metrics appear in any standard business report."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "AI metrics appear in ad-hoc presentations but not in any recurring business report."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "At least one recurring business report (monthly or quarterly) includes at least one AI outcome metric."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All active AI initiatives have at least one outcome metric reported monthly in a standard business report reviewed by the senior leadership team."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "AI outcome metrics are integrated into the same executive dashboard as financial and operational KPIs; trend analysis and variance commentary are included."
+                score: "100.00"
+
+      - slug: stakeholder_accountability
+        name: Stakeholder Accountability
+        description: Whether business owners are held accountable for AI outcome delivery.
+        display_order: 2
+        questions:
+          - slug: business_owner_accountability
+            prompt: "Does each active AI initiative have a named business owner (outside of IT) whose performance objectives include the delivery of the stated AI business outcome?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.2"]
+              iso_42001: ["5.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No business owners are formally assigned to AI initiatives."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Business owners are assigned informally but their performance objectives do not reference AI outcomes."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Business owners are formally assigned and documented; at least half have AI outcomes in their performance objectives."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Every active AI initiative has a named business owner; all owners have the AI outcome in their formal performance objectives."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Every initiative has a named business owner with a measurable AI outcome in their objectives; outcome performance is reviewed in the annual appraisal cycle."
+                score: "100.00"
+
+      - slug: strategy_iteration
+        name: Strategy Iteration
+        description: Whether the AI strategy is updated based on evidence from completed initiatives.
+        display_order: 3
+        questions:
+          - slug: strategy_updated_from_evidence
+            prompt: "Has the AI strategy been revised at least once in the last 24 months based on documented findings from completed or cancelled AI initiatives?"
+            target_role: executive
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.4"]
+              iso_42001: ["10.2"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "The AI strategy has never been revised since it was first written."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Revisions have been made but were driven by leadership changes or budget cycles, not by evidence from initiatives."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "The strategy has been revised at least once based on findings from completed initiatives, and the revision is documented."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Strategy revisions are triggered by a defined review process; each revision cites specific evidence from initiative post-implementation reviews."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Strategy is reviewed annually; revisions are version-controlled with a change log citing specific evidence; the change log is accessible to all senior staff."
+                score: "100.00"

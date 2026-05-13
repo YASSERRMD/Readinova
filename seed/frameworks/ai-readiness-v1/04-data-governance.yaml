@@ -1,0 +1,456 @@
+slug: data_governance_and_privacy
+name: Data Governance and Privacy
+description: >
+  Measures the policies, controls, and processes in place to ensure that data used
+  in AI is classified, managed, protected, and processed in compliance with privacy
+  regulations and organisational data governance standards.
+default_weight: "0.0800"
+display_order: 4
+
+sub_dimensions:
+
+  - slug: governance_framework
+    name: Data Governance Framework
+    description: Existence and effectiveness of a formal data governance framework covering AI data assets.
+    weight_within_dimension: "0.2500"
+    display_order: 1
+    indicators:
+
+      - slug: dg_policy_existence
+        name: Data Governance Policy Existence
+        description: Whether a formal data governance policy exists, covers AI data assets, and has an active owner.
+        display_order: 1
+        questions:
+          - slug: dg_policy_covers_ai
+            prompt: "Does the organisation have a data governance policy that explicitly covers data used in AI systems, and has this policy been reviewed within the last 12 months?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.1"]
+              eu_ai_act: ["Article 10"]
+              iso_42001: ["6.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No data governance policy exists."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "A general IT data policy exists but does not mention AI data assets specifically."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A data governance policy exists and references AI data assets; it was reviewed within the last 24 months."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "A data governance policy explicitly covers AI data assets, has a named owner, and is reviewed annually; compliance is assessed at least annually."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Policy is reviewed annually, compliance is measured and reported to the governance body, and non-compliance findings trigger documented remediation plans."
+                score: "100.00"
+
+      - slug: data_stewardship
+        name: Data Stewardship
+        description: Whether named data stewards are assigned to data domains used in AI.
+        display_order: 2
+        questions:
+          - slug: stewards_assigned_to_ai_data
+            prompt: "Is a named data steward assigned to each data domain that supplies data to production AI systems, with the steward's responsibilities documented?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["GOVERN-1.2"]
+              eu_ai_act: ["Article 10"]
+              iso_42001: ["5.3"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No data steward roles exist."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Data owners are informally identified but steward responsibilities are not documented."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Named data stewards are assigned to major data domains; responsibilities are documented in a stewardship register."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Named stewards are assigned to all data domains used in AI; responsibilities are documented; stewards participate in data quality reviews."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Stewards are assigned to all domains, responsibilities are documented, stewardship coverage is tracked, and steward performance metrics (issue resolution rate) are reported quarterly."
+                score: "100.00"
+
+      - slug: data_governance_metrics
+        name: Data Governance Metrics
+        description: Whether the effectiveness of data governance is measured and reported.
+        display_order: 3
+        questions:
+          - slug: dg_metrics_reported
+            prompt: "Does the organisation produce and review a data governance scorecard or equivalent report at least quarterly, covering metrics such as policy compliance rate, open data quality issues, and data access SLA adherence?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.5"]
+              iso_42001: ["9.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No data governance metrics are tracked or reported."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Metrics are produced ad hoc when requested; no regular reporting cadence."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "At least two governance metrics are tracked and reported to leadership at least twice per year."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "A governance scorecard covering at least four metrics is produced quarterly and reviewed by the data governance body; trends are tracked."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Scorecard covers five or more metrics, is produced monthly, is reviewed by the governance body, and metric trends inform governance programme priorities."
+                score: "100.00"
+
+  - slug: data_privacy_and_consent
+    name: Data Privacy and Consent
+    description: Whether privacy requirements are embedded in the AI development lifecycle and consent is managed correctly.
+    weight_within_dimension: "0.2500"
+    display_order: 2
+    indicators:
+
+      - slug: privacy_impact_assessment
+        name: Privacy Impact Assessment
+        description: Whether privacy impact assessments are completed for AI systems that process personal data.
+        display_order: 1
+        questions:
+          - slug: pia_required_for_personal_data_ai
+            prompt: "Is a privacy impact assessment (PIA or DPIA) required and completed before any AI system that processes personal data goes into production?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MAP-1.6"]
+              eu_ai_act: ["Article 9"]
+              iso_42001: ["6.1"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No privacy impact assessments are performed for AI systems."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "PIAs are conducted informally for some AI systems at the discretion of the project team."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A PIA requirement is documented in the AI deployment policy; most AI systems processing personal data have a completed PIA before go-live."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All AI systems processing personal data require a completed PIA as a deployment gate; PIAs are reviewed by a privacy officer and records are retained."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "PIAs are mandatory deployment gates; they are stored in a register, reviewed at each major model change, and high-risk findings are escalated to the governance body."
+                score: "100.00"
+
+      - slug: consent_management
+        name: Consent Management
+        description: Whether consent for use of personal data in AI training and inference is obtained and managed correctly.
+        display_order: 2
+        questions:
+          - slug: consent_tracked_for_ai_training
+            prompt: "For AI systems trained on personal data, is there a documented record showing that consent (or another lawful basis) was established for using that data for AI training specifically?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MAP-1.6"]
+              eu_ai_act: ["Article 10"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No records exist documenting the lawful basis for using personal data in AI training."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Lawful basis is considered informally but records are not consistently maintained."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A requirement to document lawful basis for AI training data exists; most production models have this documented."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All production models trained on personal data have a documented lawful basis record reviewed by a privacy officer; records are retained and linked to model documentation."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Lawful basis is documented for all personal data in AI; records are version-controlled, updated on data scope changes, and auditable by regulators on request."
+                score: "100.00"
+
+      - slug: data_minimisation
+        name: Data Minimisation
+        description: Whether AI systems are designed to use the minimum personal data necessary.
+        display_order: 3
+        questions:
+          - slug: data_minimisation_reviewed
+            prompt: "Is each AI system that processes personal data reviewed to confirm that only the minimum personal data necessary for the stated purpose is collected and retained?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MAP-1.6"]
+              eu_ai_act: ["Article 10"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Data minimisation is not considered in AI design; all available personal data fields are used."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Data minimisation is considered informally by individual developers but there is no review or sign-off process."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A data minimisation requirement is documented in the AI design standards; most new AI systems have a minimisation review before development."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All AI systems processing personal data have a documented data minimisation review completed by a privacy officer before deployment; findings are recorded."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Data minimisation reviews are mandatory; feature importance analysis is used to challenge personal data fields; unnecessary fields are removed before production."
+                score: "100.00"
+
+  - slug: data_classification
+    name: Data Classification
+    description: Whether data assets are classified by sensitivity and whether classification governs how data is used in AI.
+    weight_within_dimension: "0.2500"
+    display_order: 3
+    indicators:
+
+      - slug: classification_scheme
+        name: Classification Scheme
+        description: Whether a data classification scheme exists and is applied to data assets used in AI.
+        display_order: 1
+        questions:
+          - slug: classification_scheme_applied_to_ai
+            prompt: "Does the organisation have a data classification scheme (e.g., Public, Internal, Confidential, Restricted) that is applied to all datasets used in AI training and inference?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MAP-1.6"]
+              eu_ai_act: ["Article 10"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No data classification scheme exists."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "A classification scheme is defined but is applied inconsistently and rarely to AI datasets."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A classification scheme with at least three tiers is applied to most AI training datasets; classifications are recorded in the data catalogue."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Classification is applied to all AI datasets; classifications are recorded in the catalogue, reviewed on each major data change, and used to determine handling requirements."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Classification is automated where possible; all AI datasets are classified; classification drives automatic controls (encryption, access restriction) without manual steps."
+                score: "100.00"
+
+      - slug: handling_rules_enforced
+        name: Handling Rules Enforced
+        description: Whether classification labels result in enforced handling controls rather than advisory guidance.
+        display_order: 2
+        questions:
+          - slug: classification_drives_controls
+            prompt: "Are data handling rules (encryption, storage location, access restriction) automatically enforced based on classification label, rather than relying on individuals to apply guidelines manually?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-2.2"]
+              eu_ai_act: ["Article 10"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Classification labels exist but result in no enforced controls; handling is left to individual discretion."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Handling guidelines are published but are advisory only; enforcement depends on individual awareness."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Technical controls enforce at least one handling requirement (e.g., encryption at rest) for the highest classification tier automatically."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Technical controls enforce encryption, access restriction, and storage location for all classification tiers automatically; compliance is audited quarterly."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "All handling rules are technically enforced; control effectiveness is measured and reported monthly; exceptions require documented approval."
+                score: "100.00"
+
+      - slug: special_category_data_handling
+        name: Special Category Data Handling
+        description: Whether AI use of special category data (health, biometric, genetic) is subject to additional controls.
+        display_order: 3
+        questions:
+          - slug: special_category_controls_exist
+            prompt: "Does the organisation have documented additional controls (beyond standard confidential data controls) specifically for AI systems that process special category or sensitive personal data?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MAP-1.6"]
+              eu_ai_act: ["Article 10"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No additional controls exist for special category data in AI; it is treated the same as other confidential data."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Additional scrutiny is applied informally to special category data in AI but no documented controls or formal approval requirements exist."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Additional controls for special category data in AI are documented and applied to most systems processing such data."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All AI systems processing special category data have documented additional controls reviewed by the DPO; controls are tracked in the data protection register."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Controls are documented, technically enforced where possible, reviewed annually, and subject to independent audit; non-compliance is escalated to the governance body."
+                score: "100.00"
+
+  - slug: data_access_control
+    name: Data Access Control
+    description: Whether access to data used in AI is granted on a least-privilege basis and regularly reviewed.
+    weight_within_dimension: "0.2500"
+    display_order: 4
+    indicators:
+
+      - slug: least_privilege_access
+        name: Least-Privilege Access
+        description: Whether AI team access to sensitive datasets is restricted to what is needed for defined tasks.
+        display_order: 1
+        questions:
+          - slug: access_granted_on_need_basis
+            prompt: "Is access to sensitive datasets used in AI granted only on explicit request and approval, with access limited to the minimum needed for the defined task?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-2.2"]
+              eu_ai_act: ["Article 10"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "All AI team members have broad access to all datasets; no access restriction is in place."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Access is restricted for some datasets informally, based on the data owner's judgment, with no consistent process."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "A documented process requires approval for access to sensitive datasets; approvals are recorded."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "All sensitive dataset access is approved, recorded, limited to the defined task scope, and time-bound; access expires after the task is complete."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "All access is time-bound, approved, and enforced technically; access logs are reviewed monthly; unnecessary access is revoked automatically."
+                score: "100.00"
+
+      - slug: access_review_cadence
+        name: Access Review Cadence
+        description: Whether access to AI datasets is reviewed regularly to remove unnecessary permissions.
+        display_order: 2
+        questions:
+          - slug: access_reviewed_periodically
+            prompt: "Are access rights to sensitive datasets used in AI reviewed at least twice per year, with unnecessary access revoked and reviews documented?"
+            target_role: cio
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MANAGE-2.2"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "Access rights are never reviewed; leavers and role-changers retain access indefinitely."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Access is reviewed when a problem is discovered or a specific concern is raised."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Access reviews are conducted at least annually; results are recorded and unnecessary access is removed."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Access reviews are conducted at least twice per year; results are documented; revocations are tracked; the review process is owned by a named function."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Access reviews occur quarterly; results are published to data governance; automated tooling flags accounts inactive for more than 30 days for review."
+                score: "100.00"
+
+      - slug: access_audit_trail
+        name: Access Audit Trail
+        description: Whether access to sensitive AI datasets is logged and the logs are reviewed.
+        display_order: 3
+        questions:
+          - slug: access_logs_maintained_and_reviewed
+            prompt: "Are access logs maintained for sensitive datasets used in AI, retained for at least 12 months, and reviewed for anomalies at least quarterly?"
+            target_role: risk
+            display_order: 1
+            regulatory_references:
+              nist_ai_rmf: ["MEASURE-2.7"]
+              eu_ai_act: ["Article 12"]
+              iso_42001: ["8.4"]
+            rubric:
+              - level: 0
+                label: Absent
+                description: "No access logs are maintained for AI datasets."
+                score: "0.00"
+              - level: 1
+                label: Ad Hoc
+                description: "Access logs are generated by infrastructure but are not reviewed or retained beyond default system settings."
+                score: "25.00"
+              - level: 2
+                label: Defined
+                description: "Access logs are retained for at least 12 months; logs are reviewed when an incident occurs."
+                score: "50.00"
+              - level: 3
+                label: Managed
+                description: "Access logs are retained for at least 12 months, reviewed quarterly for anomalies, and anomaly findings are escalated to the security team."
+                score: "75.00"
+              - level: 4
+                label: Optimised
+                description: "Logs are retained for at least 24 months; automated anomaly detection alerts on unusual access patterns; quarterly reviews are documented and findings tracked to resolution."
+                score: "100.00"
