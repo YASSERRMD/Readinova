@@ -33,6 +33,9 @@ func (s *Server) Routes(mux *http.ServeMux) {
 	// Invitations
 	mux.HandleFunc("POST /v1/invitations", s.withAuth(s.handleCreateInvitation))
 	mux.HandleFunc("POST /v1/invitations/{token}/accept", s.handleAcceptInvitation)
+
+	// Assessments
+	s.assessmentRoutes(mux)
 }
 
 // writeJSON encodes v as JSON and writes it with the given status code.
