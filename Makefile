@@ -5,6 +5,7 @@ SHELL := /bin/bash
 bootstrap:
 	pnpm install
 	go work sync
+	go work edit -go=1.22
 	pnpm exec lefthook install
 	$(MAKE) build
 
@@ -39,4 +40,3 @@ web-lint:
 
 scoring:
 	cd crates && cargo build -p scoring
-
