@@ -31,31 +31,14 @@ Readinova is a multi-tenant SaaS platform that guides organisations through a st
 | **Evidence Connectors** | Pluggable `Connector` interface; ships with `TestConnector` and `AzureConnector` (ARM + Graph) |
 | **Recommendation Engine** | YAML template library, priority-ranked, wave-grouped (Act Now / Next Quarter / Roadmap) |
 | **Signed Audit Artefacts** | Ed25519 signed scoring snapshots, offline-verifiable via `readiness-verify` CLI |
-| **PDF Reports** | Chromium-rendered PDF with tier-gated watermark |
-| **Billing Tiers** | Free → Starter → Growth → Enterprise via Stripe Checkout + Customer Portal |
+| **PDF Reports** | Chromium-rendered PDF with watermark control |
 | **OpenTelemetry + Prometheus** | HTTP trace middleware, `/metrics` endpoint, k6 smoke tests |
 
 ---
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        React + Vite + Tailwind                  │
-│  Login · Assessments · Questionnaire · Dashboard · Connectors   │
-└───────────────────────────┬─────────────────────────────────────┘
-                            │ REST (JWT Bearer)
-┌───────────────────────────▼─────────────────────────────────────┐
-│                         Go REST API                             │
-│  httpapi · billing · connector · perception · recommend         │
-│  artefact · report · scoring → (CGo FFI)                        │
-└──────────┬──────────────────────────┬────────────────────────────┘
-           │                          │
-┌──────────▼──────┐         ┌─────────▼──────────┐
-│   PostgreSQL    │         │   Rust Scoring Core │
-│   (RLS, goose)  │         │   libscoring.so     │
-└─────────────────┘         └────────────────────┘
-```
+![Readinova Architecture](docs/assets/architecture.png)
 
 ### Repository layout
 
@@ -205,19 +188,6 @@ Built-in connectors:
 
 ---
 
-## Billing tiers
-
-| Feature | Free | Starter | Growth | Enterprise |
-|---|:---:|:---:|:---:|:---:|
-| Assessments | 1 | 5 | Unlimited | Unlimited |
-| Team members | 3 | 10 | 50 | Unlimited |
-| PDF watermark | Yes | No | No | No |
-| Evidence connectors | — | — | ✓ | ✓ |
-| Recommendation engine | — | ✓ | ✓ | ✓ |
-| Audit artefacts | — | — | ✓ | ✓ |
-
----
-
 ## Audit artefacts
 
 Each signed artefact is self-contained and can be verified offline:
@@ -307,5 +277,5 @@ MIT — see [LICENSE](LICENSE).
 ---
 
 <div align="center">
-Built with Go · Rust · React · PostgreSQL · Stripe
+Built with Go · Rust · React · PostgreSQL
 </div>
