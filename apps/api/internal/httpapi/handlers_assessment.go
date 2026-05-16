@@ -1,6 +1,7 @@
 package httpapi
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/YASSERRMD/Readinova/apps/api/internal/billing"
@@ -8,6 +9,9 @@ import (
 
 // assessmentRoutes adds assessment endpoints to the mux.
 func (s *Server) assessmentRoutes(mux *http.ServeMux) {
+	// Frameworks (public within org — no tier gate needed).
+	mux.HandleFunc("GET /v1/frameworks", s.withAuth(s.handleListFrameworks))
+
 	mux.HandleFunc("POST /v1/assessments", s.withAuth(s.handleCreateAssessment))
 	mux.HandleFunc("GET /v1/assessments", s.withAuth(s.handleListAssessments))
 	mux.HandleFunc("GET /v1/assessments/{id}", s.withAuth(s.handleGetAssessment))
@@ -15,6 +19,45 @@ func (s *Server) assessmentRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("POST /v1/assessments/{id}/start", s.withAuth(s.handleStartAssessment))
 	mux.HandleFunc("GET /v1/assessments/{id}/questions", s.withAuth(s.handleListQuestions))
 	mux.HandleFunc("POST /v1/assessments/{id}/submit", s.withAuth(s.handleSubmitAssessment))
+}
+
+// GET /v1/frameworks — list all available assessment frameworks.
+func (s *Server) handleListFrameworks(w http.ResponseWriter, r *http.Request) {
+	rows, err := s.db.Query(r.Context(),
+		`SELECT id, slug, name, description, version_major, version_minor
+		 FROM frameworks ORDER BY name`,
+	)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "db error")
+		return
+	}
+	defer rows.Close()
+
+	type fw struct {
+		ID          string `json:"id"`
+		Slug        string `json:"slug"`
+		Name        string `json:"name"`
+		Description string `json:"description"`
+		Version     string `json:"version"`
+	}
+	var list []fw
+	for rows.Next() {
+		var f fw
+		var vMaj, vMin int
+		if err := rows.Scan(&f.ID, &f.Slug, &f.Name, &f.Description, &vMaj, &vMin); err != nil {
+			continue
+		}
+		f.Version = fmt.Sprintf("%d.%d", vMaj, vMin)
+		list = append(list, f)
+	}
+	if err := rows.Err(); err != nil {
+		writeError(w, http.StatusInternalServerError, "db error")
+		return
+	}
+	if list == nil {
+		list = []fw{}
+	}
+	writeJSON(w, http.StatusOK, list)
 }
 
 // POST /v1/assessments
