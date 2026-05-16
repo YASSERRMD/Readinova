@@ -12,7 +12,7 @@ interface AuthUser {
 interface AuthContextValue {
   user: AuthUser | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string, orgSlug: string) => Promise<void>;
   signup: (payload: Parameters<typeof authApi.signup>[0]) => Promise<void>;
   logout: () => void;
 }
@@ -66,10 +66,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function login(email: string, password: string) {
-    const res = await authApi.login(email, password);
+  async function login(email: string, password: string, orgSlug: string) {
+    const res = await authApi.login(email, password, orgSlug);
     setUser({ ...applyAuth(res.data), email });
     startRefreshTimer();
   }
@@ -81,6 +82,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   function logout() {
+    // Revoke the server-side refresh token (best-effort, fire-and-forget).
+    authApi.logout().catch(() => undefined);
     setAccessToken(null);
     setUser(null);
     if (timerRef.current) clearInterval(timerRef.current);

@@ -28,10 +28,16 @@ export const authApi = {
   signup: (payload: SignupPayload) =>
     apiClient.post<AuthResponse>("/v1/organisations", payload),
 
-  login: (email: string, password: string) =>
-    apiClient.post<AuthResponse>("/v1/auth/login", { email, password }),
+  login: (email: string, password: string, orgSlug: string) =>
+    apiClient.post<AuthResponse>("/v1/auth/login", {
+      email,
+      password,
+      org_slug: orgSlug,
+    }),
 
   refresh: () => apiClient.post<AuthResponse>("/v1/auth/refresh"),
+
+  logout: () => apiClient.post("/v1/auth/logout"),
 
   me: () => apiClient.get<MeResponse>("/v1/me"),
 };

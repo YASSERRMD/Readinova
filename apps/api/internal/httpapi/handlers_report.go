@@ -3,7 +3,6 @@ package httpapi
 import (
 	"encoding/json"
 	"net/http"
-	"strings"
 
 	"github.com/YASSERRMD/Readinova/apps/api/internal/billing"
 	"github.com/YASSERRMD/Readinova/apps/api/internal/report"
@@ -66,24 +65,15 @@ func (s *Server) handleReport(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Determine tier from subscription.
-	var tier string
-	if err := s.db.QueryRow(r.Context(),
-		`SELECT tier FROM subscriptions WHERE organisation_id = $1`,
-		claims.OrgID,
-	).Scan(&tier); err != nil {
-		tier = string(billing.TierFree)
-	}
-	freeTier := billing.LimitsFor(billing.Tier(tier)).PDFWatermark
+	// Determine whether the org is on the free tier (watermark visibility).
+	freeTier := billing.LimitsFor(s.tierFor(r.Context(), claims.OrgID)).PDFWatermark
 
 	// Build dimension list.
 	dims := make([]report.DimensionScore, 0, len(sr.DimensionScores))
 	for slug, score := range sr.DimensionScores {
-		label := strings.ReplaceAll(slug, "_", " ")
-		label = strings.ToUpper(label[:1]) + label[1:]
 		rounded := int(score + 0.5)
 		dims = append(dims, report.DimensionScore{
-			Label:   label,
+			Label:   dimLabelFromSlug(slug),
 			Score:   score,
 			Rounded: rounded,
 			Binding: slug == sr.BindingConstraintDimension,

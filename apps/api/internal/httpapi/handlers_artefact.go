@@ -20,11 +20,7 @@ func (s *Server) handleCreateArtefact(w http.ResponseWriter, r *http.Request) {
 	assessmentID := r.PathValue("id")
 
 	// Tier gate: audit artefacts require Growth or Enterprise.
-	var tier string
-	_ = s.db.QueryRow(r.Context(),
-		`SELECT tier FROM subscriptions WHERE organisation_id = $1`, claims.OrgID,
-	).Scan(&tier)
-	if !billing.LimitsFor(billing.Tier(tier)).AuditArtefacts {
+	if !billing.LimitsFor(s.tierFor(r.Context(), claims.OrgID)).AuditArtefacts {
 		writeError(w, http.StatusPaymentRequired, "audit artefacts require Growth tier or above")
 		return
 	}
@@ -159,4 +155,3 @@ func (s *Server) handleListArtefacts(w http.ResponseWriter, r *http.Request) {
 	}
 	writeJSON(w, http.StatusOK, list)
 }
-
