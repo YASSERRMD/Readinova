@@ -34,9 +34,9 @@ func (s *Server) Handler() http.Handler {
 func (s *Server) Routes(mux *http.ServeMux) {
 	// Metrics endpoint (no auth required; scrape from internal network only).
 	mux.Handle("GET /metrics", telemetry.MetricsHandler())
-	// Auth
-	mux.HandleFunc("POST /v1/organisations", s.handleSignup)
-	mux.HandleFunc("POST /v1/auth/login", s.handleLogin)
+	// Auth (rate-limited to prevent brute-force).
+	mux.HandleFunc("POST /v1/organisations", withAuthRateLimit(s.handleSignup))
+	mux.HandleFunc("POST /v1/auth/login", withAuthRateLimit(s.handleLogin))
 	mux.HandleFunc("POST /v1/auth/refresh", s.handleRefresh)
 	mux.HandleFunc("POST /v1/auth/logout", s.handleLogout)
 	mux.HandleFunc("GET /v1/me", s.withAuth(s.handleMe))

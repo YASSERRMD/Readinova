@@ -158,12 +158,42 @@ func (s *Server) handleStripeWebhook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Idempotency: skip events we have already processed.
+	var exists bool
+	_ = s.db.QueryRow(r.Context(),
+		`SELECT EXISTS(SELECT 1 FROM stripe_webhook_events WHERE stripe_event_id = $1)`,
+		event.ID,
+	).Scan(&exists)
+	if exists {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+
+	// Log event before processing so we have an audit trail even on failure.
+	_, _ = s.db.Exec(r.Context(),
+		`INSERT INTO stripe_webhook_events (stripe_event_id, event_type, payload_json)
+		 VALUES ($1,$2,$3::jsonb)
+		 ON CONFLICT (stripe_event_id) DO NOTHING`,
+		event.ID, string(event.Type), string(event.Data.Raw),
+	)
+
+	var processErr string
 	switch event.Type {
 	case "checkout.session.completed":
 		s.handleCheckoutCompleted(r, event.Data.Raw)
 	case "customer.subscription.updated",
 		"customer.subscription.deleted":
 		s.handleSubscriptionUpdate(r, event.Data.Raw)
+	default:
+		processErr = "unhandled event type"
+	}
+
+	// Record any processing error for observability.
+	if processErr != "" {
+		_, _ = s.db.Exec(r.Context(),
+			`UPDATE stripe_webhook_events SET error_message = $1 WHERE stripe_event_id = $2`,
+			processErr, event.ID,
+		)
 	}
 
 	w.WriteHeader(http.StatusOK)

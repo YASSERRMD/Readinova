@@ -1,5 +1,13 @@
 import { apiClient } from "./client";
 
+export interface Framework {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+  version: string;
+}
+
 export interface AssessmentSummary {
   id: string;
   title: string;
@@ -52,6 +60,8 @@ export interface UpsertResponsePayload {
 }
 
 export const assessmentsApi = {
+  listFrameworks: () => apiClient.get<Framework[]>("/v1/frameworks"),
+
   list: () => apiClient.get<AssessmentSummary[]>("/v1/assessments"),
 
   create: (frameworkId: string, title: string) =>
