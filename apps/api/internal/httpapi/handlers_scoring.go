@@ -7,10 +7,6 @@ import (
 	scoring "github.com/YASSERRMD/Readinova/libs/go-scoring/scoring"
 )
 
-func init() {
-	// Scoring routes registered in server.go via scoringRoutes()
-}
-
 // scoringRoutes adds scoring endpoints to the mux.
 func (s *Server) scoringRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("POST /v1/assessments/{id}/score", s.withAuth(s.handleTriggerScore))

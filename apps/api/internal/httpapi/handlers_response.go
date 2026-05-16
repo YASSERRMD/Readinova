@@ -4,10 +4,6 @@ import (
 	"net/http"
 )
 
-func init() {
-	// Response routes registered in server.go via responseRoutes()
-}
-
 // responseRoutes adds response intake endpoints to the mux.
 func (s *Server) responseRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("PUT /v1/assessments/{id}/responses/{slug}", s.withAuth(s.handleUpsertResponse))
@@ -198,6 +194,10 @@ func (s *Server) handleListResponses(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 		list = append(list, x)
+	}
+	if err := rows.Err(); err != nil {
+		writeError(w, http.StatusInternalServerError, "db error")
+		return
 	}
 	if list == nil {
 		list = []row{}
