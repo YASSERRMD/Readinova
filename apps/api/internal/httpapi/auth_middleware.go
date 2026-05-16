@@ -29,8 +29,14 @@ func (s *Server) withAuth(next http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-// claimsFromCtx retrieves auth claims from context; panics if missing (call
-// only from handlers wrapped by withAuth).
+// claimsFromCtx retrieves auth claims from context.
+// It returns nil when called outside a withAuth-wrapped handler; callers must
+// check for nil if they are not guaranteed to be behind withAuth.
 func claimsFromCtx(r *http.Request) *auth.Claims {
-	return r.Context().Value(claimsKey{}).(*auth.Claims)
+	v := r.Context().Value(claimsKey{})
+	if v == nil {
+		return nil
+	}
+	c, _ := v.(*auth.Claims)
+	return c
 }

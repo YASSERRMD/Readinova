@@ -5,16 +5,23 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"sync"
 
-	"github.com/stripe/stripe-go/v76"
-	"github.com/stripe/stripe-go/v76/checkout/session"
+	stripe "github.com/stripe/stripe-go/v76"
+	"github.com/stripe/stripe-go/v76/billingportal/session"
+	stripeSession "github.com/stripe/stripe-go/v76/checkout/session"
 	"github.com/stripe/stripe-go/v76/webhook"
 
 	"github.com/YASSERRMD/Readinova/apps/api/internal/billing"
 )
 
-func init() {
-	// Billing routes registered in server.go via billingRoutes()
+// stripeInit sets the Stripe key exactly once at process startup (avoids data races).
+var stripeInit sync.Once
+
+func initStripe() {
+	stripeInit.Do(func() {
+		stripe.Key = os.Getenv("STRIPE_SECRET_KEY")
+	})
 }
 
 // billingRoutes adds billing endpoints to the mux.
@@ -77,7 +84,7 @@ func (s *Server) handleCreateCheckout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	stripe.Key = os.Getenv("STRIPE_SECRET_KEY")
+	initStripe()
 	params := &stripe.CheckoutSessionParams{
 		Mode: stripe.String(string(stripe.CheckoutSessionModeSubscription)),
 		LineItems: []*stripe.CheckoutSessionLineItemParams{
@@ -88,7 +95,7 @@ func (s *Server) handleCreateCheckout(w http.ResponseWriter, r *http.Request) {
 		ClientReferenceID:   stripe.String(claims.OrgID),
 		AllowPromotionCodes: stripe.Bool(true),
 	}
-	sess, err := session.New(params)
+	sess, err := stripeSession.New(params)
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, "failed to create checkout session")
 		return
@@ -112,21 +119,26 @@ func (s *Server) handleBillingPortal(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var stripeCustomerID *string
+	var stripeCustomerID string
 	if err := s.db.QueryRow(r.Context(),
 		`SELECT stripe_customer_id FROM subscriptions WHERE organisation_id = $1`,
 		claims.OrgID,
-	).Scan(&stripeCustomerID); err != nil || stripeCustomerID == nil {
+	).Scan(&stripeCustomerID); err != nil || stripeCustomerID == "" {
 		writeError(w, http.StatusNotFound, "no billing account found")
 		return
 	}
 
-	stripe.Key = os.Getenv("STRIPE_SECRET_KEY")
-	// Create a billing portal session via Stripe API.
-	// We use the Sessions endpoint: billing/portal/sessions.
-	writeJSON(w, http.StatusOK, map[string]string{
-		"url": "https://billing.stripe.com/p/session/placeholder",
-	})
+	initStripe()
+	portalParams := &stripe.BillingPortalSessionParams{
+		Customer:  stripe.String(stripeCustomerID),
+		ReturnURL: stripe.String(req.ReturnURL),
+	}
+	portalSess, err := session.New(portalParams)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "failed to create billing portal session")
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]string{"url": portalSess.URL})
 }
 
 // POST /v1/webhooks/stripe
@@ -163,7 +175,9 @@ func (s *Server) handleCheckoutCompleted(r *http.Request, raw json.RawMessage) {
 		ClientReferenceID string `json:"client_reference_id"`
 		Customer          string `json:"customer"`
 		Subscription      string `json:"subscription"`
-		Metadata          struct {
+		// price_id is resolved via subscription items in handleSubscriptionUpdate;
+		// for checkout.session.completed we fall back to metadata if present.
+		Metadata struct {
 			Tier string `json:"tier"`
 		} `json:"metadata"`
 	}
@@ -171,9 +185,11 @@ func (s *Server) handleCheckoutCompleted(r *http.Request, raw json.RawMessage) {
 		return
 	}
 
-	// Determine tier from the subscription's price metadata.
-	// For simplicity, we rely on the price ID → tier mapping.
-	tier := billing.TierStarter // default; webhook can carry more metadata in production
+	// Determine tier: prefer metadata.tier set on the Checkout Session, otherwise default to starter.
+	tier := billing.TierStarter
+	if t := billing.Tier(sess.Metadata.Tier); t == billing.TierGrowth || t == billing.TierEnterprise {
+		tier = t
+	}
 
 	_, _ = s.db.Exec(r.Context(),
 		`INSERT INTO subscriptions (organisation_id, stripe_customer_id, stripe_sub_id, tier, status)
@@ -202,6 +218,7 @@ func (s *Server) handleSubscriptionUpdate(r *http.Request, raw json.RawMessage) 
 		return
 	}
 
+	// Map price ID → tier so upgrades/downgrades are reflected correctly.
 	tier := billing.TierFree
 	if len(sub.Items.Data) > 0 {
 		tier = tierFromPriceID(sub.Items.Data[0].Price.ID)

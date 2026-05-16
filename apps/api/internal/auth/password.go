@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	argonTime    = 1
+	argonTime    = 3         // OWASP recommendation: ≥ 3 iterations
 	argonMemory  = 64 * 1024 // 64 MiB — OWASP minimum
 	argonThreads = 4
 	argonKeyLen  = 32

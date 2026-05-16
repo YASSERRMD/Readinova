@@ -1,6 +1,7 @@
 package httpapi
 
 import (
+	"encoding/json"
 	"net/http"
 	"time"
 
@@ -44,11 +45,12 @@ func (s *Server) handleCreateInvitation(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
+	// Build audit metadata using proper JSON marshalling (never string concatenation).
+	auditMeta, _ := json.Marshal(map[string]string{"email": req.Email, "role": req.Role})
 	_, _ = s.db.Exec(r.Context(),
 		`INSERT INTO audit_log (organisation_id, user_id, action, target_type, target_id, metadata)
 		 VALUES ($1,$2,'invite_sent','invitation',$3,$4::jsonb)`,
-		claims.OrgID, claims.UserID, invID,
-		`{"email":"`+req.Email+`","role":"`+req.Role+`"}`,
+		claims.OrgID, claims.UserID, invID, string(auditMeta),
 	)
 
 	writeJSON(w, http.StatusCreated, map[string]any{

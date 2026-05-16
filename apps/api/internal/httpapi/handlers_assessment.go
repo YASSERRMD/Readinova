@@ -6,10 +6,6 @@ import (
 	"github.com/YASSERRMD/Readinova/apps/api/internal/billing"
 )
 
-func init() {
-	// Assessment routes registered in server.go
-}
-
 // assessmentRoutes adds assessment endpoints to the mux.
 func (s *Server) assessmentRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("POST /v1/assessments", s.withAuth(s.handleCreateAssessment))
@@ -371,36 +367,47 @@ func (s *Server) handleListQuestions(w http.ResponseWriter, r *http.Request) {
 		AssignedUserID *string       `json:"assigned_user_id,omitempty"`
 		RubricLevels   []rubricLevel `json:"rubric_levels"`
 	}
+
+	// Index questions by ID for O(1) rubric attachment below.
 	var list []qrow
+	indexByID := map[string]int{}
 	for rows.Next() {
 		var q qrow
 		if err := rows.Scan(&q.ID, &q.Slug, &q.Prompt, &q.TargetRole, &q.AssignedRole, &q.AssignedUserID); err != nil {
 			continue
 		}
 		q.RubricLevels = []rubricLevel{}
+		indexByID[q.ID] = len(list)
 		list = append(list, q)
+	}
+	if err := rows.Err(); err != nil {
+		writeError(w, http.StatusInternalServerError, "db error")
+		return
 	}
 	rows.Close()
 
-	// Fetch rubric levels for each question.
-	for i := range list {
-		rlRows, err := s.db.Query(r.Context(),
-			`SELECT level, label, description FROM rubric_levels
-			 WHERE question_id = (SELECT id FROM questions WHERE slug = $1)
-			 ORDER BY level`,
-			list[i].Slug,
-		)
-		if err != nil {
-			continue
-		}
-		for rlRows.Next() {
-			var rl rubricLevel
-			if err := rlRows.Scan(&rl.Level, &rl.Label, &rl.Description); err != nil {
-				continue
+	// Fetch ALL rubric levels for this assessment in a single query (no N+1).
+	if len(list) > 0 {
+		rlRows, err := s.db.Query(r.Context(), `
+			SELECT rl.question_id, rl.level, rl.label, rl.description
+			FROM rubric_levels rl
+			JOIN question_assignments qa ON qa.question_id = rl.question_id
+			WHERE qa.assessment_id = $1
+			ORDER BY rl.question_id, rl.level
+		`, id)
+		if err == nil {
+			defer rlRows.Close()
+			for rlRows.Next() {
+				var qID string
+				var rl rubricLevel
+				if err := rlRows.Scan(&qID, &rl.Level, &rl.Label, &rl.Description); err != nil {
+					continue
+				}
+				if idx, ok := indexByID[qID]; ok {
+					list[idx].RubricLevels = append(list[idx].RubricLevels, rl)
+				}
 			}
-			list[i].RubricLevels = append(list[i].RubricLevels, rl)
 		}
-		rlRows.Close()
 	}
 
 	if list == nil {

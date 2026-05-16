@@ -9,10 +9,6 @@ import (
 	"github.com/YASSERRMD/Readinova/apps/api/internal/report"
 )
 
-func init() {
-	// Report routes registered in server.go via reportRoutes()
-}
-
 // reportRoutes adds report endpoints to the mux.
 func (s *Server) reportRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /v1/assessments/{id}/report", s.withAuth(s.handleReport))
