@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/YASSERRMD/Readinova/apps/api/internal/platform/telemetry"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 // Server holds shared dependencies.
@@ -35,6 +35,7 @@ func (s *Server) Routes(mux *http.ServeMux) {
 	mux.HandleFunc("POST /v1/organisations", s.handleSignup)
 	mux.HandleFunc("POST /v1/auth/login", s.handleLogin)
 	mux.HandleFunc("POST /v1/auth/refresh", s.handleRefresh)
+	mux.HandleFunc("POST /v1/auth/logout", s.handleLogout)
 	mux.HandleFunc("GET /v1/me", s.withAuth(s.handleMe))
 
 	// Org management

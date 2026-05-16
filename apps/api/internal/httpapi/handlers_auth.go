@@ -179,19 +179,29 @@ func (s *Server) handleRefresh(w http.ResponseWriter, r *http.Request) {
 
 	tokenHash := auth.HashRefreshToken(cookie.Value)
 
+	// Perform the full rotation atomically inside a transaction so a concurrent
+	// refresh can never reuse the same token twice.
+	tx, err := s.db.Begin(r.Context())
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "db error")
+		return
+	}
+	defer tx.Rollback(r.Context()) //nolint:errcheck
+
 	var userID, orgID string
 	var expiresAt time.Time
-	if err := s.db.QueryRow(r.Context(), `
+	if err := tx.QueryRow(r.Context(), `
 		SELECT user_id, organisation_id, expires_at
 		FROM refresh_tokens
 		WHERE token_hash = $1 AND revoked_at IS NULL AND expires_at > now()
+		FOR UPDATE
 	`, tokenHash).Scan(&userID, &orgID, &expiresAt); err != nil {
 		writeError(w, http.StatusUnauthorized, "invalid or expired refresh token")
 		return
 	}
 
-	// Rotate: revoke old, issue new.
-	if _, err := s.db.Exec(r.Context(),
+	// Revoke old token.
+	if _, err := tx.Exec(r.Context(),
 		`UPDATE refresh_tokens SET revoked_at = now() WHERE token_hash = $1`, tokenHash,
 	); err != nil {
 		writeError(w, http.StatusInternalServerError, "db error")
@@ -199,16 +209,10 @@ func (s *Server) handleRefresh(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var role string
-	_ = s.db.QueryRow(r.Context(),
+	_ = tx.QueryRow(r.Context(),
 		`SELECT role FROM organisation_members WHERE user_id = $1 AND organisation_id = $2`,
 		userID, orgID,
 	).Scan(&role)
-
-	accessToken, err := auth.IssueAccessToken(s.jwtSecret, userID, orgID, role)
-	if err != nil {
-		writeError(w, http.StatusInternalServerError, "token error")
-		return
-	}
 
 	plainRefresh, hashRefresh, err := auth.GenerateRefreshToken()
 	if err != nil {
@@ -216,11 +220,22 @@ func (s *Server) handleRefresh(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if _, err := s.db.Exec(r.Context(),
+	if _, err := tx.Exec(r.Context(),
 		`INSERT INTO refresh_tokens (user_id, organisation_id, token_hash) VALUES ($1,$2,$3)`,
 		userID, orgID, hashRefresh,
 	); err != nil {
 		writeError(w, http.StatusInternalServerError, "db error")
+		return
+	}
+
+	if err := tx.Commit(r.Context()); err != nil {
+		writeError(w, http.StatusInternalServerError, "db error")
+		return
+	}
+
+	accessToken, err := auth.IssueAccessToken(s.jwtSecret, userID, orgID, role)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "token error")
 		return
 	}
 
@@ -237,6 +252,31 @@ func (s *Server) handleRefresh(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]any{
 		"access_token": accessToken,
 	})
+}
+
+// POST /v1/auth/logout
+func (s *Server) handleLogout(w http.ResponseWriter, r *http.Request) {
+	cookie, err := r.Cookie("refresh_token")
+	if err == nil {
+		// Revoke the refresh token if present (best-effort; ignore DB errors).
+		tokenHash := auth.HashRefreshToken(cookie.Value)
+		_, _ = s.db.Exec(r.Context(),
+			`UPDATE refresh_tokens SET revoked_at = now() WHERE token_hash = $1 AND revoked_at IS NULL`,
+			tokenHash,
+		)
+	}
+
+	// Clear the cookie regardless.
+	http.SetCookie(w, &http.Cookie{
+		Name:     "refresh_token",
+		Value:    "",
+		Path:     "/v1/auth/refresh",
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteStrictMode,
+		MaxAge:   -1,
+	})
+	w.WriteHeader(http.StatusNoContent)
 }
 
 // GET /v1/me
@@ -278,7 +318,15 @@ func (s *Server) handlePatchOrg(w http.ResponseWriter, r *http.Request) {
 
 	if req.Name != nil {
 		if _, err := s.db.Exec(r.Context(),
-			`UPDATE organisations SET name = $1 WHERE id = $2`, *req.Name, claims.OrgID,
+			`UPDATE organisations SET name = $1, updated_at = now() WHERE id = $2`, *req.Name, claims.OrgID,
+		); err != nil {
+			writeError(w, http.StatusInternalServerError, "db error")
+			return
+		}
+	}
+	if req.SizeBand != nil {
+		if _, err := s.db.Exec(r.Context(),
+			`UPDATE organisations SET size_band = $1, updated_at = now() WHERE id = $2`, *req.SizeBand, claims.OrgID,
 		); err != nil {
 			writeError(w, http.StatusInternalServerError, "db error")
 			return
