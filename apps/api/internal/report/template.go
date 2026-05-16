@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html/template"
 	"math"
+	"sync"
 )
 
 // Data holds all data needed to render the report.
@@ -44,9 +45,23 @@ var funcMap = template.FuncMap{
 	},
 }
 
+// cachedTmpl is the parsed report template, initialised exactly once.
+var (
+	cachedTmpl     *template.Template
+	cachedTmplOnce sync.Once
+	cachedTmplErr  error
+)
+
+func getTemplate() (*template.Template, error) {
+	cachedTmplOnce.Do(func() {
+		cachedTmpl, cachedTmplErr = template.New("report").Funcs(funcMap).Parse(htmlTemplate)
+	})
+	return cachedTmpl, cachedTmplErr
+}
+
 // RenderHTML renders the report as an HTML string.
 func RenderHTML(d Data) (string, error) {
-	t, err := template.New("report").Funcs(funcMap).Parse(htmlTemplate)
+	t, err := getTemplate()
 	if err != nil {
 		return "", err
 	}

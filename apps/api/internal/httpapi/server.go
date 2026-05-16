@@ -2,9 +2,12 @@
 package httpapi
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
+	"strings"
 
+	"github.com/YASSERRMD/Readinova/apps/api/internal/billing"
 	"github.com/YASSERRMD/Readinova/apps/api/internal/platform/telemetry"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -89,4 +92,28 @@ func writeError(w http.ResponseWriter, status int, msg string) {
 func decodeJSON(r *http.Request, v any) error {
 	defer r.Body.Close()
 	return json.NewDecoder(r.Body).Decode(v)
+}
+
+// dimLabelFromSlug converts a snake_case dimension slug to a title-case label
+// (e.g. "data_governance" → "Data governance").
+func dimLabelFromSlug(slug string) string {
+	label := strings.ReplaceAll(slug, "_", " ")
+	if len(label) == 0 {
+		return label
+	}
+	return strings.ToUpper(label[:1]) + label[1:]
+}
+
+// tierFor returns the billing tier for an organisation, defaulting to TierFree
+// when no active subscription exists.  Use this instead of duplicating the
+// subscription query across handler files.
+func (s *Server) tierFor(ctx context.Context, orgID string) billing.Tier {
+	var tier string
+	_ = s.db.QueryRow(ctx,
+		`SELECT tier FROM subscriptions WHERE organisation_id = $1`, orgID,
+	).Scan(&tier)
+	if tier == "" {
+		return billing.TierFree
+	}
+	return billing.Tier(tier)
 }

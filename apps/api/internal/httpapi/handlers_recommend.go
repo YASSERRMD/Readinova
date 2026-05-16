@@ -19,11 +19,7 @@ func (s *Server) handleGetRecommendations(w http.ResponseWriter, r *http.Request
 	assessmentID := r.PathValue("id")
 
 	// Tier gate: recommendation engine requires Starter or above.
-	var tier string
-	_ = s.db.QueryRow(r.Context(),
-		`SELECT tier FROM subscriptions WHERE organisation_id = $1`, claims.OrgID,
-	).Scan(&tier)
-	if !billing.LimitsFor(billing.Tier(tier)).RecommendationEngine {
+	if !billing.LimitsFor(s.tierFor(r.Context(), claims.OrgID)).RecommendationEngine {
 		writeError(w, http.StatusPaymentRequired, "recommendation engine requires Starter tier or above")
 		return
 	}
@@ -70,7 +66,7 @@ func (s *Server) handleGetRecommendations(w http.ResponseWriter, r *http.Request
 	}
 
 	writeJSON(w, http.StatusOK, map[string]any{
-		"total":         len(recs),
+		"total":           len(recs),
 		"recommendations": recs,
 		"waves": map[string]any{
 			"wave_1": waves[1],

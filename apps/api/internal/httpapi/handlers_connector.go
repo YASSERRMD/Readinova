@@ -184,11 +184,16 @@ func (s *Server) handleSyncConnector(w http.ResponseWriter, r *http.Request) {
 	}
 	defer tx.Rollback(r.Context()) //nolint:errcheck
 
+	// Upsert signals so repeated syncs update existing rows rather than creating
+	// an ever-growing append-only history.
 	for _, sig := range signals {
 		valJSON, _ := json.Marshal(sig.SignalValue)
 		if _, err := tx.Exec(r.Context(),
-			`INSERT INTO evidence_signals (organisation_id, connector_type, dimension_slug, signal_key, signal_value)
-			 VALUES ($1,$2,$3,$4,$5)`,
+			`INSERT INTO evidence_signals
+			   (organisation_id, connector_type, dimension_slug, signal_key, signal_value)
+			 VALUES ($1,$2,$3,$4,$5)
+			 ON CONFLICT (organisation_id, connector_type, signal_key)
+			 DO UPDATE SET signal_value = EXCLUDED.signal_value, collected_at = now()`,
 			claims.OrgID, connType, sig.DimensionSlug, sig.SignalKey, valJSON,
 		); err != nil {
 			writeError(w, http.StatusInternalServerError, "db error")
@@ -262,11 +267,7 @@ func (s *Server) handleListEvidence(w http.ResponseWriter, r *http.Request) {
 
 // hasEvidenceConnectors checks whether the org's tier allows evidence connectors.
 func (s *Server) hasEvidenceConnectors(r *http.Request, orgID string) bool {
-	var tier string
-	_ = s.db.QueryRow(r.Context(),
-		`SELECT tier FROM subscriptions WHERE organisation_id = $1`, orgID,
-	).Scan(&tier)
-	return billing.LimitsFor(billing.Tier(tier)).EvidenceConnectors
+	return billing.LimitsFor(s.tierFor(r.Context(), orgID)).EvidenceConnectors
 }
 
 // markSyncError records a sync error on the connector config.
