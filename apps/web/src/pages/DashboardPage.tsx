@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { scoringApi, type ScoringResult, type PerceptionGapResult } from "../api/scoring";
+import {
+  scoringApi,
+  type ScoringResult,
+  type PerceptionGapResult,
+} from "../api/scoring";
 import { ReadinessRadarChart } from "../components/RadarChart";
 import { DimensionCard } from "../components/DimensionCard";
 
@@ -20,14 +24,25 @@ export function DashboardPage() {
       .then((res) => setResult(res.data))
       .catch(() => setError("No scoring result available for this assessment."))
       .finally(() => setLoading(false));
-    scoringApi.getPerceptionGap(assessmentId).then((res) => setGapResult(res.data)).catch(() => {});
+    scoringApi
+      .getPerceptionGap(assessmentId)
+      .then((res) => setGapResult(res.data))
+      .catch(() => {});
   }, [assessmentId]);
 
   function runGap() {
     if (!assessmentId) return;
     setGapLoading(true);
-    scoringApi.runPerceptionGap(assessmentId)
+    scoringApi
+      .runPerceptionGap(assessmentId)
       .then((res) => setGapResult(res.data))
+      .catch((err) => {
+        const msg =
+          err?.response?.data?.error ??
+          err?.message ??
+          "Failed to compute perception gap";
+        setError(msg);
+      })
       .finally(() => setGapLoading(false));
   }
 
@@ -170,7 +185,9 @@ export function DashboardPage() {
       {/* Perception Gap */}
       <div className="card space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-slate-300">Perception Gap Analysis</h3>
+          <h3 className="text-sm font-semibold text-slate-300">
+            Perception Gap Analysis
+          </h3>
           <button
             className="btn-primary text-xs px-3 py-1.5"
             disabled={gapLoading}
@@ -182,20 +199,45 @@ export function DashboardPage() {
         {gapResult ? (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             {[
-              { label: "Self-Assessment (S)", value: gapResult.layer_a_score, color: "text-brand-300" },
-              { label: "Evidence Score (E)", value: gapResult.layer_b_score, color: "text-green-400" },
-              { label: "Perception Gap (S−E)", value: gapResult.gap_score, color: Math.abs(gapResult.gap_score) > 20 ? "text-red-400" : "text-yellow-400" },
-              { label: "Master Composite", value: gapResult.master_composite, color: "text-white" },
+              {
+                label: "Self-Assessment (S)",
+                value: gapResult.layer_a_score,
+                color: "text-brand-300",
+              },
+              {
+                label: "Evidence Score (E)",
+                value: gapResult.layer_b_score,
+                color: "text-green-400",
+              },
+              {
+                label: "Perception Gap (S−E)",
+                value: gapResult.gap_score,
+                color:
+                  Math.abs(gapResult.gap_score) > 20
+                    ? "text-red-400"
+                    : "text-yellow-400",
+              },
+              {
+                label: "Master Composite",
+                value: gapResult.master_composite,
+                color: "text-white",
+              },
             ].map(({ label, value, color }) => (
-              <div key={label} className="rounded-lg bg-surface p-3 text-center">
+              <div
+                key={label}
+                className="rounded-lg bg-surface p-3 text-center"
+              >
                 <p className="text-xs text-slate-500">{label}</p>
-                <p className={`mt-1 text-2xl font-bold tabular-nums ${color}`}>{value}</p>
+                <p className={`mt-1 text-2xl font-bold tabular-nums ${color}`}>
+                  {value}
+                </p>
               </div>
             ))}
           </div>
         ) : (
           <p className="text-xs text-slate-500">
-            No perception gap data yet. Sync evidence connectors first, then run the analysis.
+            No perception gap data yet. Sync evidence connectors first, then run
+            the analysis.
           </p>
         )}
       </div>

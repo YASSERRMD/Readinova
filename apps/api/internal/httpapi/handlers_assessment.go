@@ -76,29 +76,35 @@ func (s *Server) handleCreateAssessment(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	// Enforce tier assessment limit.
-	var tier string
-	_ = s.db.QueryRow(r.Context(),
-		`SELECT tier FROM subscriptions WHERE organisation_id = $1`, claims.OrgID,
-	).Scan(&tier)
-	limits := billing.LimitsFor(billing.Tier(tier))
-	if limits.MaxAssessments > 0 {
-		var count int
-		_ = s.db.QueryRow(r.Context(),
-			`SELECT COUNT(*) FROM assessments WHERE organisation_id = $1`, claims.OrgID,
-		).Scan(&count)
-		if count >= limits.MaxAssessments {
+	// Enforce tier assessment limit atomically: the conditional INSERT ensures
+	// the count check and the insert happen in the same statement, preventing
+	// the TOCTOU race that exists when counting then inserting separately.
+	limits := billing.LimitsFor(s.tierFor(r.Context(), claims.OrgID))
+	maxAssessments := limits.MaxAssessments
+
+	var id string
+	var insertErr error
+	if maxAssessments > 0 {
+		insertErr = s.db.QueryRow(r.Context(),
+			`INSERT INTO assessments (organisation_id, framework_id, title)
+			 SELECT $1,$2,$3
+			 WHERE (SELECT COUNT(*) FROM assessments WHERE organisation_id = $1) < $4
+			 RETURNING id`,
+			claims.OrgID, req.FrameworkID, req.Title, maxAssessments,
+		).Scan(&id)
+	} else {
+		insertErr = s.db.QueryRow(r.Context(),
+			`INSERT INTO assessments (organisation_id, framework_id, title)
+			 VALUES ($1,$2,$3) RETURNING id`,
+			claims.OrgID, req.FrameworkID, req.Title,
+		).Scan(&id)
+	}
+	if insertErr != nil {
+		// Distinguish limit hit (no rows returned) from actual DB error.
+		if id == "" && maxAssessments > 0 {
 			writeError(w, http.StatusPaymentRequired, "assessment limit reached for your tier")
 			return
 		}
-	}
-
-	var id string
-	if err := s.db.QueryRow(r.Context(),
-		`INSERT INTO assessments (organisation_id, framework_id, title)
-		 VALUES ($1,$2,$3) RETURNING id`,
-		claims.OrgID, req.FrameworkID, req.Title,
-	).Scan(&id); err != nil {
 		writeError(w, http.StatusBadRequest, "invalid framework_id or db error")
 		return
 	}
@@ -139,6 +145,10 @@ func (s *Server) handleListAssessments(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 		list = append(list, x)
+	}
+	if err := rows.Err(); err != nil {
+		writeError(w, http.StatusInternalServerError, "db error")
+		return
 	}
 	if list == nil {
 		list = []row{}
@@ -265,6 +275,11 @@ func (s *Server) handleSetAssignments(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		questions = append(questions, q)
+	}
+
+	if len(questions) == 0 {
+		writeError(w, http.StatusUnprocessableEntity, "no questions found for this assessment's framework")
+		return
 	}
 
 	if len(missingRoles) > 0 {

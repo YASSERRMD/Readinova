@@ -30,6 +30,7 @@ export function QuestionnairePage() {
   const [saveError, setSaveError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -48,8 +49,11 @@ export function QuestionnairePage() {
         const firstUnanswered = qRes.data.findIndex((q) => !map.has(q.slug));
         setCursor(firstUnanswered === -1 ? 0 : firstUnanswered);
       })
-      .catch(() => {
-        // handled gracefully
+      .catch((err: unknown) => {
+        const msg =
+          (err as { response?: { data?: { error?: string } } })?.response?.data
+            ?.error ?? "Failed to load questionnaire. Please refresh.";
+        setLoadError(msg);
       })
       .finally(() => setLoading(false));
   }, [assessmentId]);
@@ -141,6 +145,20 @@ export function QuestionnairePage() {
     return (
       <div className="flex items-center justify-center py-32 text-sm text-slate-400">
         Loading questionnaire…
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="flex flex-col items-center justify-center py-32 gap-4">
+        <p className="text-sm text-red-400">{loadError}</p>
+        <button
+          className="btn-ghost text-xs"
+          onClick={() => navigate("/app/assessments")}
+        >
+          ← Back to assessments
+        </button>
       </div>
     );
   }

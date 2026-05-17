@@ -53,6 +53,10 @@ func (s *Server) handleListConnectors(w http.ResponseWriter, r *http.Request) {
 		}
 		list = append(list, x)
 	}
+	if err := rows.Err(); err != nil {
+		writeError(w, http.StatusInternalServerError, "db error")
+		return
+	}
 	if list == nil {
 		list = []row{}
 	}
@@ -159,7 +163,10 @@ func (s *Server) handleSyncConnector(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var creds map[string]any
-	_ = json.Unmarshal(credJSON, &creds)
+	if err := json.Unmarshal(credJSON, &creds); err != nil {
+		writeError(w, http.StatusInternalServerError, "failed to parse connector credentials")
+		return
+	}
 
 	conn := factory()
 	if err := conn.Connect(r.Context(), creds); err != nil {
@@ -185,8 +192,13 @@ func (s *Server) handleSyncConnector(w http.ResponseWriter, r *http.Request) {
 	defer tx.Rollback(r.Context()) //nolint:errcheck
 
 	// Upsert signals so repeated syncs update existing rows rather than creating
-	// an ever-growing append-only history.
+	// an ever-growing append-only history.  Check context cancellation between
+	// signals so a client disconnect aborts the loop promptly (BUG-4).
 	for _, sig := range signals {
+		if err := r.Context().Err(); err != nil {
+			writeError(w, http.StatusGatewayTimeout, "request cancelled")
+			return
+		}
 		valJSON, _ := json.Marshal(sig.SignalValue)
 		if _, err := tx.Exec(r.Context(),
 			`INSERT INTO evidence_signals
@@ -258,6 +270,10 @@ func (s *Server) handleListEvidence(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 		list = append(list, x)
+	}
+	if err := rows.Err(); err != nil {
+		writeError(w, http.StatusInternalServerError, "db error")
+		return
 	}
 	if list == nil {
 		list = []row{}

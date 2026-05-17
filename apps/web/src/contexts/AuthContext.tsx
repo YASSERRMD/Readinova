@@ -70,14 +70,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   async function login(email: string, password: string, orgSlug: string) {
     const res = await authApi.login(email, password, orgSlug);
-    setUser({ ...applyAuth(res.data), email });
+    const u = applyAuth(res.data);
+    setUser({ ...u, email }); // optimistic — use provided email until /me confirms
     startRefreshTimer();
+    // Fetch the canonical email from the server to keep state authoritative.
+    authApi
+      .me()
+      .then((me) =>
+        setUser((prev) => (prev ? { ...prev, email: me.data.email } : prev)),
+      )
+      .catch(() => undefined);
   }
 
   async function signup(payload: Parameters<typeof authApi.signup>[0]) {
     const res = await authApi.signup(payload);
-    setUser({ ...applyAuth(res.data), email: payload.email });
+    const u = applyAuth(res.data);
+    setUser({ ...u, email: payload.email }); // optimistic
     startRefreshTimer();
+    // Fetch canonical email from server.
+    authApi
+      .me()
+      .then((me) =>
+        setUser((prev) => (prev ? { ...prev, email: me.data.email } : prev)),
+      )
+      .catch(() => undefined);
   }
 
   function logout() {
