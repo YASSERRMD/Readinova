@@ -2,10 +2,15 @@ package httpapi
 
 import (
 	"net/http"
+	"net/mail"
+	"regexp"
 	"time"
 
 	"github.com/YASSERRMD/Readinova/apps/api/internal/auth"
 )
+
+// orgSlugRe validates org slugs: lowercase alphanumeric with hyphens, 3-64 chars.
+var orgSlugRe = regexp.MustCompile(`^[a-z0-9][a-z0-9-]{1,62}[a-z0-9]$`)
 
 // POST /v1/organisations — create org + owner user (signup).
 func (s *Server) handleSignup(w http.ResponseWriter, r *http.Request) {
@@ -24,6 +29,14 @@ func (s *Server) handleSignup(w http.ResponseWriter, r *http.Request) {
 	}
 	if req.Email == "" || req.Password == "" || req.OrgName == "" || req.OrgSlug == "" {
 		writeError(w, http.StatusUnprocessableEntity, "email, password, org_name and org_slug are required")
+		return
+	}
+	if _, err := mail.ParseAddress(req.Email); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, "invalid email address")
+		return
+	}
+	if !orgSlugRe.MatchString(req.OrgSlug) {
+		writeError(w, http.StatusUnprocessableEntity, "org_slug must be 3-64 lowercase alphanumeric characters or hyphens, starting and ending with alphanumeric")
 		return
 	}
 	if len(req.Password) < 12 {
@@ -307,6 +320,12 @@ func (s *Server) handlePatchOrg(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Verify the path id matches the caller's org to prevent cross-org writes.
+	if pathID := r.PathValue("id"); pathID != "" && pathID != claims.OrgID {
+		writeError(w, http.StatusForbidden, "cannot modify another organisation")
+		return
+	}
+
 	var req struct {
 		Name     *string `json:"name"`
 		SizeBand *string `json:"size_band"`
@@ -316,21 +335,22 @@ func (s *Server) handlePatchOrg(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if req.Name != nil {
-		if _, err := s.db.Exec(r.Context(),
-			`UPDATE organisations SET name = $1, updated_at = now() WHERE id = $2`, *req.Name, claims.OrgID,
-		); err != nil {
-			writeError(w, http.StatusInternalServerError, "db error")
-			return
-		}
+	if req.Name == nil && req.SizeBand == nil {
+		writeJSON(w, http.StatusOK, map[string]string{"status": "no-op"})
+		return
 	}
-	if req.SizeBand != nil {
-		if _, err := s.db.Exec(r.Context(),
-			`UPDATE organisations SET size_band = $1, updated_at = now() WHERE id = $2`, *req.SizeBand, claims.OrgID,
-		); err != nil {
-			writeError(w, http.StatusInternalServerError, "db error")
-			return
-		}
+
+	// Single UPDATE that touches only the provided fields to avoid two round-trips.
+	if _, err := s.db.Exec(r.Context(),
+		`UPDATE organisations
+		 SET name      = COALESCE($1, name),
+		     size_band = COALESCE($2, size_band),
+		     updated_at = now()
+		 WHERE id = $3`,
+		req.Name, req.SizeBand, claims.OrgID,
+	); err != nil {
+		writeError(w, http.StatusInternalServerError, "db error")
+		return
 	}
 
 	writeJSON(w, http.StatusOK, map[string]string{"status": "updated"})

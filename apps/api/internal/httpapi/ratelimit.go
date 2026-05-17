@@ -2,6 +2,7 @@ package httpapi
 
 import (
 	"net/http"
+	"strings"
 	"sync"
 	"time"
 )
@@ -73,10 +74,13 @@ var authLimiter = newRateLimiter(10, 15*time.Minute)
 func withAuthRateLimit(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ip := r.RemoteAddr
-		// Strip port for IPv4; for X-Forwarded-For use the first value.
+		// X-Forwarded-For can contain a comma-separated chain of IPs added by each
+		// proxy.  Always take the leftmost value (the original client IP) to prevent
+		// spoofing: a malicious client cannot forge earlier entries in the chain.
 		if xff := r.Header.Get("X-Forwarded-For"); xff != "" {
-			ip = xff
+			ip = strings.SplitN(xff, ",", 2)[0]
 		}
+		ip = strings.TrimSpace(ip)
 		if !authLimiter.allow(ip) {
 			writeError(w, http.StatusTooManyRequests, "too many requests — try again later")
 			return

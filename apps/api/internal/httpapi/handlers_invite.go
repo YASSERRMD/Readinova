@@ -3,6 +3,7 @@ package httpapi
 import (
 	"encoding/json"
 	"net/http"
+	"net/mail"
 	"time"
 
 	"github.com/YASSERRMD/Readinova/apps/api/internal/auth"
@@ -26,6 +27,10 @@ func (s *Server) handleCreateInvitation(w http.ResponseWriter, r *http.Request) 
 	}
 	if req.Email == "" || req.Role == "" {
 		writeError(w, http.StatusUnprocessableEntity, "email and role are required")
+		return
+	}
+	if _, err := mail.ParseAddress(req.Email); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, "invalid email address")
 		return
 	}
 
@@ -80,14 +85,21 @@ func (s *Server) handleAcceptInvitation(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	var invID, orgID, invRole string
+	var invID, orgID, invRole, invEmail string
 	var expiresAt time.Time
 	if err := s.db.QueryRow(r.Context(), `
-		SELECT id, organisation_id, role, expires_at
+		SELECT id, organisation_id, role, email, expires_at
 		FROM invitations
 		WHERE token = $1 AND accepted_at IS NULL AND expires_at > now()
-	`, token).Scan(&invID, &orgID, &invRole, &expiresAt); err != nil {
+	`, token).Scan(&invID, &orgID, &invRole, &invEmail, &expiresAt); err != nil {
 		writeError(w, http.StatusNotFound, "invitation not found or expired")
+		return
+	}
+
+	// Ensure the submitted email matches what was invited to prevent token
+	// hijacking (one user accepting an invitation meant for another).
+	if req.Email != invEmail {
+		writeError(w, http.StatusForbidden, "email does not match invitation")
 		return
 	}
 
