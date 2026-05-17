@@ -1,39 +1,80 @@
-import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { connectorsApi, type ConnectorConfig } from '../api/connectors';
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { connectorsApi, type ConnectorConfig } from "../api/connectors";
+
+function extractApiError(err: unknown): string {
+  return (
+    (err as { response?: { data?: { error?: string } } })?.response?.data
+      ?.error ??
+    (err as { message?: string })?.message ??
+    "An unexpected error occurred"
+  );
+}
 
 const KNOWN_CONNECTORS = [
-  { type: 'test', label: 'Test Connector', description: 'Synthetic signals for dev and testing.' },
-  { type: 'azure', label: 'Azure', description: 'Read-only ARM and Graph signals.' },
+  {
+    type: "test",
+    label: "Test Connector",
+    description: "Synthetic signals for dev and testing.",
+  },
+  {
+    type: "azure",
+    label: "Azure",
+    description: "Read-only ARM and Graph signals.",
+  },
 ];
 
 export default function ConnectorsPage() {
   const qc = useQueryClient();
   const { data: configs = [], isLoading } = useQuery({
-    queryKey: ['connectors'],
+    queryKey: ["connectors"],
     queryFn: connectorsApi.list,
     retry: false,
   });
 
-  const configByType = Object.fromEntries(configs.map((c: ConnectorConfig) => [c.connector_type, c]));
+  const configByType = Object.fromEntries(
+    configs.map((c: ConnectorConfig) => [c.connector_type, c]),
+  );
 
   const syncMutation = useMutation({
     mutationFn: (type: string) => connectorsApi.sync(type),
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['connectors'] }); },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["connectors"] });
+    },
   });
 
   const toggleMutation = useMutation({
     mutationFn: ({ type, enabled }: { type: string; enabled: boolean }) =>
       connectorsApi.upsert(type, { enabled }),
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['connectors'] }); },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["connectors"] });
+    },
   });
 
   const [syncing, setSyncing] = useState<string | null>(null);
+  const [connectError, setConnectError] = useState<string | null>(null);
+  const [syncError, setSyncError] = useState<string | null>(null);
+
+  async function handleConnect(type: string, label: string) {
+    setConnectError(null);
+    try {
+      await connectorsApi.upsert(type, {
+        display_name: label,
+        credentials: {},
+      });
+      qc.invalidateQueries({ queryKey: ["connectors"] });
+    } catch (err) {
+      setConnectError(extractApiError(err));
+    }
+  }
 
   async function handleSync(type: string) {
     setSyncing(type);
+    setSyncError(null);
     try {
       await syncMutation.mutateAsync(type);
+    } catch (err) {
+      setSyncError(extractApiError(err));
     } finally {
       setSyncing(null);
     }
@@ -48,9 +89,21 @@ export default function ConnectorsPage() {
       <div>
         <h1 className="text-2xl font-bold text-white">Evidence Connectors</h1>
         <p className="text-surface-400 mt-1">
-          Connect external systems to automatically collect evidence signals for your assessments.
+          Connect external systems to automatically collect evidence signals for
+          your assessments.
         </p>
       </div>
+
+      {connectError && (
+        <p className="rounded-md bg-red-900/40 px-3 py-2 text-sm text-red-400">
+          {connectError}
+        </p>
+      )}
+      {syncError && (
+        <p className="rounded-md bg-red-900/40 px-3 py-2 text-sm text-red-400">
+          {syncError}
+        </p>
+      )}
 
       <div className="space-y-4">
         {KNOWN_CONNECTORS.map(({ type, label, description }) => {
@@ -59,13 +112,18 @@ export default function ConnectorsPage() {
           const isEnabled = config?.enabled ?? false;
 
           return (
-            <div key={type} className="card flex items-start justify-between gap-4">
+            <div
+              key={type}
+              className="card flex items-start justify-between gap-4"
+            >
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="font-semibold text-white">{label}</span>
                   {isConfigured && (
-                    <span className={`text-xs px-2 py-0.5 rounded-full ${isEnabled ? 'bg-green-900 text-green-300' : 'bg-surface-700 text-surface-400'}`}>
-                      {isEnabled ? 'Enabled' : 'Disabled'}
+                    <span
+                      className={`text-xs px-2 py-0.5 rounded-full ${isEnabled ? "bg-green-900 text-green-300" : "bg-surface-700 text-surface-400"}`}
+                    >
+                      {isEnabled ? "Enabled" : "Disabled"}
                     </span>
                   )}
                 </div>
@@ -76,7 +134,9 @@ export default function ConnectorsPage() {
                   </p>
                 )}
                 {config?.last_sync_error && (
-                  <p className="text-red-400 text-xs mt-1">Error: {config.last_sync_error}</p>
+                  <p className="text-red-400 text-xs mt-1">
+                    Error: {config.last_sync_error}
+                  </p>
                 )}
               </div>
 
@@ -84,7 +144,7 @@ export default function ConnectorsPage() {
                 {!isConfigured ? (
                   <button
                     className="btn-primary text-sm"
-                    onClick={() => connectorsApi.upsert(type, { display_name: label, credentials: {} }).then(() => qc.invalidateQueries({ queryKey: ['connectors'] }))}
+                    onClick={() => handleConnect(type, label)}
                   >
                     Connect
                   </button>
@@ -92,16 +152,18 @@ export default function ConnectorsPage() {
                   <>
                     <button
                       className="btn-ghost text-sm"
-                      onClick={() => toggleMutation.mutate({ type, enabled: !isEnabled })}
+                      onClick={() =>
+                        toggleMutation.mutate({ type, enabled: !isEnabled })
+                      }
                     >
-                      {isEnabled ? 'Disable' : 'Enable'}
+                      {isEnabled ? "Disable" : "Enable"}
                     </button>
                     <button
                       className="btn-primary text-sm"
                       disabled={!isEnabled || syncing === type}
                       onClick={() => handleSync(type)}
                     >
-                      {syncing === type ? 'Syncing…' : 'Sync Now'}
+                      {syncing === type ? "Syncing…" : "Sync Now"}
                     </button>
                   </>
                 )}
@@ -118,7 +180,7 @@ export default function ConnectorsPage() {
 
 function EvidencePanel() {
   const { data: signals = [] } = useQuery({
-    queryKey: ['evidence'],
+    queryKey: ["evidence"],
     queryFn: () => connectorsApi.listEvidence(),
     retry: false,
   });
@@ -127,7 +189,9 @@ function EvidencePanel() {
 
   return (
     <div className="space-y-3">
-      <h2 className="text-lg font-semibold text-white">Recent Evidence Signals</h2>
+      <h2 className="text-lg font-semibold text-white">
+        Recent Evidence Signals
+      </h2>
       <div className="overflow-auto rounded-lg border border-surface-700">
         <table className="w-full text-sm">
           <thead>
@@ -140,13 +204,26 @@ function EvidencePanel() {
             </tr>
           </thead>
           <tbody>
-            {signals.map((s, i) => (
-              <tr key={i} className="border-b border-surface-800 hover:bg-surface-800/50">
-                <td className="px-4 py-2 text-surface-300">{s.connector_type}</td>
-                <td className="px-4 py-2 text-surface-300">{s.dimension_slug}</td>
-                <td className="px-4 py-2 text-white font-mono text-xs">{s.signal_key}</td>
-                <td className="px-4 py-2 text-brand-400 font-mono text-xs">{JSON.stringify(s.signal_value)}</td>
-                <td className="px-4 py-2 text-surface-500 text-xs">{new Date(s.collected_at).toLocaleString()}</td>
+            {signals.map((s) => (
+              <tr
+                key={`${s.connector_type}:${s.signal_key}`}
+                className="border-b border-surface-800 hover:bg-surface-800/50"
+              >
+                <td className="px-4 py-2 text-surface-300">
+                  {s.connector_type}
+                </td>
+                <td className="px-4 py-2 text-surface-300">
+                  {s.dimension_slug}
+                </td>
+                <td className="px-4 py-2 text-white font-mono text-xs">
+                  {s.signal_key}
+                </td>
+                <td className="px-4 py-2 text-brand-400 font-mono text-xs">
+                  {JSON.stringify(s.signal_value)}
+                </td>
+                <td className="px-4 py-2 text-surface-500 text-xs">
+                  {new Date(s.collected_at).toLocaleString()}
+                </td>
               </tr>
             ))}
           </tbody>

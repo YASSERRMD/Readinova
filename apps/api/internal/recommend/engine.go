@@ -7,6 +7,7 @@ import (
 	"math"
 	"sort"
 	"strings"
+	"sync"
 
 	"gopkg.in/yaml.v3"
 )
@@ -14,14 +15,22 @@ import (
 //go:embed templates/*.yaml
 var templateFS embed.FS
 
+// templateCache holds the parsed template files so we only read and unmarshal
+// the embedded YAML once per process lifetime (the embed.FS is static).
+var (
+	templateOnce    sync.Once
+	cachedTemplates []templateFile
+	cacheErr        error
+)
+
 // Recommendation is a single actionable recommendation.
 type Recommendation struct {
 	ID            string  `json:"id"`
 	DimensionSlug string  `json:"dimension_slug"`
 	Title         string  `json:"title"`
 	Description   string  `json:"description"`
-	Effort        string  `json:"effort"`  // low | medium | high
-	Impact        string  `json:"impact"`  // low | medium | high
+	Effort        string  `json:"effort"`   // low | medium | high
+	Impact        string  `json:"impact"`   // low | medium | high
 	Priority      float64 `json:"priority"` // higher = more urgent
 	Wave          int     `json:"wave"`     // 1 = now, 2 = next, 3 = later
 }
@@ -38,29 +47,43 @@ type templateFile struct {
 	} `yaml:"recommendations"`
 }
 
+// loadTemplates parses all embedded YAML templates once and caches the result.
+func loadTemplates() ([]templateFile, error) {
+	templateOnce.Do(func() {
+		entries, err := templateFS.ReadDir("templates")
+		if err != nil {
+			cacheErr = fmt.Errorf("read templates: %w", err)
+			return
+		}
+		for _, entry := range entries {
+			if !strings.HasSuffix(entry.Name(), ".yaml") {
+				continue
+			}
+			data, err := templateFS.ReadFile("templates/" + entry.Name())
+			if err != nil {
+				continue
+			}
+			var tf templateFile
+			if err := yaml.Unmarshal(data, &tf); err != nil {
+				continue
+			}
+			cachedTemplates = append(cachedTemplates, tf)
+		}
+	})
+	return cachedTemplates, cacheErr
+}
+
 // Generate returns prioritised, wave-grouped recommendations based on dimension scores.
 // dimensionScores is a map of dimension_slug → score (0–100).
 func Generate(dimensionScores map[string]float64) ([]Recommendation, error) {
-	entries, err := templateFS.ReadDir("templates")
+	templates, err := loadTemplates()
 	if err != nil {
-		return nil, fmt.Errorf("read templates: %w", err)
+		return nil, err
 	}
 
 	var all []Recommendation
 
-	for _, entry := range entries {
-		if !strings.HasSuffix(entry.Name(), ".yaml") {
-			continue
-		}
-		data, err := templateFS.ReadFile("templates/" + entry.Name())
-		if err != nil {
-			continue
-		}
-		var tf templateFile
-		if err := yaml.Unmarshal(data, &tf); err != nil {
-			continue
-		}
-
+	for _, tf := range templates {
 		score, hasScore := dimensionScores[tf.Dimension]
 
 		for _, t := range tf.Recommendations {

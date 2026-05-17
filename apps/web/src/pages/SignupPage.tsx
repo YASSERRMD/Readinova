@@ -180,7 +180,7 @@ export function SignupPage() {
               id="password"
               type="password"
               required
-              minLength={8}
+              minLength={12}
               autoComplete="new-password"
               className="input"
               value={form.password}

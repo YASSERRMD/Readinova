@@ -48,6 +48,7 @@ func (s *Server) Routes(mux *http.ServeMux) {
 
 	// Org management
 	mux.HandleFunc("PATCH /v1/organisations/{id}", s.withAuth(s.handlePatchOrg))
+	mux.HandleFunc("GET /v1/members", s.withAuth(s.handleListMembers))
 
 	// Invitations
 	mux.HandleFunc("POST /v1/invitations", s.withAuth(s.handleCreateInvitation))
