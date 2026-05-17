@@ -4,6 +4,7 @@ package httpapi
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -18,8 +19,12 @@ type Server struct {
 	jwtSecret []byte
 }
 
-// New creates a new Server.
+// New creates a new Server.  It panics if jwtSecret is shorter than 32 bytes
+// to catch misconfiguration at startup rather than at runtime.
 func New(db *pgxpool.Pool, jwtSecret []byte) *Server {
+	if len(jwtSecret) < 32 {
+		panic(fmt.Sprintf("httpapi: jwtSecret must be at least 32 bytes, got %d", len(jwtSecret)))
+	}
 	return &Server{db: db, jwtSecret: jwtSecret}
 }
 
@@ -46,7 +51,7 @@ func (s *Server) Routes(mux *http.ServeMux) {
 
 	// Invitations
 	mux.HandleFunc("POST /v1/invitations", s.withAuth(s.handleCreateInvitation))
-	mux.HandleFunc("POST /v1/invitations/{token}/accept", s.handleAcceptInvitation)
+	mux.HandleFunc("POST /v1/invitations/{token}/accept", withAuthRateLimit(s.handleAcceptInvitation))
 
 	// Assessments
 	s.assessmentRoutes(mux)
@@ -89,7 +94,9 @@ func writeError(w http.ResponseWriter, status int, msg string) {
 }
 
 // decodeJSON reads and decodes the request body into v.
+// It limits the body to 1 MiB to prevent unbounded memory consumption.
 func decodeJSON(r *http.Request, v any) error {
+	r.Body = http.MaxBytesReader(nil, r.Body, 1<<20) // 1 MiB
 	defer r.Body.Close()
 	return json.NewDecoder(r.Body).Decode(v)
 }
