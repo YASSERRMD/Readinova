@@ -11,7 +11,7 @@ export interface InviteMemberResponse {
 }
 
 export const orgApi = {
-  invite: (orgId: string, payload: InviteMemberPayload) =>
+  invite: (payload: InviteMemberPayload) =>
     apiClient.post<InviteMemberResponse>("/v1/invitations", payload),
 
   acceptInvitation: (token: string, email: string, password: string) =>

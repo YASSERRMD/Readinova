@@ -2,6 +2,7 @@ package httpapi
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/YASSERRMD/Readinova/apps/api/internal/billing"
@@ -109,12 +110,14 @@ func (s *Server) handleReport(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			// Fall back to HTML if Chrome is not available.
 			w.Header().Set("Content-Type", "text/html; charset=utf-8")
+			w.Header().Set("Content-Length", fmt.Sprintf("%d", len(htmlContent)))
 			w.Header().Set("X-Report-Fallback", "chromedp-unavailable")
 			w.WriteHeader(http.StatusOK)
 			_, _ = w.Write([]byte(htmlContent))
 			return
 		}
 		w.Header().Set("Content-Type", "application/pdf")
+		w.Header().Set("Content-Length", fmt.Sprintf("%d", len(pdfBytes)))
 		w.Header().Set("Content-Disposition", `attachment; filename="readiness-report.pdf"`)
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write(pdfBytes)
@@ -122,6 +125,7 @@ func (s *Server) handleReport(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Header().Set("Content-Length", fmt.Sprintf("%d", len(htmlContent)))
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write([]byte(htmlContent))
 }

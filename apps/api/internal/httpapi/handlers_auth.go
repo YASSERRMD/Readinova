@@ -1,12 +1,14 @@
 package httpapi
 
 import (
+	"errors"
 	"net/http"
 	"net/mail"
 	"regexp"
 	"time"
 
 	"github.com/YASSERRMD/Readinova/apps/api/internal/auth"
+	"github.com/jackc/pgx/v5/pgconn"
 )
 
 // orgSlugRe validates org slugs: lowercase alphanumeric with hyphens, 3-64 chars.
@@ -63,7 +65,12 @@ func (s *Server) handleSignup(w http.ResponseWriter, r *http.Request) {
 		 VALUES ($1,$2,$3,$4,$5) RETURNING id`,
 		req.OrgSlug, req.OrgName, req.CountryCode, req.Sector, req.SizeBand,
 	).Scan(&orgID); err != nil {
-		writeError(w, http.StatusConflict, "organisation slug already taken")
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
+			writeError(w, http.StatusConflict, "organisation slug already taken")
+		} else {
+			writeError(w, http.StatusInternalServerError, "db error")
+		}
 		return
 	}
 
@@ -71,7 +78,12 @@ func (s *Server) handleSignup(w http.ResponseWriter, r *http.Request) {
 		`INSERT INTO users (email, hashed_password) VALUES ($1,$2) RETURNING id`,
 		req.Email, hashed,
 	).Scan(&userID); err != nil {
-		writeError(w, http.StatusConflict, "email already registered")
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
+			writeError(w, http.StatusConflict, "email already registered")
+		} else {
+			writeError(w, http.StatusInternalServerError, "db error")
+		}
 		return
 	}
 
@@ -354,4 +366,45 @@ func (s *Server) handlePatchOrg(w http.ResponseWriter, r *http.Request) {
 	}
 
 	writeJSON(w, http.StatusOK, map[string]string{"status": "updated"})
+}
+
+// GET /v1/members — list all members of the caller's organisation.
+func (s *Server) handleListMembers(w http.ResponseWriter, r *http.Request) {
+	claims := claimsFromCtx(r)
+
+	rows, err := s.db.Query(r.Context(), `
+		SELECT u.id, u.email, om.role, u.last_login_at
+		FROM organisation_members om
+		JOIN users u ON u.id = om.user_id
+		WHERE om.organisation_id = $1
+		ORDER BY u.email
+	`, claims.OrgID)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "db error")
+		return
+	}
+	defer rows.Close()
+
+	type member struct {
+		UserID      string  `json:"user_id"`
+		Email       string  `json:"email"`
+		Role        string  `json:"role"`
+		LastLoginAt *string `json:"last_login_at,omitempty"`
+	}
+	var list []member
+	for rows.Next() {
+		var m member
+		if err := rows.Scan(&m.UserID, &m.Email, &m.Role, &m.LastLoginAt); err != nil {
+			continue
+		}
+		list = append(list, m)
+	}
+	if err := rows.Err(); err != nil {
+		writeError(w, http.StatusInternalServerError, "db error")
+		return
+	}
+	if list == nil {
+		list = []member{}
+	}
+	writeJSON(w, http.StatusOK, list)
 }
