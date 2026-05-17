@@ -150,6 +150,10 @@ func (s *Server) handleListArtefacts(w http.ResponseWriter, r *http.Request) {
 		}
 		list = append(list, x)
 	}
+	if err := rows.Err(); err != nil {
+		writeError(w, http.StatusInternalServerError, "db error")
+		return
+	}
 	if list == nil {
 		list = []row{}
 	}

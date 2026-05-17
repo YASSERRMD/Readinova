@@ -5,7 +5,7 @@ interface Props {
 }
 
 export function ProgressBar({ total, answered, label }: Props) {
-  const pct = total === 0 ? 100 : Math.round((answered / total) * 100);
+  const pct = total === 0 ? 0 : Math.round((answered / total) * 100);
 
   return (
     <div>
